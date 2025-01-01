@@ -1,0 +1,20 @@
+
+export const defaultColleges = [
+    { value: "CAF", label: "College of Accountancy and Finance" },
+    { value: "CADBE", label: "College of Architecture, Design and the Built Environment" },
+    { value: "CBA", label: "College of Business Administration" },
+    { value: "CCIS", label: "College of Computer and Information Sciences" },
+    { value: "CE", label: "College of Engineering" },
+    { value: "CHK", label: "College of Human Kinetics" },
+    { value: "CL", label: "College of Law" },
+    { value: "COC", label: "College of Communication" },
+    { value: "COED", label: "College of Education" },
+    { value: "CPSPA", label: "College of Political Science and Public Administration" },
+    { value: "CS", label: "College of Science" },
+    { value: "CTHTM", label: "College of Tourism, Hospitality and Transportation Management" },
+    { value: "GS", label: "Graduate School" },
+    { value: "ITECH", label: "Institute of Technology" },
+    { value: "PUPL", label: "PUP Laboratory Highschool" },
+    { value: "SHS", label: "PUP Senior Highschool" },
+    { value: "CSSD", label: "College of Social Sciences and Development" },
+  ];

@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Paskil\\appdev.csproj": {}
+    "/home/vee/personal/project/Main/appdev.csproj": {}
   },
   "projects": {
-    "C:\\Paskil\\appdev.csproj": {
+    "/home/vee/personal/project/Main/appdev.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Paskil\\appdev.csproj",
+        "projectUniqueName": "/home/vee/personal/project/Main/appdev.csproj",
         "projectName": "appdev",
-        "projectPath": "C:\\Paskil\\appdev.csproj",
-        "packagesPath": "C:\\Users\\A S U S\\.nuget\\packages\\",
-        "outputPath": "C:\\Paskil\\obj\\",
+        "projectPath": "/home/vee/personal/project/Main/appdev.csproj",
+        "packagesPath": "/home/vee/.nuget/packages/",
+        "outputPath": "/home/vee/personal/project/Main/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\A S U S\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/vee/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -69,7 +67,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/home/vee/.dotnet/sdk/8.0.402/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

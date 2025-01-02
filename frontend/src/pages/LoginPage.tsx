@@ -2,7 +2,7 @@ import { LoginView } from "@/components/layouts/login/login-view";
 import { LoginBg } from "@/components/layouts/login/login-bg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import OrgMarquee from '@/components/layouts/landing_page/Marquee';
+import OrgMarquee from '@/components/layouts/landing_page/OrgMarquee';
 
 export default function LoginPage() {
     const navigate = useNavigate();

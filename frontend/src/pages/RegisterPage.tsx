@@ -1,7 +1,7 @@
 import { RegisterView } from "@/components/layouts/register/register-view";
 import {LoginBg} from "@/components/layouts/login/login-bg";
 import { Link } from "react-router-dom";
-import OrgMarquee from '@/components/layouts/landing_page/Marquee';
+import OrgMarquee from '@/components/layouts/landing_page/OrgMarquee';
 
 export default function RegisterPage() {
     return (

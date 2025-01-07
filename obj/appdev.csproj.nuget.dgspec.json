@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/vee/personal/project/Main/appdev.csproj": {}
+    "/home/vee/personal/project/Main-tw/appdev.csproj": {}
   },
   "projects": {
-    "/home/vee/personal/project/Main/appdev.csproj": {
+    "/home/vee/personal/project/Main-tw/appdev.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/vee/personal/project/Main/appdev.csproj",
+        "projectUniqueName": "/home/vee/personal/project/Main-tw/appdev.csproj",
         "projectName": "appdev",
-        "projectPath": "/home/vee/personal/project/Main/appdev.csproj",
+        "projectPath": "/home/vee/personal/project/Main-tw/appdev.csproj",
         "packagesPath": "/home/vee/.nuget/packages/",
-        "outputPath": "/home/vee/personal/project/Main/obj/",
+        "outputPath": "/home/vee/personal/project/Main-tw/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/vee/.nuget/NuGet/NuGet.Config"

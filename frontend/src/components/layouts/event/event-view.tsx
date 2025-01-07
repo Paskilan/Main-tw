@@ -137,7 +137,7 @@ const EventView = () => {
       <div className="w-full ticky top-4 col-span-3 div-shadow-sm rounded-xl bg-white p-6 space-y-4">
         <div className="flex justify-between items-center">
           <div className="flex-1">
-            <p className="font-semibold text-gray-600">Wednesday, October 16, 2024</p>
+            <p className=" text-gray-800">Wednesday, October 16, 2024</p>
             <p className="text-2xl font-bold text-gray-800 py-1">{event.name}</p>
             <div className="flex items-center space-x-2 text-gray-600">
               <MdGroups />

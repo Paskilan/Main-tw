@@ -27,3 +27,17 @@
 .org-card-btn{
     @apply bg-pup-maroon2 hover:bg-pup-maroon1 font-semibold font-poppins text-lg tracking-tight rounded-full w-[150px] justify-self-end;
 }
+
+/*div shadow*/
+
+.div-shadow-sm{
+    @apply bg-white shadow-md shadow-gray-300;
+}
+
+.div-shadow-md{
+    @apply bg-white shadow-md shadow-gray-500;
+}
+
+.div-shadow-lg{
+    @apply bg-white shadow-md shadow-gray-700;
+}

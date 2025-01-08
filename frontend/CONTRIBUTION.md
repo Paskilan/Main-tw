@@ -195,8 +195,22 @@ When pushing changes to the repository, follow the guidelines below to ensure cl
    Always create a feature branch for new work. Once the feature branch is complete and the changes are reviewed, it should be merged into the test then development branch and subsequently deployed in the main branch.
 
 2. **Example Workflow:**
-   - Create a feature branch: 
-     `git checkout -b Feature/Navbar`
+   - Create a feature branch:
+      > [!NOTE]
+      > `chore` commit message & type is used for cleanups when having x commit ahead y commit behind, no need to make a branch `Chore/some-feature-name`
+
+      To create a feature branch by the `<CommitType> / <feature-to-implement>` if more than one words please consider using kebab case
+
+      `git checkout -b Feature/Navbar`
+
+      `git checkout -b Fix/navbar-sticky`
+
+      `git checkout -b Refactor/navbar-page`
+
+      `git checkout -b Docs/navbar-doc`
+
+      `git checkout -b Test/navbar-unit-test`
+
    - Check on `test` branch whether new changes to commit to stay updated before pushing the Feature
     `git pull origin test`  
    - After making changes and committing them, push to the remote repository:

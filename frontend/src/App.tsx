@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 /**pages */
 import HomePage from './pages/HomePage';
 import SettingsPage from './pages/SettingsPage';
-import FeaturesPage from './pages/FeaturesPage';
+import EventPage from './pages/EventPage';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -20,7 +20,7 @@ function App() {
         <Route path="/*" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage/>} />
-        <Route path="/features" element={<FeaturesPage/>} />
+        <Route path="/event" element={<EventPage/>} />
         <Route path="/settings/*" element={<SettingsPage/>} />
       </Routes>
     </Router>

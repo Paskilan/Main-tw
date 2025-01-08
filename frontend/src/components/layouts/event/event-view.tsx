@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselItem, CarouselContent, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { FaCheck, FaRegClock } from "react-icons/fa";
 import { IoLocationOutline, IoStarOutline } from "react-icons/io5";
 import { MdGroups } from "react-icons/md";
+import EventReportPopup from "@/components/layouts/event/EventReportPopup";
 
 /*TODO : replace and delete this in PROD  */
 import HeaderPicture from "@/sample_data/sample_header/sample_header.jpeg";
@@ -18,6 +20,8 @@ const hosts = [
 ];
 
 const EventView = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   return (
     <div className="w-full grid grid-cols-1 xl:grid-cols-3 gap-4 px-4 py-4">
       {/* Left Side: Header, Title, Registration, and Details */}
@@ -95,72 +99,79 @@ const EventView = () => {
           </div>
 
           {/* Report this event */}
-          <div className="text-center mt-6">
-            <Button variant="link" className="font-light text-lg text-pup-maroon1">
+          <div className="text-center mt-6 z-50 relative">
+            <Button
+              variant="link"
+              className="font-light text-lg text-pup-maroon1"
+              onClick={() => setIsDialogOpen(true)}
+            >
               Report this event
             </Button>
+            </div>
+            {isDialogOpen && (
+                <EventReportPopup onClose={() => setIsDialogOpen(false)} />
+            )}
           </div>
-        </div>
 
-        {/* Hosted By */}
-        <div className="div-shadow-sm rounded-xl bg-white p-4">
-          <h3 className="font-bold text-lg text-gray-800 mb-4">Hosted by</h3>
-          <div className="relative">
-            <Carousel className="flex gap-4 overflow-hidden">
-              <CarouselContent>
-                {hosts.map((host, index) => (
-                  <CarouselItem key={index} className="flex-shrink-0 basis-1/3">
-                    <div className="flex flex-col items-center text-center">
-                      <img
-                        src={host.picture}
-                        alt={host.name}
-                        className="w-16 h-16 rounded-full object-cover"
-                      />
-                      <p className="text-sm text-gray-600">{host.name}</p>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              {/* Carousel Navigation */}
-              <CarouselPrevious className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 cursor-pointer">
-                &#8249;
-              </CarouselPrevious>
-              <CarouselNext className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 cursor-pointer">
-                &#8250;
-              </CarouselNext>
-            </Carousel>
-          </div>
-        </div>
-      </div>
-
-      {/* RSVP Box (Maximized and Sticky) */}
-      <div className="w-full ticky top-4 col-span-3 div-shadow-sm rounded-xl bg-white p-6 space-y-4">
-        <div className="flex justify-between items-center">
-          <div className="flex-1">
-            <p className=" text-gray-800">Wednesday, October 16, 2024</p>
-            <p className="text-2xl font-bold text-gray-800 py-1">{event.name}</p>
-            <div className="flex items-center space-x-2 text-gray-600">
-              <MdGroups />
-              <p>100 attendees</p>
+          {/* Hosted By */}
+          <div className="div-shadow-sm rounded-xl bg-white p-4">
+            <h3 className="font-bold text-lg text-gray-800 mb-4">Hosted by</h3>
+            <div className="relative">
+              <Carousel className="flex gap-4 overflow-hidden">
+                <CarouselContent>
+                  {hosts.map((host, index) => (
+                    <CarouselItem key={index} className="flex-shrink-0 basis-1/3">
+                      <div className="flex flex-col items-center text-center">
+                        <img
+                          src={host.picture}
+                          alt={host.name}
+                          className="w-16 h-16 rounded-full object-cover"
+                        />
+                        <p className="text-sm text-gray-600">{host.name}</p>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                {/* Carousel Navigation */}
+                <CarouselPrevious className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 cursor-pointer">
+                  &#8249;
+                </CarouselPrevious>
+                <CarouselNext className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-200 rounded-full p-2 cursor-pointer">
+                  &#8250;
+                </CarouselNext>
+              </Carousel>
             </div>
           </div>
-          <div className="flex items-center space-x-2 ">
-            <IoStarOutline className="text-pup-maroon2 text-2xl" />
-            <Button
-              variant="outline"
-              className="bg-white border-1 border-pup-maroon1  border-2
+        </div>
+
+        {/* RSVP Box (Maximized and Sticky) */}
+        <div className="w-full ticky top-4 col-span-3 div-shadow-sm rounded-xl bg-white p-6 space-y-4">
+          <div className="flex justify-between items-center">
+            <div className="flex-1">
+              <p className=" text-gray-800">Wednesday, October 16, 2024</p>
+              <p className="text-2xl font-bold text-gray-800 py-1">{event.name}</p>
+              <div className="flex items-center space-x-2 text-gray-600">
+                <MdGroups />
+                <p>100 attendees</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2 ">
+              <IoStarOutline className="text-pup-maroon2 text-2xl" />
+              <Button
+                variant="outline"
+                className="bg-white border-1 border-pup-maroon1  border-2
                text-pup-maroon1 rounded-md hover:bg-pup-maroon1 hover:text-white
                text-lg">
-              Share
-            </Button>
-            <Button className="text-lg bg-pup-maroon2  hover:bg-pup-maroon1 rounded-md">
-              RSVP me!
-            </Button>
+                Share
+              </Button>
+              <Button className="text-lg bg-pup-maroon2  hover:bg-pup-maroon1 rounded-md">
+                RSVP me!
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+      );
 };
 
-export default EventView;
+      export default EventView;

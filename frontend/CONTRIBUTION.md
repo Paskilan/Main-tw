@@ -189,6 +189,7 @@ When pushing changes to the repository, follow the guidelines below to ensure cl
    - **Refactor**: `Refactor: Simplify homepage component structure`
    - **Docs**: `Docs: Update README with new API information`
    - **Test**: `Test: Add unit tests for user authentication flow`
+   - **Chore** : `Chore : making the <branch_name> up to date with <main / test>`
    
 1. **Branching Strategy:**
    Always create a feature branch for new work. Once the feature branch is complete and the changes are reviewed, it should be merged into the test then development branch and subsequently deployed in the main branch.

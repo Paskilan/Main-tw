@@ -76,7 +76,7 @@ const EventReportPopup: React.FC<EventReportPopupProps> = ({ onClose }) => {
                             Your report is anonymous, and your identity will remain confidential throughout the process.
                         </p>
                         <Button
-                            className="bg-pup-maroon2 hover:bg-pup-maroon1 rounded-full mt-4"
+                            className="bg-pup-maroon2 hover:bg-pup-maroon1 rounded-full mt-4 w-[200px]"
                             onClick={onClose}
                         >
                             Done

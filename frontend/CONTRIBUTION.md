@@ -181,6 +181,7 @@ When pushing changes to the repository, follow the guidelines below to ensure cl
    - **Refactor**: For code restructuring or optimization without changing functionality.
    - **Docs**: For documentation changes or additions.
    - **Test**: For changes to tests or adding new tests.
+   - **Chore** : For keeping up-to-date with default branch (Main) or other branch such as Development and Test
    
 * **Examples of commits :**
    - **Feature**: `Feature: Implement Navbar component`
@@ -195,6 +196,8 @@ When pushing changes to the repository, follow the guidelines below to ensure cl
 2. **Example Workflow:**
    - Create a feature branch: 
      `git checkout -b Feature/Navbar`
+   - Check on `test` branch whether new changes to commit to stay updated before pushing the Feature
+    `git pull origin test`  
    - After making changes and committing them, push to the remote repository:
      `git push origin Feature/Navbar`
    - Once approved, merge the feature branch into the `test` branch.

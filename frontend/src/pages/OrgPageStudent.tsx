@@ -9,10 +9,65 @@ import OrgBanner from "@/components/layouts/org_page/OrgBanner";
 // Test Components
 import awsccIcon from "@/sample_data/sample_orgs/awscc_circle.png";
 
+// Mock Data
+const mockData = {
+  name: "Sample Organization",
+  bannerImageUrl: "https://via.placeholder.com/1920x1080",
+  imageUrl: "https://via.placeholder.com/100",
+  followersCount: 1200,
+  status: "Accredited",
+  upcomingEvents: [
+    {
+      title: "League Finals 2024",
+      date: "January 20, 2025 | 7:00 PM",
+      description: "Join us for the exciting finals of League 2024!",
+      image: "https://via.placeholder.com/100",
+    },
+    {
+      title: "Tech Meetup",
+      date: "February 10, 2025 | 10:00 AM",
+      description: "A networking event for tech enthusiasts and professionals.",
+      image: "https://via.placeholder.com/100",
+    },
+    {
+      title: "Charity Run",
+      date: "March 15, 2025 | 6:00 AM",
+      description: "Run for a cause and make a difference in the community.",
+      image: "https://via.placeholder.com/100",
+    },
+    {
+      title: "Workshop on AI",
+      date: "April 25, 2025 | 9:00 AM",
+      description: "Hands-on workshop exploring the basics of AI technology.",
+      image: "https://via.placeholder.com/100",
+    },
+  ],
+  highlights: [
+    {
+      id: 1,
+      imageUrl: "https://via.placeholder.com/300x400",
+      title: "Event Name 1",
+      description: "A brief description of Event 1 goes here.",
+    },
+    {
+      id: 2,
+      imageUrl: "https://via.placeholder.com/300x400",
+      title: "Event Name 2",
+      description: "A brief description of Event 2 goes here.",
+    },
+    {
+      id: 3,
+      imageUrl: "https://via.placeholder.com/300x400",
+      title: "Event Name 3",
+      description: "A brief description of Event 3 goes here.",
+    },
+  ],
+};
+
 // Function Component
 const OrgPageStudent = ({ bannerImageUrl }) => {
   const { orgId } = useParams(); // Assuming the orgId is part of the route
-  const [orgData, setOrgData] = useState(null);
+  const [orgData, setOrgData] = useState(mockData);
   const [loading, setLoading] = useState(true);
   const [imageUrl, setImageUrl] = useState("");
 
@@ -60,7 +115,7 @@ const OrgPageStudent = ({ bannerImageUrl }) => {
           {/* Main Content */}
           <main className="flex flex-1 overflow-y-auto gap-x-6">
             {/* Left Main Content */}
-            <section className="w-3/5 space-y-6 pl-12 pt-5">
+            <section className="w-3/5 space-y-6 pl-12 pt-5 flex flex-col">
               {/* Icons, Name, Buttons */}
               <div className="flex items-center justify-between w-full">
                 {/* Icons and Name */}
@@ -78,7 +133,7 @@ const OrgPageStudent = ({ bannerImageUrl }) => {
                   {/* Name and Followers Status */}
                   <div className="flex flex-col justify-center">
                     <h2
-                      className="text-4xl font-semibold font-museo"
+                      className="text-3xl font-semibold font-museo"
                       style={{ textShadow: "0px 4px 6px rgba(0, 0, 0, 0.5)" }}
                     >
                       {orgData?.name || "Club Name"}{" "}
@@ -105,23 +160,101 @@ const OrgPageStudent = ({ bannerImageUrl }) => {
               </div>
 
               {/* Highlights */}
-              <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
-                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
+              {/* Highlights */}
+              <div className="w-full h-auto bg-gray-200 rounded-lg p-3">
+                {/* Label */}
+                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 py-2 rounded-full inline-block shadow-md mb-4">
                   Highlights of the Organization
                 </div>
-                <div></div>
+
+                {/* Pictures with event details */}
+                <div className="grid grid-cols-3 gap-4">
+                  {mockData.highlights.map((highlight) => (
+                    <div
+                      key={highlight.id}
+                      className="relative bg-gray-100 rounded-lg overflow-hidden shadow-md"
+                    >
+                      {/* Image with blur effect */}
+                      <img
+                        src={highlight.imageUrl}
+                        alt={highlight.title}
+                        className="w-full h-64 object-cover filter blur-sm"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-4 backdrop-blur-sm">
+                        <h3 className="text-lg font-bold text-white">
+                          {highlight.title}
+                        </h3>
+                        <p className="text-sm text-gray-300">
+                          {highlight.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Upcoming Events */}
-              <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
-                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
+              <div className="w-full h-full bg-gray-200 rounded-lg p-3 overflow-y-auto">
+                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 py-2 rounded-full inline-block shadow-md mb-4">
                   Upcoming Events
                 </div>
+                {orgData?.upcomingEvents?.length ? (
+                  <div className="space-y-4">
+                    {orgData.upcomingEvents.map((event, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center bg-white shadow-lg rounded-lg p-4"
+                      >
+                        {/* Event Image */}
+                        <div className="flex-shrink-0">
+                          <img
+                            src={
+                              event.image || "https://via.placeholder.com/100"
+                            }
+                            alt={event.title}
+                            className="w-20 h-20 rounded-lg object-cover"
+                          />
+                        </div>
+                        {/* Event Details */}
+                        <div className="flex-grow ml-4">
+                          <h3 className="text-lg font-bold">{event.title}</h3>
+                          <p className="text-sm text-gray-600">{event.date}</p>
+                          <p className="text-sm text-gray-800 mt-2 line-clamp-2">
+                            {event.description}
+                          </p>
+                        </div>
+                        {/* Buttons */}
+                        <div className="flex flex-col items-center ml-4 space-y-2">
+                          <button
+                            className="p-2 bg-yellow-400 hover:bg-yellow-500 text-white rounded-full shadow-md"
+                            onClick={() =>
+                              console.log(`Star clicked for ${event.title}`)
+                            }
+                          >
+                            ★
+                          </button>
+                          <button
+                            className="p-2 bg-blue-400 hover:bg-blue-500 text-white rounded-full shadow-md"
+                            onClick={() =>
+                              console.log(`Share clicked for ${event.title}`)
+                            }
+                          >
+                            ↗
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-600 text-center">
+                    No upcoming events available.
+                  </p>
+                )}
               </div>
             </section>
 
             {/* Right Main Content */}
-            <section className="w-2/5 space-y-6 pr-7 pt-6">
+            <section className="w-2/5 space-y-6 pr-7 pt-6 flex flex-col">
               {/* Description */}
               <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">

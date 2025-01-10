@@ -93,12 +93,6 @@ const OrgPageStudent = ({ bannerImageUrl }) => {
 
   // if (!orgData) return <div>Organization not found.</div>;     (Disregard for now. Only implement if connected to backend already)
 
-  // Banner image URL
-  // bannerImageUrl = "https://via.placeholder.com/1920x1080";
-
-  //List of things that would be dependent on output of fetchOrgData:
-  // - orgData.bannerImageUrl
-  // - orgData.imageUrl
   return (
     <>
       <div className="flex flex-col h-screen">

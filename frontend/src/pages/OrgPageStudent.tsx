@@ -62,6 +62,42 @@ const mockData = {
       description: "A brief description of Event 3 goes here.",
     },
   ],
+  description:
+    "This is a description of the organization. We strive to make the world better through education and community.",
+  orgDetails: {
+    organization: "Academic",
+    college: "Uniwide",
+    email: "awscloudclub.pupmnl@gmail.com",
+    socials: {
+      facebook: "https://facebook.com/awscloudclub",
+      instagram: "https://instagram.com/awscloudclub",
+      linkedin: "https://linkedin.com/awscloudclub",
+    },
+  },
+  orgHeads: [
+    {
+      name: "John Doe",
+      imageUrl: "https://via.placeholder.com/100",
+    },
+    {
+      name: "Jane Smith",
+      imageUrl: "https://via.placeholder.com/100",
+    },
+    {
+      name: "Sam Wilson",
+      imageUrl: "https://via.placeholder.com/100",
+    },
+  ],
+  pastEvents: [
+    {
+      title: "Tech Conference 2024",
+      imageUrl: "https://via.placeholder.com/100",
+    },
+    {
+      title: "Leadership Summit",
+      imageUrl: "https://via.placeholder.com/100",
+    },
+  ],
 };
 
 // Function Component
@@ -254,6 +290,9 @@ const OrgPageStudent = ({ bannerImageUrl }) => {
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
                   Description
                 </div>
+                <p className="mt-4 text-sm text-poppins">
+                  {orgData?.description}
+                </p>
               </div>
 
               {/* Org Details */}

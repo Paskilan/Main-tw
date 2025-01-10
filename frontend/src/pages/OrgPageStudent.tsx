@@ -235,7 +235,7 @@ const OrgPageStudent = ({ bannerImageUrl }) => {
                     {orgData.upcomingEvents.map((event, index) => (
                       <div
                         key={index}
-                        className="flex items-center bg-white shadow-lg rounded-lg p-4"
+                        className="flex items-center bg-white shadow-lg rounded-lg p-1"
                       >
                         {/* Event Image */}
                         <div className="flex-shrink-0">
@@ -401,10 +401,43 @@ const OrgPageStudent = ({ bannerImageUrl }) => {
               </div>
 
               {/* Past Events */}
-              <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
-                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
+              <div className="w-full h-full bg-gray-200 rounded-lg p-3 overflow-y-auto">
+                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md mb-4">
                   Past Events
                 </div>
+
+                {orgData?.pastEvents?.length ? (
+                  <div className="space-y-4">
+                    {orgData.pastEvents.map((event, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center bg-white shadow-lg rounded-lg p-1 mb-1"
+                      >
+                        {/* Event Image */}
+                        <div className="flex-shrink-0 mr-4">
+                          <img
+                            src={
+                              event.image || "https://via.placeholder.com/100"
+                            }
+                            alt={event.title}
+                            className="w-24 h-24 rounded-lg object-cover"
+                          />
+                        </div>
+
+                        {/* Event Name */}
+                        <div className="flex-grow">
+                          <h3 className="text-sm font-semibold">
+                            {event.title}
+                          </h3>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-600 text-center">
+                    No past events available.
+                  </p>
+                )}
               </div>
             </section>
           </main>

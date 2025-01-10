@@ -62,8 +62,8 @@ const mockData = {
       description: "A brief description of Event 3 goes here.",
     },
   ],
-  description:
-    "This is a description of the organization. We strive to make the world better through education and community.",
+  orgdescription:
+    "The AWS Cloud Club at Polytechnic University of the Philippines (PUP) is a student-led organization that aims to promote cloud technology and its impact on the community. It is part of a global initiative by Amazon Web Services (AWS) to foster learning and innovation among students. The club offers a platform for students to explore AWS technologies through hands-on workshops, seminars, and projects that develop cloud computing skills.",
   orgDetails: {
     organization: "Academic",
     college: "Uniwide",
@@ -190,10 +190,9 @@ const OrgPageStudent = ({ bannerImageUrl }) => {
               </div>
 
               {/* Highlights */}
-              {/* Highlights */}
               <div className="w-full h-auto bg-gray-200 rounded-lg p-3">
                 {/* Label */}
-                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 py-2 rounded-full inline-block shadow-md mb-4">
+                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md mb-4">
                   Highlights of the Organization
                 </div>
 
@@ -225,7 +224,7 @@ const OrgPageStudent = ({ bannerImageUrl }) => {
 
               {/* Upcoming Events */}
               <div className="w-full h-full bg-gray-200 rounded-lg p-3 overflow-y-auto">
-                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 py-2 rounded-full inline-block shadow-md mb-4">
+                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md mb-4">
                   Upcoming Events
                 </div>
                 {orgData?.upcomingEvents?.length ? (
@@ -284,14 +283,14 @@ const OrgPageStudent = ({ bannerImageUrl }) => {
             </section>
 
             {/* Right Main Content */}
-            <section className="w-2/5 space-y-6 pr-7 pt-6 flex flex-col">
+            <section className="w-2/5 space-y-6 pr-10 pt-6 flex flex-col">
               {/* Description */}
               <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
                   Description
                 </div>
-                <p className="mt-4 text-sm text-poppins">
-                  {orgData?.description}
+                <p className="mt-4 text-sm text-poppins text-justify">
+                  {orgData?.orgdescription}
                 </p>
               </div>
 
@@ -299,6 +298,68 @@ const OrgPageStudent = ({ bannerImageUrl }) => {
               <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
                   Org Details
+                </div>
+
+                {/* Organization Info */}
+                <div className="mt-4">
+                  <div className="flex justify-start space-x-4">
+                    <span className="font-museo text-red-800 font-bold text-base">
+                      Organization:
+                    </span>
+                    <span className="font-poppins text-base">
+                      {orgData?.orgDetails?.organization || "Academic"}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-start space-x-4 mt-2">
+                    <span className="font-museo text-red-800 font-bold text-base">
+                      College:
+                    </span>
+                    <span className="font-poppins text-base">
+                      {orgData?.orgDetails?.college || "Uniwide"}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-start space-x-4 mt-2">
+                    <span className="font-museo text-red-800 font-bold text-base">
+                      Email:
+                    </span>
+                    <span className="font-poppins text-base">
+                      {orgData?.orgDetails?.email ||
+                        "awscloudclub.pupmnl@gmail.com"}
+                    </span>
+                  </div>
+
+                  {/* Socials */}
+                  <div className="flex flex-col justify-start mt-4">
+                    <span className="font-museo text-red-800 font-bold text-base">
+                      Socials:
+                    </span>
+                    <div className="flex space-x-6 mt-2 justify-start">
+                      {orgData?.orgDetails?.socials ? (
+                        Object.entries(orgData.orgDetails.socials).map(
+                          ([platform, link], index) => (
+                            <a
+                              key={index}
+                              href={link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                src={`https://www.vectorlogo.zone/logos/${platform}/${platform}-icon.svg`} // Dynamic logo based on the platform
+                                alt={platform}
+                                className="w-12 h-12 rounded-full border-2 border-yellow-400" // Larger icons
+                              />
+                            </a>
+                          )
+                        )
+                      ) : (
+                        <span className="font-poppins text-base text-gray-600">
+                          No socials available
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
 

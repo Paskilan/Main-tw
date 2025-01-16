@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
 import Paskilan from '@/assets/Paskilan.png';
 import { Button } from "@/components/ui/button"

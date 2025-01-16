@@ -1,6 +1,6 @@
 ﻿namespace appdev.Models
 {
-    public class FollowedOrgs
+    public class FollowedOrg
     {
         public int StudentID { get; set; }
         public int OrgID { get; set; }

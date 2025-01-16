@@ -7,13 +7,13 @@ namespace appdev
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        public DbSet<Student> StudentTable { get; set; }
-        public DbSet<Admin> AdminTable { get; set; }
-        public DbSet<Organization> OrganizationTable { get; set; }
-        public DbSet<Event> EventTable { get; set; }
-        public DbSet<College> CollegeTable { get; set; }
-        public DbSet<OrgHighlights> OrgHighlightsTable { get; set; }
-        public DbSet<FollowedOrgs> FollowedOrgsTable { get; set; }
-        public DbSet<Report> ReportTable { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<College> Colleges { get; set; }
+        public DbSet<OrgHighlight> OrgHighlights { get; set; }
+        public DbSet<FollowedOrg> FollowedOrgs { get; set; }
+        public DbSet<Report> Reports { get; set; }
     }
 }

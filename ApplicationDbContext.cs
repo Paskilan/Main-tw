@@ -223,7 +223,7 @@ public partial class ApplicationDbContext : DbContext
         });
 
         modelBuilder.Entity<ReportTable>(entity =>
-        {
+{
             entity.HasKey(e => e.ReportId);
 
             entity.ToTable("ReportTable");
@@ -247,7 +247,7 @@ public partial class ApplicationDbContext : DbContext
         });
 
         modelBuilder.Entity<StudentTable>(entity =>
-        {
+    {
             entity.HasKey(e => e.StudentId);
 
             entity.ToTable("StudentTable");

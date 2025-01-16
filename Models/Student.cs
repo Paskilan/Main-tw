@@ -8,7 +8,7 @@ namespace appdev.Models
         public string? StudentLastName { get; set; }
         public string? StudentEmail { get; set; }
         public string? StudentPassword { get; set; }
-        public string? CollegeID { get; set; }
+        public int CollegeID { get; set; }
         public string? FollowedOrgs { get; set; }
         public char OrgAdmin { get; set; }
     }

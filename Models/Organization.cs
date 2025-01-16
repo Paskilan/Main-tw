@@ -5,7 +5,7 @@ namespace appdev.Models
     {
         public int OrgID { get; set; }
         public string? OrgName { get; set; }
-        public string? CollegeID { get; set; }
+        public int CollegeID { get; set; }
         public char Verified { get; set; }
         public int ControlNumber { get; set; }
         public string? OrgEmail { get; set; }

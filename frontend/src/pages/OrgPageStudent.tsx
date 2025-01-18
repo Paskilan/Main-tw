@@ -14,7 +14,7 @@ const mockData = {
   name: "Sample Organization",
   bannerImageUrl: "https://via.placeholder.com/1920x1080",
   imageUrl: "https://via.placeholder.com/100",
-  followersCount: 1200,
+  followersCount: 1204,
   status: "Accredited",
   upcomingEvents: [
     {
@@ -104,33 +104,8 @@ const mockData = {
 };
 
 // Function Component
-const OrgPageStudent = ({ bannerImageUrl }) => {
-  const { orgId } = useParams(); // Assuming the orgId is part of the route
+const OrgPageStudent = () => {
   const [orgData, setOrgData] = useState(mockData);
-  const [loading, setLoading] = useState(true);
-  const [imageUrl, setImageUrl] = useState("");
-
-  useEffect(() => {
-    // Fetch organization data from the API using the orgId
-    const fetchOrgData = async () => {
-      try {
-        const response = await fetch(`/api/organizations/${orgId}`); // Replace with your actual API URL
-        if (!response.ok) throw new Error("Failed to fetch organization data.");
-        const data = await response.json();
-        setOrgData(data);
-      } catch (error) {
-        console.error("Error fetching organization data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrgData();
-  }, [orgId]);
-
-  // if (loading) return <div>Loading...</div>;                   (Disregard for now. Only implement if connected to backend already)
-
-  // if (!orgData) return <div>Organization not found.</div>;     (Disregard for now. Only implement if connected to backend already)
 
   return (
     <>
@@ -157,7 +132,7 @@ const OrgPageStudent = ({ bannerImageUrl }) => {
                   <div className="flex items-center justify-center relative">
                     <img
                       src={orgData?.imageUrl || awsccIcon} // Use dynamic or fallback image
-                      alt="Organization Icon"
+                      alt="Org Icon"
                       className="w-40 h-40 rounded-full object-cover z-10 shadow-xl"
                       draggable="false"
                     />

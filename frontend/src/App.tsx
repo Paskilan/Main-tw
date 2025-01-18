@@ -23,7 +23,8 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/event" element={<EventPage />} />
         <Route path="/settings/*" element={<SettingsPage />} />
-        <Route path="/org" element={<OrgPageStudent />} />
+        <Route path="/org/StudentView" element={<OrgPageStudent />} />
+        <Route path="/org/AdminView" element={<OrgPageAdmin />} />
       </Routes>
     </Router>
   );

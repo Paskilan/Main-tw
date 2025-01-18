@@ -1,6 +1,5 @@
 // React
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState } from "react";
 
 // Components
 import { Navbar } from "@/components/commons/Navbar";

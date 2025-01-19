@@ -9,7 +9,7 @@ import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import OrgPageStudent from "./pages/OrgPageStudent";
-import OrgPageStudent from "./pages/OrgPageAdmin";
+import OrgPageAdmin from "./pages/OrgPageAdmin";
 
 /**styles */
 import "./App.css";

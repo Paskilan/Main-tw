@@ -1,14 +1,8 @@
-// React
 import { useState } from "react";
 
-// Components
 import { Navbar } from "@/components/commons/Navbar";
 import OrgBanner from "@/components/layouts/org_page/OrgBanner";
 
-// Test Components
-import awsccIcon from "@/sample_data/sample_orgs/awscc_circle.png";
-
-// Mock Data
 const mockData = {
   name: "Sample Organization",
   bannerImageUrl: "https://via.placeholder.com/1920x1080",
@@ -102,8 +96,7 @@ const mockData = {
   ],
 };
 
-// Function Component
-const OrgPageStudent = () => {
+const OrgPageAdmin = () => {
   const [orgData, setOrgData] = useState(mockData);
 
   return (
@@ -421,4 +414,4 @@ const OrgPageStudent = () => {
   );
 };
 
-export default OrgPageStudent;
+export default OrgPageAdmin;

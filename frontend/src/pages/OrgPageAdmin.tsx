@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { Navbar } from "@/components/commons/Navbar";
 import OrgBanner from "@/components/layouts/org_page/OrgBanner";
+import OrgHighlights from "@/components/layouts/org_page/OrgHighlights";
 
 const mockData = {
   name: "Sample Organization",
@@ -99,6 +100,17 @@ const mockData = {
 const OrgPageAdmin = () => {
   const [orgData, setOrgData] = useState(mockData);
 
+  const handleUpdateHighlights = (newHighlights) => {
+    setOrgData({
+      ...orgData,
+      highlights: newHighlights,
+    });
+
+    // Here you would typically make an API call to update the backend
+    // Example:
+    // await updateOrgHighlights(orgId, newHighlights);
+  };
+
   return (
     <>
       <div className="flex flex-col h-screen">
@@ -147,47 +159,18 @@ const OrgPageAdmin = () => {
 
                 {/* Buttons */}
                 <div className="flex items-center justify-start space-x-4">
-                  <button className="px-5 py-2 bg-red-900 text-white text-l font-museo rounded-lg shadow-md hover:bg-red-700">
-                    Ask me!
-                  </button>
-                  <button className="px-5 py-2 bg-red-900 text-white text-l font-museo rounded-lg shadow-md hover:bg-red-700">
-                    Follow
+                  <button className="px-5 py-2 bg-amber-700 text-white text-l font-museo rounded-lg shadow-md hover:bg-amber-800">
+                    Manage Admins
                   </button>
                 </div>
               </div>
 
               {/* Highlights */}
-              <div className="w-full h-auto bg-gray-200 rounded-lg p-3">
-                {/* Label */}
-                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md mb-4">
-                  Highlights of the Organization
-                </div>
-
-                {/* Pictures with event details */}
-                <div className="grid grid-cols-3 gap-4">
-                  {mockData.highlights.map((highlight) => (
-                    <div
-                      key={highlight.id}
-                      className="relative bg-gray-100 rounded-lg overflow-hidden shadow-md"
-                    >
-                      {/* Image with blur effect */}
-                      <img
-                        src={highlight.imageUrl}
-                        alt={highlight.title}
-                        className="w-full h-64 object-cover filter blur-sm"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-4 backdrop-blur-sm">
-                        <h3 className="text-lg font-bold text-white">
-                          {highlight.title}
-                        </h3>
-                        <p className="text-sm text-gray-300">
-                          {highlight.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <OrgHighlights
+                highlights={orgData.highlights}
+                onUpdateHighlights={handleUpdateHighlights}
+                isAdmin={true}
+              />
 
               {/* Upcoming Events */}
               <div className="w-full h-full bg-gray-200 rounded-lg p-3 overflow-y-auto">

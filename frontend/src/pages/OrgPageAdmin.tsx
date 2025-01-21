@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Navbar } from "@/components/commons/Navbar";
 import OrgBanner from "@/components/layouts/org_page/OrgBanner";
 import OrgHighlights from "@/components/layouts/org_page/OrgHighlights";
+import OrgDescription from "@/components/layouts/org_page/OrgDescription";
 
 const mockData = {
   name: "Sample Organization",
@@ -109,6 +110,13 @@ const OrgPageAdmin = () => {
     // Here you would typically make an API call to update the backend
     // Example:
     // await updateOrgHighlights(orgId, newHighlights);
+  };
+
+  const handleUpdateDescription = (newDescription: string) => {
+    setOrgData({
+      ...orgData,
+      orgdescription: newDescription,
+    });
   };
 
   return (
@@ -235,14 +243,11 @@ const OrgPageAdmin = () => {
             {/* Right Main Content */}
             <section className="w-2/5 space-y-6 pr-10 pt-6 flex flex-col">
               {/* Description */}
-              <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
-                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
-                  Description
-                </div>
-                <p className="mt-4 text-sm text-poppins text-justify">
-                  {orgData?.orgdescription}
-                </p>
-              </div>
+              <OrgDescription
+                description={orgData.orgdescription}
+                onUpdateDescription={handleUpdateDescription}
+                isAdmin={true}
+              />
 
               {/* Org Details */}
               <div className="w-full h-64 bg-gray-200 rounded-lg p-3">

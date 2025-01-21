@@ -30,9 +30,10 @@ const OrgHighlights = ({
         {isAdmin && (
           <button
             onClick={() => setIsModalOpen(true)}
-            className="px-4 py-2 bg-red-900 text-white rounded-lg hover:bg-red-700"
+            className="flex items-center space-x-1 text-gray-600 hover:text-gray-800"
           >
-            Edit Highlights
+            <span className="text-lg">✎</span>
+            <span>Edit Highlights</span>
           </button>
         )}
       </div>

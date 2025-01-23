@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import axios from "axios";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,7 +14,14 @@ export function RegisterView({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
-  const [password, setPassword] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [formData, setFormData] = React.useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        collegeId: 0, // Add this field if using SingleSelectInput for college
+        password: "",
+    });
 
   // Updated Password Validation
   const passwordCriteria = /^(?=.*[0-9])(?=.*[!@#$%^&*_\-])[A-Za-z0-9!@#$%^&*_\-]{8,}$/;
@@ -22,10 +30,45 @@ export function RegisterView({
     if (!password) return "Use 8 or more characters with a mix of letters, numbers & symbols";
     if (!passwordCriteria.test(password)) return "Password must be at least 8 characters long and can include letters, numbers, underscores, and dashes.";
     return "";
-  };
+    };
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target;
+        setFormData((prev) => ({ ...prev, [id]: value }));
+    };
+
+    // Handle form submission
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault(); // Prevent default form submission
+
+        const isValidEmail =
+            formData.email.endsWith("@iskolarngbayan.pup.edu.ph") ||
+            formData.email.endsWith("@pup.edu.ph");
+
+        if (!isValidEmail) {
+            alert("Please use a valid PUP email address");
+            return;
+        }
+
+        if (!passwordCriteria.test(formData.password)) {
+            alert("Password does not meet requirements");
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_BASE_URL}/api/Account/register`, formData); // Adjust URL to your API endpoint
+            console.log("Registration successful:", response.data);
+            alert("Registration successful!");
+        } catch (error) {
+            console.error("Error registering user:", error);
+            alert("Error registering user. Please try again.");
+        }
+    };
 
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+      <form className={cn("flex flex-col gap-6", className)}
+          {...props}
+          onSubmit={handleSubmit}>
       <div className="flex items-center justify-start gap-2">
         <img src={PaskilanCircle} alt="Paskilan Logo" className="w-[35px] h-[35px]" />
         <p className="text-lg text-pup-gold3">Sign up using your PUP Webmail</p>
@@ -40,6 +83,8 @@ export function RegisterView({
                 id="firstName"
                 type="text"
                 placeholder="Juan"
+                value={formData.firstName}
+                onChange={handleInputChange}
                 required
               />
             </div>
@@ -49,6 +94,8 @@ export function RegisterView({
                 id="lastName"
                 type="text"
                 placeholder="Dela Cruz"
+                value={formData.lastName}
+                onChange={handleInputChange}
                 required
               />
             </div>
@@ -61,11 +108,16 @@ export function RegisterView({
           id="email"
           type="email"
           placeholder="juandc@iskolarngbayan.pup.edu.ph"
+          value={formData.email}
+          onChange={handleInputChange}
           required
         />
 
         {/* College Dropdown */}
-        <SingleSelectInput />
+        <SingleSelectInput
+        onChange={(value: string) => setFormData((prev) => ({ ...prev, collegeId: parseInt(value, 10) }))}
+                  value={formData.collegeId.toString()}
+          />
 
         {/* Password */}
         <div className="grid gap-2">
@@ -74,8 +126,11 @@ export function RegisterView({
             id="password"
             type="password"
             placeholder="Enter your password"
-            value={password}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} // Explicitly typing `e`
+            value={formData.password}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setPassword(e.target.value); // Update password state for validation
+            handleInputChange(e); // Update formData
+            }}
             required
           />
           {getPasswordMessage() && (

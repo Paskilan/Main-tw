@@ -5,10 +5,12 @@ import FormInput from "@/components/commons/FormInput";
 import SingleSelectInput from "@/components/commons/SingleSelectInput";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import ProfileSettingsView from "./profile_settings_view";
 
 const passwordCriteria = /^(?=.*[0-9])(?=.*[!@#$%^&*_\-])[A-Za-z0-9!@#$%^&*_\-]{8,}$/;
 
 export default function ProfileSettingsUpdate() {
+    const [isEditing, setIsEditing] = useState(false);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
@@ -68,7 +70,30 @@ export default function ProfileSettingsUpdate() {
 
         // Proceed with form submission logic
         alert("Profile updated successfully!");
+        setIsEditing(false); // Switch back to view mode after successful update
     };
+
+    const handleCancel = () => {
+        setIsEditing(false);
+        // Reset form state
+        setPassword("");
+        setConfirmPassword("");
+        setPasswordError("");
+        setConfirmPasswordError("");
+        setAlertMessage("");
+    };
+
+    if (!isEditing) {
+        return (
+            <ProfileSettingsView
+                onEdit={() => setIsEditing(true)}
+                firstName={firstName}
+                lastName={lastName}
+                college={college}
+                profilePicture=""  // Add your profile picture URL here
+            />
+        );
+    }
 
     return (
         <form className="grid gap-6" onSubmit={handleSubmit}>
@@ -130,9 +155,23 @@ export default function ProfileSettingsUpdate() {
                     onChange={(value) => setCollege(value)} // Ensure the component passes the correct value
                 />
 
-                <Button className="w-1/4 h-12 bg-pup-maroon2 font-semibold text-base hover:bg-pup-maroon1">
-                    Save
-                </Button>
+                <div className="flex gap-4 justify-end">
+                    <Button 
+                        type="button"
+                        variant="outline"
+                        className="w-1/4 h-12 font-semibold text-base"
+                        onClick={handleCancel}
+                    >
+                        Cancel
+                    </Button>
+                    <Button 
+                        type="submit"
+                        className="w-1/4 h-12 bg-pup-maroon2 font-semibold text-base hover:bg-pup-maroon1"
+                    >
+                        Save
+                    </Button>
+                </div>
+
             </div>
 
             {/* Floating Alert */}

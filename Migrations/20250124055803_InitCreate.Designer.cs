@@ -12,7 +12,7 @@ using appdev.Models;
 namespace appdev.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250124032106_InitCreate")]
+    [Migration("20250124055803_InitCreate")]
     partial class InitCreate
     {
         /// <inheritdoc />

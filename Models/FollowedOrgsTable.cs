@@ -11,8 +11,6 @@ public partial class FollowedOrgsTable
 
     public string OrgName { get; set; } = null!;
 
-    public string StudentName { get; set; } = null!;
-
     public virtual OrgTable Org { get; set; } = null!;
 
     public virtual StudentTable Student { get; set; } = null!;

@@ -38,9 +38,7 @@ namespace appdev.Models
                 entity.Property(e => e.AdminId)
                     .ValueGeneratedNever()
                     .HasColumnName("AdminID");
-                entity.Property(e => e.AdminName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                
                 entity.Property(e => e.OrgId).HasColumnName("OrgID");
                 entity.Property(e => e.OrgOwner)
                     .HasMaxLength(10)
@@ -71,9 +69,45 @@ namespace appdev.Models
                     .ValueGeneratedNever()
                     .HasColumnName("CollegeID");
                 entity.Property(e => e.CollegeName)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
             });
+
+            modelBuilder.Entity<CollegeTable>().HasData(
+            new CollegeTable { CollegeId = 1, CollegeName = "College of Accountancy and Finance" }
+ ,
+            new CollegeTable { CollegeId = 2, CollegeName = "College of Architecture, Design and the Built Environment" }
+            ,
+            new CollegeTable { CollegeId = 3, CollegeName = "College of Business Administration" }
+            ,
+            new CollegeTable { CollegeId = 4, CollegeName = "College of Computer and Information Sciences" }
+            ,
+            new CollegeTable { CollegeId = 5, CollegeName = "College of Engineering" }
+            ,
+            new CollegeTable { CollegeId = 6, CollegeName = "College of Human Kinetics" }
+            ,
+            new CollegeTable { CollegeId = 7, CollegeName = "ollege of Law" }
+            ,
+            new CollegeTable { CollegeId = 8, CollegeName = "College of Communication" }
+            ,
+            new CollegeTable { CollegeId = 9, CollegeName = "College of Education" }
+            ,
+            new CollegeTable { CollegeId = 10, CollegeName = "College of Political Science and Public Administration" }
+            ,
+            new CollegeTable { CollegeId = 11, CollegeName = "College of Science" }
+            ,
+            new CollegeTable { CollegeId = 12, CollegeName = "College of Tourism, Hospitality and Transportation Management" }
+            ,
+            new CollegeTable { CollegeId = 13, CollegeName = "Graduate School" }
+            ,
+            new CollegeTable { CollegeId = 14, CollegeName = "Institute of Technology" }
+            ,
+            new CollegeTable { CollegeId = 15, CollegeName = "PUP Laboratory Highschool" }
+            ,
+            new CollegeTable { CollegeId = 16, CollegeName = "PUP Senior Highschool" }
+            ,
+            new CollegeTable { CollegeId = 17, CollegeName = "College of Social Sciences and Development" }
+    );
 
             modelBuilder.Entity<EventTable>(entity =>
             {
@@ -82,25 +116,25 @@ namespace appdev.Models
                 entity.ToTable("EventTable");
 
                 entity.Property(e => e.EventId)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("EventID");
                 entity.Property(e => e.CollegeId).HasColumnName("CollegeID");
                 entity.Property(e => e.EventDescription).IsUnicode(false);
                 entity.Property(e => e.EventHeader).HasColumnType("image");
                 entity.Property(e => e.EventHost)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.EventLocation)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.EventMode)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.EventName)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.EventRegistration)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.EventState)
                     .HasMaxLength(1)
@@ -108,7 +142,7 @@ namespace appdev.Models
                     .IsFixedLength();
                 entity.Property(e => e.OrgId).HasColumnName("OrgID");
                 entity.Property(e => e.OrgName)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.Rsvpcount).HasColumnName("RSVPCount");
 
@@ -136,9 +170,6 @@ namespace appdev.Models
                 entity.Property(e => e.OrgName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-                entity.Property(e => e.StudentName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
 
                 entity.HasOne(d => d.Org)
                     .WithMany(p => p.FollowedOrgsTables)
@@ -160,13 +191,12 @@ namespace appdev.Models
                 entity.ToTable("OrgHighlightsTable");
 
                 entity.Property(e => e.OrgHighlightsId)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("OrgHighlightsID");
                 entity.Property(e => e.OrgHighlightsDescription)
-                    .HasMaxLength(50)
                     .IsUnicode(false);
                 entity.Property(e => e.OrgHighlightsTitle)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.OrgId).HasColumnName("OrgID");
 
@@ -184,28 +214,28 @@ namespace appdev.Models
                 entity.ToTable("OrgTable");
 
                 entity.Property(e => e.OrgId)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("OrgID");
                 entity.Property(e => e.OrgDescription).IsUnicode(false);
                 entity.Property(e => e.OrgEmail)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.OrgFacebook)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.OrgHeader).HasColumnType("image");
                 entity.Property(e => e.OrgInstagram)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.OrgLinkedIn)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.OrgLogo).HasColumnType("image");
                 entity.Property(e => e.OrgName)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.OrgType)
-                    .HasMaxLength(50)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
                 entity.Property(e => e.Verified)
                     .HasMaxLength(10)
@@ -227,7 +257,7 @@ namespace appdev.Models
                 entity.ToTable("ReportTable");
 
                 entity.Property(e => e.ReportId)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("ReportID");
                 entity.Property(e => e.EventId).HasColumnName("EventID");
                 entity.Property(e => e.OrgId).HasColumnName("OrgID");
@@ -253,7 +283,7 @@ namespace appdev.Models
                 entity.ToTable("StudentTable");
 
                 entity.Property(e => e.StudentId)
-                    .ValueGeneratedNever()
+                    .ValueGeneratedOnAdd()
                     .HasColumnName("StudentID");
                 entity.Property(e => e.CollegeId).HasColumnName("CollegeID");
                 entity.Property(e => e.OrgAdmin)
@@ -261,7 +291,7 @@ namespace appdev.Models
                     .IsUnicode(false)
                     .IsFixedLength();
                 entity.Property(e => e.StudentEmail)
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
                 entity.Property(e => e.StudentFirstName)
                     .HasMaxLength(50)
@@ -270,7 +300,7 @@ namespace appdev.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
                 entity.Property(e => e.StudentPassword)
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.CollegeName)

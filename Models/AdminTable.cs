@@ -11,8 +11,6 @@ public partial class AdminTable
 
     public int StudentId { get; set; }
 
-    public string AdminName { get; set; } = null!;
-
     public string OrgOwner { get; set; } = null!;
 
     public virtual OrgTable Org { get; set; } = null!;

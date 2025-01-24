@@ -215,7 +215,7 @@ namespace appdev.Migrations
                     { 4, "College of Computer and Information Sciences" },
                     { 5, "College of Engineering" },
                     { 6, "College of Human Kinetics" },
-                    { 7, "ollege of Law" },
+                    { 7, "College of Law" },
                     { 8, "College of Communication" },
                     { 9, "College of Education" },
                     { 10, "College of Political Science and Public Administration" },

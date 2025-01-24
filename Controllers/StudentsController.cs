@@ -39,8 +39,6 @@ public class StudentsController : ControllerBase
             })
         .FirstOrDefaultAsync(s => s.StudentId == id);
 
-            .FirstOrDefaultAsync(s => s.StudentId == id);
-
         if (student == null)
         {
             return NotFound();

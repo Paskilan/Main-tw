@@ -19,12 +19,12 @@ export function RegisterView({
         firstName: "",
         lastName: "",
         email: "",
-        collegeId: 0, // Add this field if using SingleSelectInput for college
+        collegeId: 0,
         password: "",
     });
 
   // Updated Password Validation
-  const passwordCriteria = /^(?=.*[0-9])(?=.*[!@#$%^&*_\-])[A-Za-z0-9!@#$%^&*_\-]{8,}$/;
+  const passwordCriteria = /^(?=.*[0-9])(?=.*[!@#$%^&*_-])[A-Za-z0-9!@#$%^&*_-]{8,}$/;
 
   const getPasswordMessage = () => {
     if (!password) return "Use 8 or more characters with a mix of letters, numbers & symbols";
@@ -38,7 +38,7 @@ export function RegisterView({
 
     // Handle form submission
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
 
         const isValidEmail =
             formData.email.endsWith("@iskolarngbayan.pup.edu.ph") ||
@@ -56,7 +56,8 @@ export function RegisterView({
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_API_BASE_URL}/api/Account/register`, formData); // Adjust URL to your API endpoint
+                `${import.meta.env.VITE_API_BASE_URL}/api/Account/register`, formData); 
+            localStorage.setItem("authToken", response.data.token);
             console.log("Registration successful:", response.data);
             alert("Registration successful!");
         } catch (error) {
@@ -128,8 +129,8 @@ export function RegisterView({
             placeholder="Enter your password"
             value={formData.password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setPassword(e.target.value); // Update password state for validation
-            handleInputChange(e); // Update formData
+            setPassword(e.target.value); 
+            handleInputChange(e); 
             }}
             required
           />

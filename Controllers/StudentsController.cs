@@ -1,4 +1,4 @@
-﻿using appdev.Models;
+using appdev.Models;
 using appdev;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +27,17 @@ public class StudentsController : ControllerBase
     public async Task<ActionResult<StudentTable>> GetStudent(int id)
     {
         var student = await _context.Students
-            .FirstOrDefaultAsync(s => s.StudentId == id);
+
+            .Select(s => new StudentTable
+            {
+                StudentId = s.StudentId,
+                StudentFirstName = s.StudentFirstName,
+                StudentLastName = s.StudentLastName,
+                StudentEmail = s.StudentEmail,
+                CollegeId = s.CollegeId,
+                OrgAdmin = s.OrgAdmin
+            })
+        .FirstOrDefaultAsync(s => s.StudentId == id);
 
         if (student == null)
         {

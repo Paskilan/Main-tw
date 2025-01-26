@@ -1,4 +1,4 @@
-﻿using appdev.Models;
+using appdev.Models;
 using appdev;
 using Microsoft.EntityFrameworkCore;
 
@@ -72,5 +72,20 @@ public class StudentService
         _context.Students.Remove(student);
         await _context.SaveChangesAsync();
         return true;
+      
+    }
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend", builder =>
+            {
+                builder.WithOrigins("http://localhost:5173") // Replace with your frontend URL
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
+            });
+        });
+
+        services.AddControllers();
     }
 }

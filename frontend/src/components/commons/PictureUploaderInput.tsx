@@ -17,6 +17,7 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0];

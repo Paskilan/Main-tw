@@ -101,7 +101,7 @@ const mockData = {
 const OrgPageAdmin = () => {
   const [orgData, setOrgData] = useState(mockData);
 
-  const handleUpdateHighlights = (newHighlights) => {
+  const handleUpdateHighlights = (newHighlights: any) => {
     setOrgData({
       ...orgData,
       highlights: newHighlights,

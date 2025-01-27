@@ -9,9 +9,18 @@ import { Label } from "@/components/ui/label";
 
 interface GroupDetailsFormProps {
     onBack: () => void;
+    onSubmit: (formData: {
+        orgName: string;
+        isValidated: "validated" | "new";
+        controlNumber: string;
+        email: string;
+        description: string;
+        classification: "uniwide" | "college";
+        college: string;
+    }) => void;
 }
 
-export function GroupDetailsForm({ onBack }: GroupDetailsFormProps) {
+export function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormProps) {
     const [orgName, setOrgName] = useState("");
     const [isValidated, setIsValidated] = useState<"validated" | "new">("new");
     const [controlNumber, setControlNumber] = useState("");
@@ -42,8 +51,7 @@ export function GroupDetailsForm({ onBack }: GroupDetailsFormProps) {
             return;
         }
 
-        // Proceed with form submission logic
-        console.log({
+        onSubmit({
             orgName,
             isValidated,
             controlNumber,
@@ -52,7 +60,6 @@ export function GroupDetailsForm({ onBack }: GroupDetailsFormProps) {
             classification,
             college
         });
-        alert("Group created successfully!");
     };
 
     return (

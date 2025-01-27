@@ -4,7 +4,11 @@ import { ImagePlus, X, ZoomIn, ZoomOut } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-export const PictureUploaderInput = ({ onChange }: { onChange?: () => void }) => {
+interface PictureUploaderInputProps {
+  onChange: (url: string) => void;
+}
+
+export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isCropModalOpen, setCropModalOpen] = useState(false);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
@@ -20,7 +24,7 @@ export const PictureUploaderInput = ({ onChange }: { onChange?: () => void }) =>
       setCropModalOpen(true);
 
       if (onChange) {
-        onChange(); // Notify parent about the image upload
+        onChange(URL.createObjectURL(file)); // Notify parent about the image upload
       }
 
       if (fileInputRef.current) {

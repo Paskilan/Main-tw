@@ -1,9 +1,14 @@
 ﻿using appdev.Models;
 using appdev.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using static appdev.Services.AccountService;
+using appdev.DTOs;
+using static AppDev.Controllers.AccountController.RegisterRequest;
 
 namespace AppDev.Controllers
 {
@@ -12,9 +17,11 @@ namespace AppDev.Controllers
     public class AccountController : ControllerBase
     {
         private readonly AccountService _accountService;
-        public AccountController(AccountService AccountService)
+        private readonly ApplicationDbContext _context;
+        public AccountController(AccountService AccountService, ApplicationDbContext context)
         {
             _accountService = AccountService;
+            _context = context;
 
         }
 
@@ -28,13 +35,13 @@ namespace AppDev.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request)
+        public async Task<ActionResult<AuthResponse<UserDto>>> Login([FromBody] LoginRequest request)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(new ApiResponse
+                    return BadRequest(new AuthResponse<UserDto>
                     {
                         Success = false,
                         Message = "Invalid input data"
@@ -48,7 +55,7 @@ namespace AppDev.Controllers
                     return Ok(result);
                 }
 
-                return Unauthorized(new ApiResponse
+                return Unauthorized(new AuthResponse<UserDto>
                 {
                     Success = false,
                     Message = "Invalid credentials"
@@ -56,7 +63,7 @@ namespace AppDev.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ApiResponse
+                return StatusCode(500, new AuthResponse<UserDto>
                 {
                     Success = false,
                     Message = "An error occurred while processing your request"
@@ -65,13 +72,13 @@ namespace AppDev.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request)
+        public async Task<ActionResult<AuthResponse<UserDto>>> Register([FromBody] RegisterRequest request)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(new ApiResponse
+                    return BadRequest(new AuthResponse<UserDto>
                     {
                         Success = false,
                         Message = "Invalid input data"
@@ -85,7 +92,7 @@ namespace AppDev.Controllers
                     return Ok(result);
                 }
 
-                return BadRequest(new ApiResponse
+                return BadRequest(new AuthResponse<UserDto>
                 {
                     Success = false,
                     Message = result.Message
@@ -93,76 +100,125 @@ namespace AppDev.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new ApiResponse
+                return StatusCode(500, new AuthResponse<UserDto>
                 {
                     Success = false,
                     Message = "An error occurred while processing your request"
                 });
             }
         }
+
+        [HttpGet("profile")]
+        [Authorize]
+        public async Task<ActionResult<ActionResult<StudentProfileDto>>> GetStudentProfile()
+        {
+            try
+            {
+                var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    return Unauthorized(new AuthResponse<UserDto>
+                    {
+                        Success = false,
+                        Message = "User not authenticated"
+                    });
+                }
+
+                var result = await _accountService.GetStudentProfileAsync(userEmail);
+
+                if (!result.Success)
+                {
+                    return NotFound(result);
+                }
+
+                return Ok(result);
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, new AuthResponse<UserDto>
+                {
+                    Success = false,
+                    Message = "An error occurred while fetching the profile"
+                });
+            }
+        }
+
+        [HttpPost("update-profile")]
+        [Authorize]
+        public async Task<ActionResult<AuthResponse<UserDto>>> UpdateProfile([FromForm] UpdateProfileRequest request)
+        {
+            try
+            {
+                var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    return Unauthorized(new AuthResponse<UserDto>
+                    {
+                        Success = false,
+                        Message = "User not authenticated"
+                    });
+                }
+
+                var result = await _accountService.UpdateProfileAsync(userEmail, request);
+
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+
+                return BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new AuthResponse<UserDto>
+                {
+                    Success = false,
+                    Message = "An error occurred while updating profile"
+                });
+            }
+        }
+
+        public class LoginRequest
+        {
+            [Required]
+            [EmailAddress]
+            public string Email { get; set; }
+
+            [Required]
+            [MinLength(6)]
+            public string Password { get; set; }
+        }
+
+        public class RegisterRequest
+        {
+            [Required]
+            [StringLength(50)]
+            public string FirstName { get; set; }
+
+            [Required]
+            [StringLength(50)]
+            public string LastName { get; set; }
+
+            [Required]
+            [EmailAddress]
+            public string Email { get; set; }
+
+            [Required]
+            public int CollegeId { get; set; }
+
+            [Required]
+            [MinLength(6)]
+            public string Password { get; set; }
+
+            public class UpdateProfileRequest
+            {
+                public string FirstName { get; set; }
+                public string LastName { get; set; }
+                public string Password { get; set; }
+                public IFormFile ProfilePicture { get; set; }
+            }
+        }
     }
-
-
-    public class LoginRequest
-    {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Required]
-        [MinLength(6)]
-        public string Password { get; set; }
-    }
-
-    public class RegisterRequest
-    {
-        [Required]
-        [StringLength(50)]
-        public string FirstName { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string LastName { get; set; }
-
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Required]
-        public int CollegeId { get; set; }
-
-        [Required]
-        [MinLength(6)]
-        public string Password { get; set; }
-    }
-
-    public class AuthResponse
-    {
-        public bool Success { get; set; }
-        public string Message { get; set; }
-        public string Token { get; set; }
-        public UserDto User { get; set; }
-    }
-
-    public class ApiResponse
-    {
-        public bool Success { get; set; }
-        public string Message { get; set; }
-    }
-
-    public class UserDto
-    {
-        public string Email { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public int CollegeId { get; set; }
-    }
-
-    public interface IAuthService
-    {
-        Task<AuthResponse> AuthenticateAsync(LoginRequest request);
-        Task<AuthResponse> RegisterAsync(RegisterRequest request);
-    }
-
 }
-

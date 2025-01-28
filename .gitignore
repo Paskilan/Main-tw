@@ -3,8 +3,6 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
-# dotenv files
-.env
 
 # User-specific files
 *.rsuser
@@ -509,10 +507,7 @@ bun.lockb
 deno.lock
 deno.json
 deno.jsonc
-
-# Environment files
-.env
-.env.*  
+ 
 
 # Editor directories and files
 .vscode/*
@@ -523,3 +518,6 @@ deno.jsonc
 *.ntvs*
 *.njsproj
 *.sln
+
+# Migration files
+/Migrations/*

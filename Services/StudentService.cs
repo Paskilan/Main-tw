@@ -1,4 +1,4 @@
-﻿using appdev.Models;
+using appdev.Models;
 using appdev;
 using Microsoft.EntityFrameworkCore;
 
@@ -72,6 +72,7 @@ public class StudentService
         _context.Students.Remove(student);
         await _context.SaveChangesAsync();
         return true;
+      
     }
     public void ConfigureServices(IServiceCollection services)
     {

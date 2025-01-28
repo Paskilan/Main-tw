@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import {
     DialogContent,
     DialogHeader,
@@ -10,12 +10,15 @@ import { AlertCircle } from "lucide-react";
 import { PictureUploaderInput } from "@/components/commons/PictureUploaderInput";
 import { GroupDetailsForm } from "./GroupDetailsForm";
 
-export default function CreateGroupModal() {
+interface CreateGroupModalProps {
+    onNewGroup: (newGroup: { id: number, name: string, description: string, imageUrl: string }) => void;
+}
+
+export default function CreateGroupModal({ onNewGroup }: CreateGroupModalProps) {
     const [step, setStep] = useState(1);
-   
     const [alertMessage, setAlertMessage] = useState("");
     const [pictureUploaded, setPictureUploaded] = useState(false);
-   
+    const [imageUrl, setImageUrl] = useState("");
 
     const handleNext = () => {
         if (!pictureUploaded) {
@@ -30,8 +33,19 @@ export default function CreateGroupModal() {
         setStep(1);
     };
 
+    const handleFormSubmit = (formData: { orgName: any; description: any; }) => {
+        const newGroup = {
+            id: Date.now(),
+            name: formData.orgName,
+            description: formData.description,
+            imageUrl
+        };
+        onNewGroup(newGroup);
+        setStep(1); // Close the form after successfully creating a group
+    };
+
     return (
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] bg-white">
             <DialogHeader>
                 <DialogTitle>
                     {step === 1 ? "Upload Group Photo" : "Group Details"}
@@ -41,7 +55,10 @@ export default function CreateGroupModal() {
             {step === 1 ? (
                 <div className="grid gap-4">
                     <PictureUploaderInput
-                        onChange={() => setPictureUploaded(true)} 
+                        onChange={(url) => {
+                            setPictureUploaded(true);
+                            setImageUrl(url);
+                        }} 
                     />
                     <Button 
                         onClick={handleNext}
@@ -51,7 +68,7 @@ export default function CreateGroupModal() {
                     </Button>
                 </div>
             ) : (
-                <GroupDetailsForm onBack={handleBack} />
+                <GroupDetailsForm onBack={handleBack} onSubmit={handleFormSubmit} />
             )}
 
             {alertMessage && (

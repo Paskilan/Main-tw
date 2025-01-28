@@ -1,4 +1,4 @@
-﻿using appdev.Models;
+using appdev.Models;
 using appdev;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +27,7 @@ public class StudentsController : ControllerBase
     public async Task<ActionResult<StudentTable>> GetStudent(int id)
     {
         var student = await _context.Students
+
             .Select(s => new StudentTable
             {
                 StudentId = s.StudentId,

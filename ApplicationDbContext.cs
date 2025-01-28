@@ -38,7 +38,7 @@ namespace appdev.Models
                 entity.Property(e => e.AdminId)
                     .ValueGeneratedNever()
                     .HasColumnName("AdminID");
-                
+
                 entity.Property(e => e.OrgId).HasColumnName("OrgID");
                 entity.Property(e => e.OrgOwner)
                     .HasMaxLength(10)

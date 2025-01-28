@@ -268,13 +268,6 @@ export function EventDetailsForm({ onBack, onSubmit }: EventDetailsFormProps) {
 
             <div className="flex gap-2 justify-end mt-4">
                 <Button
-                    type="button"
-                    variant="outline"
-                    onClick={onBack}
-                >
-                    Back
-                </Button>
-                <Button
                     type="submit"
                     className="bg-pup-maroon2 hover:bg-pup-maroon1"
                 >

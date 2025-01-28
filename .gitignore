@@ -518,3 +518,6 @@ deno.jsonc
 *.ntvs*
 *.njsproj
 *.sln
+
+# Migration files
+/Migrations/*

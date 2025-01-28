@@ -5,6 +5,7 @@ import OrgBanner from "@/components/layouts/org_page/OrgBanner";
 import OrgHighlights from "@/components/layouts/org_page/OrgHighlights";
 import OrgDescription from "@/components/layouts/org_page/OrgDescription";
 import OrgDetails from "@/components/layouts/org_page/OrgDetails";
+import { ProfilePictureButton } from "@/components/layouts/org_page/ProfilePictureButton";
 import { EventModal } from "@/components/layouts/settings/EventModal";
 
 const mockData = {
@@ -102,6 +103,7 @@ const mockData = {
 
 const OrgPageAdmin = () => {
   const [orgData, setOrgData] = useState(mockData);
+
   // Export this to a component
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -197,6 +199,14 @@ const OrgPageAdmin = () => {
     });
   };
 
+  const handleSavePictures = (profilePic: string, headerPic: string) => {
+    setOrgData((prevData) => ({
+      ...prevData,
+      imageUrl: profilePic,
+      bannerImageUrl: headerPic,
+    }));
+  };
+
   return (
     <>
       <div className="flex flex-col h-screen">
@@ -215,15 +225,12 @@ const OrgPageAdmin = () => {
               <div className="flex items-center justify-between w-full">
                 {/* Icons and Name */}
                 <div className="flex items-center justify-start space-x-6">
-                  {/* Icon */}
-                  <div className="flex items-center justify-center relative">
-                    <img
-                      src={orgData?.imageUrl} // Use dynamic or fallback image
-                      alt="Org Icon"
-                      className="w-40 h-40 rounded-full object-cover z-10 shadow-xl"
-                      draggable="false"
-                    />
-                  </div>
+                  {/* Profile Picture Button Component */}
+                  <ProfilePictureButton
+                    imageUrl={orgData.imageUrl}
+                    bannerImageUrl={orgData.bannerImageUrl}
+                    onSavePictures={handleSavePictures}
+                  />
 
                   {/* Name and Followers Status */}
                   <div className="flex flex-col justify-center">
@@ -266,7 +273,7 @@ const OrgPageAdmin = () => {
               />
 
               {/* Upcoming Events */}
-              <div className="w-full h-full bg-gray-200 rounded-lg p-3 overflow-y-auto">
+              <div className="w-full h-full bg-white shadow-xl rounded-lg p-3 overflow-y-auto">
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md mb-4">
                   Upcoming Events
                 </div>
@@ -343,7 +350,7 @@ const OrgPageAdmin = () => {
               />
 
               {/* Org Heads */}
-              <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
+              <div className="w-full h-64 bg-white shadow-xl rounded-lg p-3">
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
                   Org Heads
                 </div>
@@ -380,7 +387,7 @@ const OrgPageAdmin = () => {
               </div>
 
               {/* Past Events */}
-              <div className="w-full h-full bg-gray-200 rounded-lg p-3 overflow-y-auto">
+              <div className="w-full h-full bg-white shadow-xl rounded-lg p-3 overflow-y-auto">
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md mb-4">
                   Past Events
                 </div>

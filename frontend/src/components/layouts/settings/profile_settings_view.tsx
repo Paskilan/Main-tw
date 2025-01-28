@@ -45,7 +45,7 @@ export default function ProfileSettingsView({ onEdit }: { onEdit: () => void }) 
             }
         }; fetchProfileData();
     }, []);
-                
+
 
     if (isLoading) {
         return <div>Loading...</div>;

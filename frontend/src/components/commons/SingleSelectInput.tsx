@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandList, CommandGroup, CommandItem, CommandEmpty } from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { cn } from "@/lib/utils";
 
 interface College {
@@ -16,21 +16,21 @@ interface College {
 }
 
 interface SingleSelectInputProps {
-  label?: string;
-  divClassName?: string;
-  ButtonClassName?: string;
-  labelClassName?: string;
-  inputClassName?: string;
-  placeholder?: string;
-  noOptionsMessage?: string;
-  Data?: { value: string; label: string }[];
-  value?: string;
-  onChange?: (value: string) => void;
+    label?: string;
+    divClassName?: string;
+    ButtonClassName?: string;
+    labelClassName?: string;
+    inputClassName?: string;
+    placeholder?: string;
+    noOptionsMessage?: string;
+    Data?: { value: string; label: string }[];
+    value?: string;
+    onChange?: (value: string) => void;
 }
 
 export default function SingleSelectInput({
-  label = "Select your College",
-  onChange,
+    label = "Select your College",
+    onChange,
 }: SingleSelectInputProps) {
     const [colleges, setColleges] = useState<{ value: string; label: string }[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -58,12 +58,12 @@ export default function SingleSelectInput({
         fetchColleges();
     }, []);
 
-  const handleSelect = (currentValue: string) => {
-    const newValue = currentValue === selectedValue ? "" : currentValue;
-    setSelectedValue(newValue);
-    setOpen(false);
-    onChange?.(newValue);
-  };
+    const handleSelect = (currentValue: string) => {
+        const newValue = currentValue === selectedValue ? "" : currentValue;
+        setSelectedValue(newValue);
+        setOpen(false);
+        onChange?.(newValue);
+    };
 
     return (
         <div className="grid gap-2">

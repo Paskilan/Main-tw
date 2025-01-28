@@ -1,4 +1,4 @@
-import { useState } from "react"; 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import axios from "axios";
@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import PaskilanCircle from "@/assets/paskilan_circle.png";
 import FormInput from "@/components/commons/FormInput";
 
-export function LoginView() { 
+export function LoginView() {
     const navigate = useNavigate();
     const [error, setError] = useState<string | null>(null);
 
@@ -18,7 +18,7 @@ export function LoginView() {
 
         try {
             const response = await axios.post(
-                `${import.meta.env.VITE_API_BASE_URL}/api/account/login`, 
+                `${import.meta.env.VITE_API_BASE_URL}/api/account/login`,
                 { email, password }
             );
 

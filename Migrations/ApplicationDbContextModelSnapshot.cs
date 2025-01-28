@@ -466,6 +466,10 @@ namespace appdev.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<byte[]>("StudentProfilePicture")
+                        .IsRequired()
+                        .HasColumnType("image");
+
                     b.HasKey("StudentId");
 
                     b.HasIndex("CollegeId");
@@ -575,21 +579,13 @@ namespace appdev.Migrations
 
             modelBuilder.Entity("appdev.Models.StudentTable", b =>
                 {
-                    b.HasOne("appdev.Models.CollegeTable", "CollegeName")
+                    b.HasOne("CollegeTable", "College")
                         .WithMany("StudentTables")
                         .HasForeignKey("CollegeId")
                         .IsRequired()
                         .HasConstraintName("FK_StudentTable_CollegeTable");
 
-                    b.HasOne("appdev.Models.CollegeTable", "College")
-                        .WithMany()
-                        .HasForeignKey("CollegeId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("College");
-
-                    b.Navigation("CollegeName");
                 });
 
             modelBuilder.Entity("appdev.Models.CollegeTable", b =>

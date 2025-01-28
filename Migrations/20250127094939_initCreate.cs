@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace appdev.Migrations
 {
     /// <inheritdoc />
-    public partial class InitCreate : Migration
+    public partial class initCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,6 +64,7 @@ namespace appdev.Migrations
                     StudentEmail = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
                     StudentPassword = table.Column<string>(type: "varchar(100)", unicode: false, maxLength: 100, nullable: false),
                     CollegeID = table.Column<int>(type: "int", nullable: false),
+                    StudentProfilePicture = table.Column<byte[]>(type: "image", nullable: false),
                     OrgCount = table.Column<int>(type: "int", nullable: false),
                     OrgAdmin = table.Column<string>(type: "char(10)", unicode: false, fixedLength: true, maxLength: 10, nullable: false)
                 },

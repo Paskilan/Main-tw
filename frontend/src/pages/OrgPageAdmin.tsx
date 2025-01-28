@@ -103,33 +103,45 @@ const OrgPageAdmin = () => {
   const [orgData, setOrgData] = useState(mockData);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleOpenModal = () => {
-        setIsModalOpen(true);
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSubmit = (formData: {
+    eventName: string;
+    when: string;
+    where: "online" | "onsite";
+    platform?: string;
+    location?: string;
+    participantsCount: "limited" | "free";
+    eventDetails: string;
+    topic: string;
+    exclusivity: "uniwide" | "college";
+    picture: File | null;
+    organizer: string;
+    host: string;
+    freeOrPaid: "free" | "paid";
+    cost?: string;
+  }) => {
+    const newEvent = {
+      title: formData.eventName,
+      date: formData.when,
+      description: formData.eventDetails,
+      image: formData.picture ? URL.createObjectURL(formData.picture) : "https://via.placeholder.com/100",
     };
 
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
+    setOrgData((prevData) => ({
+      ...prevData,
+      upcomingEvents: [newEvent, ...prevData.upcomingEvents],
+    }));
 
-    const handleSubmit = (formData: {
-        eventName: string;
-        when: string;
-        where: "online" | "onsite";
-        platform?: string;
-        location?: string;
-        participantsCount: "limited" | "free";
-        eventDetails: string;
-        topic: string;
-        exclusivity: "uniwide" | "college";
-        picture: File | null;
-        organizer: string;
-        host: string;
-        freeOrPaid: "free" | "paid";
-        cost?: string;
-    }) => {
-        console.log("Event Data Submitted:", formData);
-        handleCloseModal();
-    };
+    handleCloseModal();
+  };
+
   const handleUpdateHighlights = (newHighlights: any) => {
     setOrgData({
       ...orgData,
@@ -195,16 +207,16 @@ const OrgPageAdmin = () => {
                 </div>
 
                 <div className="flex items-center justify-start space-x-4">
-            <button onClick={handleOpenModal} className="bpx-6 py-2 bg-amber-600 text-white text-l font-museo rounded-lg shadow-md hover:bg-amber-800">
-                Create Event
-            </button>
-            <EventModal
-                isOpen={isModalOpen}
-                onClose={handleCloseModal}
-                onSubmit={handleSubmit}
-            />
-            </div>
-          </div>
+                  <button onClick={handleOpenModal} className="px-6 py-2 bg-amber-600 text-white text-l font-museo rounded-lg shadow-md hover:bg-amber-800">
+                    Create Event
+                  </button>
+                  <EventModal
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal}
+                    onSubmit={handleSubmit}
+                  />
+                </div>
+              </div>
 
               {/* Highlights */}
               <OrgHighlights

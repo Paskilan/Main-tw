@@ -4,6 +4,7 @@ import { Navbar } from "@/components/commons/Navbar";
 import OrgBanner from "@/components/layouts/org_page/OrgBanner";
 import OrgHighlights from "@/components/layouts/org_page/OrgHighlights";
 import OrgDescription from "@/components/layouts/org_page/OrgDescription";
+import OrgDetails from "@/components/layouts/org_page/OrgDetails";
 import { EventModal } from "@/components/layouts/settings/EventModal";
 
 const mockData = {
@@ -101,6 +102,7 @@ const mockData = {
 
 const OrgPageAdmin = () => {
   const [orgData, setOrgData] = useState(mockData);
+  // Export this to a component
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -131,7 +133,9 @@ const OrgPageAdmin = () => {
       title: formData.eventName,
       date: formData.when,
       description: formData.eventDetails,
-      image: formData.picture ? URL.createObjectURL(formData.picture) : "https://via.placeholder.com/100",
+      image: formData.picture
+        ? URL.createObjectURL(formData.picture)
+        : "https://via.placeholder.com/100",
     };
 
     setOrgData((prevData) => ({
@@ -141,7 +145,9 @@ const OrgPageAdmin = () => {
 
     handleCloseModal();
   };
+  // Until this part
 
+  // For Updating Highlights
   const handleUpdateHighlights = (newHighlights: any) => {
     setOrgData({
       ...orgData,
@@ -153,10 +159,41 @@ const OrgPageAdmin = () => {
     // await updateOrgHighlights(orgId, newHighlights);
   };
 
+  // For Updating Description
   const handleUpdateDescription = (newDescription: string) => {
     setOrgData({
       ...orgData,
       orgdescription: newDescription,
+    });
+  };
+
+  // For Updating Org Details Part 1
+  const handleUpdateOrgDetails = (details: {
+    organization: string;
+    college: string;
+    email: string;
+  }) => {
+    setOrgData({
+      ...orgData,
+      orgDetails: {
+        ...orgData.orgDetails,
+        ...details,
+      },
+    });
+  };
+
+  // For Updating Org Details Part 2
+  const handleUpdateSocials = (socials: {
+    facebook?: string;
+    instagram?: string;
+    linkedin?: string;
+  }) => {
+    setOrgData({
+      ...orgData,
+      orgDetails: {
+        ...orgData.orgDetails,
+        ...socials,
+      },
     });
   };
 
@@ -207,7 +244,10 @@ const OrgPageAdmin = () => {
                 </div>
 
                 <div className="flex items-center justify-start space-x-4">
-                  <button onClick={handleOpenModal} className="px-6 py-2 bg-amber-600 text-white text-l font-museo rounded-lg shadow-md hover:bg-amber-800">
+                  <button
+                    onClick={handleOpenModal}
+                    className="px-6 py-2 bg-amber-600 text-white text-l font-museo rounded-lg shadow-md hover:bg-amber-800"
+                  >
                     Create Event
                   </button>
                   <EventModal
@@ -295,72 +335,12 @@ const OrgPageAdmin = () => {
               />
 
               {/* Org Details */}
-              <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
-                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
-                  Org Details
-                </div>
-
-                {/* Organization Info */}
-                <div className="mt-4">
-                  <div className="flex justify-start space-x-4">
-                    <span className="font-museo text-red-800 font-bold text-base">
-                      Organization:
-                    </span>
-                    <span className="font-poppins text-base">
-                      {orgData?.orgDetails?.organization || "Not specified"}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-start space-x-4 mt-2">
-                    <span className="font-museo text-red-800 font-bold text-base">
-                      College:
-                    </span>
-                    <span className="font-poppins text-base">
-                      {orgData?.orgDetails?.college || "Not specified"}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-start space-x-4 mt-2">
-                    <span className="font-museo text-red-800 font-bold text-base">
-                      Email:
-                    </span>
-                    <span className="font-poppins text-base">
-                      {orgData?.orgDetails?.email || "Not specified"}
-                    </span>
-                  </div>
-
-                  {/* Socials */}
-                  <div className="flex flex-col justify-start mt-4">
-                    <span className="font-museo text-red-800 font-bold text-base">
-                      Socials:
-                    </span>
-                    <div className="flex space-x-6 mt-2 justify-start">
-                      {orgData?.orgDetails?.socials ? (
-                        Object.entries(orgData.orgDetails.socials).map(
-                          ([platform, link], index) => (
-                            <a
-                              key={index}
-                              href={link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <img
-                                src={`https://www.vectorlogo.zone/logos/${platform}/${platform}-icon.svg`} // Dynamic logo based on the platform
-                                alt={platform}
-                                className="w-12 h-12 rounded-full border-2 border-yellow-400" // Larger icons
-                              />
-                            </a>
-                          )
-                        )
-                      ) : (
-                        <span className="font-poppins text-base text-gray-600">
-                          No socials available
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <OrgDetails
+                orgDetails={orgData.orgDetails}
+                onUpdateDetails={handleUpdateOrgDetails}
+                onUpdateSocials={handleUpdateSocials}
+                isAdmin={true}
+              />
 
               {/* Org Heads */}
               <div className="w-full h-64 bg-gray-200 rounded-lg p-3">

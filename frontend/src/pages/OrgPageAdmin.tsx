@@ -1,14 +1,11 @@
-// React
 import { useState } from "react";
 
-// Components
 import { Navbar } from "@/components/commons/Navbar";
 import OrgBanner from "@/components/layouts/org_page/OrgBanner";
+import OrgHighlights from "@/components/layouts/org_page/OrgHighlights";
+import OrgDescription from "@/components/layouts/org_page/OrgDescription";
+import { EventModal } from "@/components/layouts/settings/EventModal";
 
-// Test Components
-import awsccIcon from "@/sample_data/sample_orgs/awscc_circle.png";
-
-// Mock Data
 const mockData = {
   name: "Sample Organization",
   bannerImageUrl: "https://via.placeholder.com/1920x1080",
@@ -102,9 +99,54 @@ const mockData = {
   ],
 };
 
-// Function Component
-const OrgPageStudent = () => {
+const OrgPageAdmin = () => {
   const [orgData, setOrgData] = useState(mockData);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleSubmit = (formData: {
+        eventName: string;
+        when: string;
+        where: "online" | "onsite";
+        platform?: string;
+        location?: string;
+        participantsCount: "limited" | "free";
+        eventDetails: string;
+        topic: string;
+        exclusivity: "uniwide" | "college";
+        picture: File | null;
+        organizer: string;
+        host: string;
+        freeOrPaid: "free" | "paid";
+        cost?: string;
+    }) => {
+        console.log("Event Data Submitted:", formData);
+        handleCloseModal();
+    };
+  const handleUpdateHighlights = (newHighlights: any) => {
+    setOrgData({
+      ...orgData,
+      highlights: newHighlights,
+    });
+
+    // Here you would typically make an API call to update the backend
+    // Example:
+    // await updateOrgHighlights(orgId, newHighlights);
+  };
+
+  const handleUpdateDescription = (newDescription: string) => {
+    setOrgData({
+      ...orgData,
+      orgdescription: newDescription,
+    });
+  };
 
   return (
     <>
@@ -152,49 +194,24 @@ const OrgPageStudent = () => {
                   </div>
                 </div>
 
-                {/* Buttons */}
                 <div className="flex items-center justify-start space-x-4">
-                  <button className="px-5 py-2 bg-red-900 text-white text-l font-museo rounded-lg shadow-md hover:bg-red-700">
-                    Ask me!
-                  </button>
-                  <button className="px-5 py-2 bg-red-900 text-white text-l font-museo rounded-lg shadow-md hover:bg-red-700">
-                    Follow
-                  </button>
-                </div>
-              </div>
+            <button onClick={handleOpenModal} className="bpx-6 py-2 bg-amber-600 text-white text-l font-museo rounded-lg shadow-md hover:bg-amber-800">
+                Create Event
+            </button>
+            <EventModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onSubmit={handleSubmit}
+            />
+            </div>
+          </div>
 
               {/* Highlights */}
-              <div className="w-full h-auto bg-gray-200 rounded-lg p-3">
-                {/* Label */}
-                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md mb-4">
-                  Highlights of the Organization
-                </div>
-
-                {/* Pictures with event details */}
-                <div className="grid grid-cols-3 gap-4">
-                  {mockData.highlights.map((highlight) => (
-                    <div
-                      key={highlight.id}
-                      className="relative bg-gray-100 rounded-lg overflow-hidden shadow-md"
-                    >
-                      {/* Image with blur effect */}
-                      <img
-                        src={highlight.imageUrl}
-                        alt={highlight.title}
-                        className="w-full h-64 object-cover filter blur-sm"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-end p-4 backdrop-blur-sm">
-                        <h3 className="text-lg font-bold text-white">
-                          {highlight.title}
-                        </h3>
-                        <p className="text-sm text-gray-300">
-                          {highlight.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <OrgHighlights
+                highlights={orgData.highlights}
+                onUpdateHighlights={handleUpdateHighlights}
+                isAdmin={true}
+              />
 
               {/* Upcoming Events */}
               <div className="w-full h-full bg-gray-200 rounded-lg p-3 overflow-y-auto">
@@ -259,14 +276,11 @@ const OrgPageStudent = () => {
             {/* Right Main Content */}
             <section className="w-2/5 space-y-6 pr-10 pt-6 flex flex-col">
               {/* Description */}
-              <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
-                <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
-                  Description
-                </div>
-                <p className="mt-4 text-sm text-poppins text-justify">
-                  {orgData?.orgdescription}
-                </p>
-              </div>
+              <OrgDescription
+                description={orgData.orgdescription}
+                onUpdateDescription={handleUpdateDescription}
+                isAdmin={true}
+              />
 
               {/* Org Details */}
               <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
@@ -421,4 +435,4 @@ const OrgPageStudent = () => {
   );
 };
 
-export default OrgPageStudent;
+export default OrgPageAdmin;

@@ -9,6 +9,8 @@ import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import OrgPageStudent from "./pages/OrgPageStudent";
+import OrgPageAdmin from "./pages/OrgPageAdmin";
+import TemporaryEventPage from "./pages/TemporaryEventPage";
 
 /**styles */
 import "./App.css";
@@ -23,7 +25,9 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/event" element={<EventPage />} />
         <Route path="/settings/*" element={<SettingsPage />} />
-        <Route path="/org" element={<OrgPageStudent />} />
+        <Route path="/org/StudentView" element={<OrgPageStudent />} />
+        <Route path="/org/AdminView" element={<OrgPageAdmin />} />
+        <Route path="/temporary-event" element={<TemporaryEventPage />} />
       </Routes>
     </Router>
   );

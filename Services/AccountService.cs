@@ -10,6 +10,9 @@ using AppDev.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using BCrypt.Net;
 using Microsoft.Extensions.Options;
+using static AppDev.Controllers.AccountController;
+using appdev.DTOs;
+using static AppDev.Controllers.AccountController.RegisterRequest;
 
 namespace appdev.Services
 {
@@ -32,14 +35,14 @@ namespace appdev.Services
             };
         }
 
-        public async Task<AuthResponse> AuthenticateAsync(LoginRequest request)
+        public async Task<AuthResponse<UserDto>> AuthenticateAsync(LoginRequest request)
         {
             var user = await _context.Students
                 .FirstOrDefaultAsync(u => u.StudentEmail == request.Email);
 
             if (user == null)
             {
-                return new AuthResponse
+                return new AuthResponse<UserDto>
                 {
                     Success = false,
                     Message = "User not found"
@@ -48,7 +51,7 @@ namespace appdev.Services
 
             if (!VerifyPassword(request.Password, user.StudentPassword))
             {
-                return new AuthResponse
+                return new AuthResponse<UserDto>
                 {
                     Success = false,
                     Message = "Invalid password"
@@ -57,20 +60,20 @@ namespace appdev.Services
 
             var token = GenerateJwtToken(user);
 
-            return new AuthResponse
+            return new AuthResponse<UserDto>
             {
                 Success = true,
                 Message = "Login successful",
                 Token = token,
-                User = MapToUserDto(user)
+                Data = MapToUserDto(user)
             };
         }
 
-        public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
+        public async Task<AuthResponse<UserDto>> RegisterAsync(RegisterRequest request)
         {
             if (await _context.Students.AnyAsync(u => u.StudentEmail == request.Email))
             {
-                return new AuthResponse
+                return new AuthResponse<UserDto>
                 {
                     Success = false,
                     Message = "Email already registered"
@@ -78,7 +81,7 @@ namespace appdev.Services
             }
             if (!await _context.Colleges.AnyAsync(c => c.CollegeId == request.CollegeId))
             {
-                return new AuthResponse
+                return new AuthResponse<UserDto>
                 {
                     Success = false,
                     Message = "Invalid college ID"
@@ -94,6 +97,7 @@ namespace appdev.Services
                 StudentEmail = request.Email,
                 CollegeId = request.CollegeId,
                 StudentPassword = hashedPassword,
+                StudentProfilePicture = Array.Empty<byte>(),
                 OrgCount = 0, // Assuming OrgCount starts at 0
                 OrgAdmin = "No" // Assuming OrgAdmin starts as "No"
             };
@@ -103,12 +107,12 @@ namespace appdev.Services
 
             var token = GenerateJwtToken(user);
 
-            return new AuthResponse
+            return new AuthResponse<UserDto>
             {
                 Success = true,
                 Message = "Registration successful",
                 Token = token,
-                User = MapToUserDto(user)
+                Data = MapToUserDto(user)
             };
         }
 
@@ -125,19 +129,116 @@ namespace appdev.Services
             return colleges;
         }
 
+        public async Task<AuthResponse<StudentProfileDto>> GetStudentProfileAsync(string email)
+        {
+            try
+            {
+                var student = await _context.Students
+                    .Include(s => s.College)
+                    .FirstOrDefaultAsync(s => s.StudentEmail == email);
+
+                if (student == null)
+                {
+                    return new AuthResponse<StudentProfileDto>
+                    {
+                        Success = false,
+                        Message = "Student not found"
+                    };
+                }
+
+                return new AuthResponse<StudentProfileDto>
+                {
+                    Success = true,
+                    Data = new StudentProfileDto
+                    {
+                        FirstName = student.StudentFirstName,
+                        LastName = student.StudentLastName,
+                        Email = student.StudentEmail,
+                        CollegeName = student.College.CollegeName,
+                        CollegeId = student.CollegeId,
+                        ProfilePicture = student.StudentProfilePicture?.Length > 0
+             ? Convert.ToBase64String(student.StudentProfilePicture)
+             : null
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new AuthResponse<StudentProfileDto>
+                {
+                    Success = false,
+                    Message = "Error retrieving profile"
+                };
+            }
+        }
+
+        public async Task<AuthResponse<UserDto>> UpdateProfileAsync(string email, UpdateProfileRequest request)
+        {
+            try
+            {
+                var student = await _context.Students
+                    .Include(s => s.College)
+                    .FirstOrDefaultAsync(s => s.StudentEmail == email);
+
+                if (student == null)
+                {
+                    return new AuthResponse<UserDto>
+                    {
+                        Success = false,
+                        Message = "Student not found"
+                    };
+                }
+                student.StudentFirstName = request.FirstName;
+                student.StudentLastName = request.LastName;
+
+                if (!string.IsNullOrEmpty(request.Password))
+                {
+                    student.StudentPassword = HashPassword(request.Password);
+                }
+
+                if (request.ProfilePicture != null && request.ProfilePicture.Length > 0)
+                {
+                    using var memoryStream = new MemoryStream();
+                    await request.ProfilePicture.CopyToAsync(memoryStream);
+                    student.StudentProfilePicture = memoryStream.ToArray();
+                }
+
+                {
+
+                    await _context.SaveChangesAsync();
+
+                    return new AuthResponse<UserDto>
+                    {
+                        Success = true,
+                        Message = "Profile updated successfully",
+                        Data = MapToUserDto(student)
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new AuthResponse<UserDto>
+                {
+                    Success = false,
+                    Message = "Error updating profile"
+                };
+            }
+        }
+
+
         private string GenerateJwtToken(StudentTable user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.StudentId.ToString()),
-                new Claim(ClaimTypes.Email, user.StudentEmail),
-                new Claim(ClaimTypes.GivenName, user.StudentFirstName),
-                new Claim(ClaimTypes.Surname, user.StudentLastName),
-                new Claim("CollegeId", user.CollegeId.ToString())
-            };
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.StudentId.ToString()),
+                    new Claim(ClaimTypes.Email, user.StudentEmail),
+                    new Claim(ClaimTypes.GivenName, user.StudentFirstName),
+                    new Claim(ClaimTypes.Surname, user.StudentLastName),
+                    new Claim("CollegeId", user.CollegeId.ToString())
+                };
 
             var token = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,
@@ -159,12 +260,6 @@ namespace appdev.Services
                 LastName = user.StudentLastName,
                 CollegeId = user.CollegeId
             };
-        }
-
-        public class CollegeDto
-        {
-            public int CollegeId { get; set; }
-            public string CollegeName { get; set; }
         }
 
         private string HashPassword(string password)

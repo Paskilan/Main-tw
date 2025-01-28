@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import PictureUploaderInput from "@/components/commons/PictureUploaderInput";
+import { PictureUploaderInput } from "@/components/commons/PictureUploaderInput";
 import { GroupDetailsForm } from "./GroupDetailsForm";
 
 export default function CreateGroupModal() {

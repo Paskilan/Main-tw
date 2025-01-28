@@ -2,13 +2,11 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { PictureUploaderInput } from "@/components/commons/PictureUploaderInput";
 import FormInput from "@/components/commons/FormInput";
-import SingleSelectInput from "@/components/commons/SingleSelectInput";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import ProfileSettingsView from "./profile_settings_view";
 import axios from "axios";
 
-const passwordCriteria = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_-])[A-Za-z0-9!@#$%^&*_-]{8,}$/;
 
 export default function ProfileSettingsUpdate() {
     const [isEditing, setIsEditing] = useState(false);
@@ -20,16 +18,12 @@ export default function ProfileSettingsUpdate() {
     const [alertMessage, setAlertMessage] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [colleges, setColleges] = useState<CollegeDto[]>([]);
     const [selectedCollege, setSelectedCollege] = useState<string>("");
     const [email, setEmail] = useState("");
     const [uploadedPicture, setUploadedPicture] = useState<File | null>(null);
     const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null);
 
-    type CollegeDto = {
-        CollegeId: number;
-        CollegeName: string;
-    };
+    const passwordCriteria = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_-])[A-Za-z0-9!@#$%^&*_-]{8,}$/;
 
     const showAlert = (message: string) => {
         setAlertMessage(message);
@@ -57,22 +51,7 @@ export default function ProfileSettingsUpdate() {
     };
 
     useEffect(() => {
-        const fetchColleges = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/account/colleges`);
-                setColleges(response.data);
-            } catch (error) {
-                console.error("Failed to fetch colleges", error);
-                showAlert("Failed to load colleges");
-            }
-        };
-        fetchColleges();
-    }, []);
-
-    useEffect(() => {
-        if (!isEditing) return;
-
-        const fetchProfile = async () => {
+        const fetchInitialProfile = async () => {
             const token = localStorage.getItem("authToken");
             if (!token) {
                 showAlert("Authentication required. Please log in.");
@@ -81,18 +60,17 @@ export default function ProfileSettingsUpdate() {
             setIsLoading(true);
             try {
                 const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/account/profile`, {
-                    method: "GET",
                     headers: {
-                        "Authorization": `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json"
-                    },
+                    }
                 });
                 const data = await response.json();
                 if (response.ok) {
                     setFirstName(data.data.firstName);
                     setLastName(data.data.lastName);
                     setEmail(data.data.email);
-                    setSelectedCollege(data.data.collegeId.toString());
+                    setSelectedCollege(data.data.collegeName);
                     setProfilePictureUrl(
                         data.data.profilePicture
                             ? `data:image/jpeg;base64,${data.data.profilePicture}`
@@ -108,15 +86,8 @@ export default function ProfileSettingsUpdate() {
                 setIsLoading(false);
             }
         };
-        fetchProfile();
-    }, [isEditing]);
-
-    useEffect(() => {
-        if (uploadedPicture) {
-            const objectUrl = URL.createObjectURL(uploadedPicture);
-            return () => URL.revokeObjectURL(objectUrl);
-        }
-    }, [uploadedPicture]);
+        fetchInitialProfile();
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -137,37 +108,24 @@ export default function ProfileSettingsUpdate() {
         const formData = new FormData();
         formData.append("firstName", firstName);
         formData.append("lastName", lastName);
-        formData.append("collegeId", selectedCollege);
         if (password) formData.append("password", password);
         if (uploadedPicture) {
-            formData.append("profilePicture", uploadedPicture, uploadedPicture.name);
+            formData.append("profilePicture", uploadedPicture);
         }
 
-        const fetchProfileData = async () => {
-            const token = localStorage.getItem("authToken");
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/account/profile`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            const data = await response.json();
-            return data.data;
-        };
-
-
         try {
-            const response = await fetch("/api/account/update-profile", {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/account/update-profile`, {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`
                 },
-                body: formData,
+                body: formData
             });
 
             const data = await response.json();
-
             if (response.ok) {
-                const updatedProfile = await fetchProfileData();
-                setProfilePictureUrl(updatedProfile.profilePictureUrl);
                 setIsEditing(false);
+                showAlert("Profile updated successfully");
             } else {
                 showAlert(data.message || "Failed to update profile");
             }
@@ -179,11 +137,12 @@ export default function ProfileSettingsUpdate() {
         }
     };
 
-
     const validateFields = () => {
         if (!firstName.trim()) return "First name is required.";
         if (!lastName.trim()) return "Last name is required.";
-        if (password && getPasswordMessage(password)) return getPasswordMessage(password);
+        if (password && getPasswordMessage(password)) {
+            return getPasswordMessage(password);
+        }
         if (password !== confirmPassword) return "Passwords do not match.";
         return "";
     };
@@ -204,12 +163,10 @@ export default function ProfileSettingsUpdate() {
                 onEdit={() => setIsEditing(true)}
                 firstName={firstName}
                 lastName={lastName}
-                college={colleges.find(c => c.CollegeId.toString() === selectedCollege)?.CollegeName || ""}
                 profilePicture={profilePictureUrl || undefined}
             />
         );
     }
-
 
     return (
         <form className="grid gap-6" onSubmit={handleSubmit}>
@@ -227,7 +184,7 @@ export default function ProfileSettingsUpdate() {
                         placeholder="Enter your first name"
                         inputClassName="form-input w-full"
                         value={firstName}
-                        onChange={(e : React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
                     />
                     <FormInput
                         labelClassName="block form-label"
@@ -235,22 +192,18 @@ export default function ProfileSettingsUpdate() {
                         placeholder="Enter your last name"
                         inputClassName="form-input"
                         value={lastName}
-                        onChange={(e : React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
                     />
                 </div>
             </div>
 
-
             <div className="grid gap-3">
-
-                <SingleSelectInput
+                <FormInput
                     label="College"
-                    options={colleges.map(c => ({
-                        value: c.CollegeId.toString(),
-                        label: c.CollegeName
-                    }))}
+                    inputClassName="form-input bg-gray-100 cursor-not-allowed"
+                    labelClassName="block form-label"
                     value={selectedCollege}
-                    onChange={(value) => setSelectedCollege(value)}
+                    readOnly
                     disabled
                 />
 
@@ -288,7 +241,7 @@ export default function ProfileSettingsUpdate() {
                 {confirmPasswordError && <p className="text-xs text-red-500">{confirmPasswordError}</p>}
 
                 <div className="flex gap-4 justify-end">
-                    <Button 
+                    <Button
                         type="button"
                         variant="outline"
                         className="w-1/4 h-12 font-semibold text-base"
@@ -304,7 +257,6 @@ export default function ProfileSettingsUpdate() {
                         {isLoading ? "Saving..." : "Save"}
                     </Button>
                 </div>
-
             </div>
 
             {alertMessage && (

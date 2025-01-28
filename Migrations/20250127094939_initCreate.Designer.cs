@@ -12,8 +12,8 @@ using appdev.Models;
 namespace appdev.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250124055803_InitCreate")]
-    partial class InitCreate
+    [Migration("20250127094939_initCreate")]
+    partial class initCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -452,6 +452,10 @@ namespace appdev.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<byte[]>("StudentProfilePicture")
+                        .IsRequired()
+                        .HasColumnType("image");
+
                     b.HasKey("StudentId");
 
                     b.HasIndex("CollegeId");
@@ -559,13 +563,13 @@ namespace appdev.Migrations
 
             modelBuilder.Entity("appdev.Models.StudentTable", b =>
                 {
-                    b.HasOne("CollegeTable", "CollegeName")
+                    b.HasOne("CollegeTable", "College")
                         .WithMany("StudentTables")
                         .HasForeignKey("CollegeId")
                         .IsRequired()
                         .HasConstraintName("FK_StudentTable_CollegeTable");
 
-                    b.Navigation("CollegeName");
+                    b.Navigation("College");
                 });
 
             modelBuilder.Entity("CollegeTable", b =>

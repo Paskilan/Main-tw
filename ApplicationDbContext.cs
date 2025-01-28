@@ -302,8 +302,9 @@ namespace appdev.Models
                 entity.Property(e => e.StudentPassword)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+                entity.Property(e => e.StudentProfilePicture).HasColumnType("image");
 
-                entity.HasOne(d => d.CollegeName)
+                entity.HasOne(d => d.College)   
                     .WithMany(p => p.StudentTables)
                     .HasForeignKey(d => d.CollegeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)

@@ -4,6 +4,7 @@ import { Navbar } from "@/components/commons/Navbar";
 import OrgBanner from "@/components/layouts/org_page/OrgBanner";
 import OrgHighlights from "@/components/layouts/org_page/OrgHighlights";
 import OrgDescription from "@/components/layouts/org_page/OrgDescription";
+import { EventModal } from "@/components/layouts/settings/EventModal";
 
 const mockData = {
   name: "Sample Organization",
@@ -100,7 +101,35 @@ const mockData = {
 
 const OrgPageAdmin = () => {
   const [orgData, setOrgData] = useState(mockData);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleSubmit = (formData: {
+        eventName: string;
+        when: string;
+        where: "online" | "onsite";
+        platform?: string;
+        location?: string;
+        participantsCount: "limited" | "free";
+        eventDetails: string;
+        topic: string;
+        exclusivity: "uniwide" | "college";
+        picture: File | null;
+        organizer: string;
+        host: string;
+        freeOrPaid: "free" | "paid";
+        cost?: string;
+    }) => {
+        console.log("Event Data Submitted:", formData);
+        handleCloseModal();
+    };
   const handleUpdateHighlights = (newHighlights: any) => {
     setOrgData({
       ...orgData,
@@ -165,13 +194,17 @@ const OrgPageAdmin = () => {
                   </div>
                 </div>
 
-                {/* Buttons */}
                 <div className="flex items-center justify-start space-x-4">
-                  <button className="px-5 py-2 bg-amber-700 text-white text-l font-museo rounded-lg shadow-md hover:bg-amber-800">
-                    Manage Admins
-                  </button>
-                </div>
-              </div>
+            <button onClick={handleOpenModal} className="bpx-6 py-2 bg-amber-600 text-white text-l font-museo rounded-lg shadow-md hover:bg-amber-800">
+                Create Event
+            </button>
+            <EventModal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onSubmit={handleSubmit}
+            />
+            </div>
+          </div>
 
               {/* Highlights */}
               <OrgHighlights

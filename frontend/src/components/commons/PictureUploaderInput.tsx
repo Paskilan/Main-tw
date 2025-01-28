@@ -4,30 +4,16 @@ import { ImagePlus, X, ZoomIn, ZoomOut } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-<<<<<<< HEAD
 type PixelCrop = {
-    x: number
-    y: number
-    width: number
-    height: number
-}
-interface PictureUploaderInputProps {
-    onChange?: (file: File | null) => void
-}
-=======
-interface PictureUploaderInputProps {
-  onChange: (url: string) => void;
-}
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+};
 
-export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) => {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [isCropModalOpen, setCropModalOpen] = useState(false);
-  const [croppedImage, setCroppedImage] = useState<string | null>(null);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
->>>>>>> origin/main
+interface PictureUploaderInputProps {
+    onChange?: (file: File | null) => void;
+}
 
 export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -38,17 +24,15 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<PixelCrop | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-<<<<<<< HEAD
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
             setSelectedImage(URL.createObjectURL(file));
             setCropModalOpen(true);
-=======
-      if (onChange) {
-        onChange(URL.createObjectURL(file)); // Notify parent about the image upload
-      }
->>>>>>> origin/main
+
+            if (onChange) {
+                onChange(file); // Notify parent about the image upload
+            }
 
             if (fileInputRef.current) {
                 fileInputRef.current.value = ""; 

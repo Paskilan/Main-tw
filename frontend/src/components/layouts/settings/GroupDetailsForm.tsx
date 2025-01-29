@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/commons/FormInput";
 import SingleSelectInput from "@/components/commons/SingleSelectInput";
@@ -11,16 +11,16 @@ interface GroupDetailsFormProps {
     onBack: () => void;
     onSubmit: (formData: {
         orgName: string;
-        isValidated: "validated" | "new";
-        controlNumber: string;
-        email: string;
         description: string;
+        email: string;
         classification: "uniwide" | "college";
-        college: string;
-    }) => void;
+        collegeId?: string;
+        controlNumber?: string;
+    }) => Promise<void>;
+    imageUrl: string;
 }
 
-export function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormProps) {
+export default function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormProps) {
     const [orgName, setOrgName] = useState("");
     const [isValidated, setIsValidated] = useState<"validated" | "new">("new");
     const [controlNumber, setControlNumber] = useState("");
@@ -41,25 +41,32 @@ export function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormProps) {
         return "";
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const showAlert = (message: string) => {
+        setAlertMessage(message);
+        setTimeout(() => setAlertMessage(""), 3000);
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const validationMessage = validateFields();
         if (validationMessage) {
-            setAlertMessage(validationMessage);
-            setTimeout(() => setAlertMessage(""), 3000);
+            showAlert(validationMessage);
             return;
         }
 
-        onSubmit({
-            orgName,
-            isValidated,
-            controlNumber,
-            email,
-            description,
-            classification,
-            college
-        });
+        try {
+            await onSubmit({
+                orgName,
+                description,
+                email,
+                classification,
+                collegeId: classification === "college" ? college : undefined,
+                controlNumber: isValidated === "validated" ? controlNumber : undefined,
+            });
+        } catch (error: any) {
+            showAlert(error.message || "Failed to create organization");
+        }
     };
 
     return (
@@ -68,7 +75,7 @@ export function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormProps) {
                 label="Organization Name *"
                 placeholder="Enter organization name"
                 value={orgName}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setOrgName(e.target.value)}
+                onChange={(e: { target: { value: string } }) => setOrgName(e.target.value)}
                 labelClassName="block form-label"
                 inputClassName="form-input"
                 required
@@ -76,8 +83,8 @@ export function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormProps) {
 
             <div className="space-y-2">
                 <Label>Organization Status *</Label>
-                <RadioGroup 
-                    defaultValue="new" 
+                <RadioGroup
+                    defaultValue="new"
                     onValueChange={(value: "validated" | "new") => setIsValidated(value)}
                     className="flex gap-4"
                 >
@@ -97,7 +104,7 @@ export function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormProps) {
                     label="Control Number *"
                     placeholder="Enter control number"
                     value={controlNumber}
-                    onChange={(e: { target: { value: SetStateAction<string>; }; }) => setControlNumber(e.target.value)}
+                    onChange={(e: { target: { value: string } }) => setControlNumber(e.target.value)}
                     labelClassName="block form-label"
                     inputClassName="form-input"
                     required
@@ -109,7 +116,7 @@ export function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormProps) {
                 type="email"
                 placeholder="Enter organization email"
                 value={email}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setEmail(e.target.value)}
+                onChange={(e: { target: { value: string } }) => setEmail(e.target.value)}
                 labelClassName="block form-label"
                 inputClassName="form-input"
                 required
@@ -128,8 +135,8 @@ export function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormProps) {
 
             <div className="space-y-2">
                 <Label>Classification *</Label>
-                <RadioGroup 
-                    defaultValue="uniwide" 
+                <RadioGroup
+                    defaultValue="uniwide"
                     onValueChange={(value: "uniwide" | "college") => {
                         setClassification(value);
                         if (value === "uniwide") setCollege("");
@@ -169,7 +176,7 @@ export function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormProps) {
                     type="submit"
                     className="bg-pup-maroon2 hover:bg-pup-maroon1"
                 >
-                    Create Group
+                    Create Org
                 </Button>
             </div>
 

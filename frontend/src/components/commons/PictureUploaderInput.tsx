@@ -14,6 +14,7 @@ interface PictureUploaderInputProps {
     onChange?: (file: File | null) => void
 }
 
+
 export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [isCropModalOpen, setCropModalOpen] = useState(false);
@@ -28,9 +29,12 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
             const file = event.target.files[0];
             setSelectedImage(URL.createObjectURL(file));
             setCropModalOpen(true);
+      if (onChange) {
+        onChange(URL.createObjectURL(file)); // Notify parent about the image upload
+      }
 
             if (fileInputRef.current) {
-                fileInputRef.current.value = ""; 
+                fileInputRef.current.value = "";
             }
         }
     };
@@ -126,7 +130,6 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
                     onChange={handleImageChange}
                 />
             </div>
-
             <Dialog open={isCropModalOpen} onOpenChange={setCropModalOpen}>
                 <DialogContent className="w-full max-w-md">
                     <DialogHeader>

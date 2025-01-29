@@ -2,7 +2,6 @@
 using appdev.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -60,8 +59,9 @@ namespace AppDev.Controllers
                     Success = false,
                     Message = "Invalid credentials"
                 });
-            }
-            catch (Exception ex)
+}
+            catch (Exception)
+
             {
                 return StatusCode(500, new AuthResponse<UserDto>
                 {
@@ -98,7 +98,7 @@ namespace AppDev.Controllers
                     Message = result.Message
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, new AuthResponse<UserDto>
                 {

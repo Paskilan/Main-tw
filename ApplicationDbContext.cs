@@ -245,13 +245,16 @@ namespace appdev.Models
                 entity.Property(e => e.OrgApproved)
                     .HasMaxLength(5)
                     .IsUnicode(false);
-                entity.Property(e => e.CollegeId).HasColumnName("CollegeID");
+                entity.Property(e => e.CollegeId)
+                    .HasColumnName("CollegeID")
+                    .IsRequired(false);
 
                 entity.HasOne(d => d.College)
                     .WithMany(p => p.OrgTables)
                     .HasForeignKey(d => d.CollegeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrgTable_CollegeTable");
+                    .HasConstraintName("FK_OrgTable_CollegeTable")
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<ReportTable>(entity =>

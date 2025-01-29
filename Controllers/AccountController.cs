@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using static appdev.Services.AccountService;
 using appdev.DTOs;
 using static AppDev.Controllers.AccountController.RegisterRequest;
 
@@ -135,7 +133,7 @@ namespace AppDev.Controllers
                 return Ok(result);
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, new AuthResponse<UserDto>
                 {
@@ -170,7 +168,7 @@ namespace AppDev.Controllers
 
                 return BadRequest(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, new AuthResponse<UserDto>
                 {

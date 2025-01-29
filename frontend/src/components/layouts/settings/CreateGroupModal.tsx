@@ -69,20 +69,30 @@ export default function CreateOrgModal({ onNewGroup }: CreateOrgModalProps) {
             );
 
             if (response.status === 200) {
-                // Show success message to user
                 onNewGroup({
-                    ...response.data,
+                    id: response.data.id,
+                    name: response.data.orgName,
+                    description: response.data.orgDescription,
+                    imageUrl: response.data.orgLogo,
                     status: response.data.verified === "Yes" ? "Approved" : "Pending"
                 });
+            
             } else {
                 setAlertMessage("Failed to create organization");
             }
         } catch (error: any) {
-            // Handle specific error cases
-            if (error.response?.status === 400 && error.response?.data?.includes("already exists")) {
-                setAlertMessage("An organization with this name already exists");
+            if (error.response) {
+                if (error.response.status === 400) {
+                    setAlertMessage(error.response.data || "Invalid input data");
+                } else if (error.response.status === 401) {
+                    setAlertMessage("Unauthorized: Please log in again");
+                } else {
+                    setAlertMessage(error.response.data?.message || "Failed to create organization");
+                }
+            } else if (error.request) {
+                setAlertMessage("No response from server. Please check your network connection.");
             } else {
-                setAlertMessage(error.response?.data?.message || "Failed to create organization");
+                setAlertMessage("An unexpected error occurred.");
             }
         }
     };
@@ -99,10 +109,17 @@ export default function CreateOrgModal({ onNewGroup }: CreateOrgModalProps) {
             {step === 1 ? (
                 <div className="grid gap-4">
                     <PictureUploaderInput
-                        onChange={(url) => {
-                            if (url !== null) {
+                        onChange={(file) => {
+                            if (file) {
                                 setPictureUploaded(true);
-                                setImageUrl(url);
+                                const reader = new FileReader();
+                                reader.onloadend = () => {
+                                    setImageUrl(reader.result as string);
+                                };
+                                reader.readAsDataURL(file);
+                            } else {
+                                setPictureUploaded(false);
+                                setImageUrl("");
                             }
                         }}
                     />

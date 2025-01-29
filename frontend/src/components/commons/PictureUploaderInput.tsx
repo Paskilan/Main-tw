@@ -14,7 +14,6 @@ interface PictureUploaderInputProps {
     onChange?: (file: File | null) => void
 }
 
-
 export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) => {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const [isCropModalOpen, setCropModalOpen] = useState(false);
@@ -29,9 +28,6 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
             const file = event.target.files[0];
             setSelectedImage(URL.createObjectURL(file));
             setCropModalOpen(true);
-      if (onChange) {
-        onChange(URL.createObjectURL(file)); // Notify parent about the image upload
-      }
 
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
@@ -39,6 +35,7 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
         }
     };
 
+    
     const getCroppedImage = (
         imageSrc: string,
         croppedAreaPixels: PixelCrop
@@ -76,7 +73,7 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
             image.src = imageSrc;
         });
     };
-        
+
     const handleCropConfirm = async () => {
         if (!selectedImage || !croppedAreaPixels) return;
 
@@ -107,7 +104,7 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
                         <button
                             onClick={() => {
                                 setCroppedImage(null);
-                                onChange?.(null); 
+                                onChange?.(null); // Clear the image in parent
                             }}
                             className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 z-10"
                         >
@@ -124,12 +121,13 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
                     aria-label="Upload profile picture"
                     ref={fileInputRef}
                     type="file"
-                    name="profilePicture" 
+                    name="profilePicture" // Added for form handling
                     accept="image/*"
                     className="absolute inset-0 opacity-0 cursor-pointer z-0"
                     onChange={handleImageChange}
                 />
             </div>
+
             <Dialog open={isCropModalOpen} onOpenChange={setCropModalOpen}>
                 <DialogContent className="w-full max-w-md">
                     <DialogHeader>
@@ -145,7 +143,7 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
                                 cropShape="rect"
                                 onCropChange={setCrop}
                                 onZoomChange={setZoom}
-                                onCropComplete={(croppedAreaPixels) => {
+                                onCropComplete={(croppedArea, croppedAreaPixels) => {
                                     setCroppedAreaPixels(croppedAreaPixels);
                                 }}
                             />

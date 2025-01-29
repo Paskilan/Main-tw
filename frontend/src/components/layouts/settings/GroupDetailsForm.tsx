@@ -17,7 +17,6 @@ interface GroupDetailsFormProps {
         collegeId?: string;
         controlNumber?: string;
     }) => Promise<void>;
-    imageUrl: string;
 }
 
 export default function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormProps) {
@@ -35,6 +34,7 @@ export default function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormP
         if (!email.trim()) return "Email is required.";
         if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return "Invalid email format.";
         if (isValidated === "validated" && !controlNumber.trim()) return "Control number is required for validated organizations.";
+        if (isValidated === "validated" && !controlNumber.match(/^\d+$/)) return "Control number must be a number.";
         if (!description.trim()) return "Description is required.";
         if (!classification) return "Classification is required.";
         if (classification === "college" && !college) return "College selection is required.";

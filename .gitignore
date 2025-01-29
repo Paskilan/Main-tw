@@ -519,5 +519,5 @@ deno.jsonc
 *.njsproj
 *.sln
 
-# Migration files
+# MigrationFiles
 /Migrations/*

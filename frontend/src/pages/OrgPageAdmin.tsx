@@ -102,6 +102,7 @@ const mockData = {
 
 const OrgPageAdmin = () => {
   const [orgData, setOrgData] = useState(mockData);
+  // Export this to a component
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {

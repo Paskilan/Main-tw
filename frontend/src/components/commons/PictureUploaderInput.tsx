@@ -76,7 +76,7 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
             image.src = imageSrc;
         });
     };
-
+        
     const handleCropConfirm = async () => {
         if (!selectedImage || !croppedAreaPixels) return;
 

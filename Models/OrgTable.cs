@@ -1,35 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace appdev.Models;
-
-public partial class OrgTable
+namespace appdev.Models
 {
-    public int OrgId { get; set; }
-    public string OrgName { get; set; } = null!;
-    public string OrgEmail { get; set; } = null!;
-    public string OrgDescription { get; set; } = null!;
-    public string OrgType { get; set; } = null!;
-    public string OrgFacebook { get; set; } = null!;
-    public string OrgInstagram { get; set; } = null!;
-    public string OrgLinkedIn { get; set; } = null!;
-    public byte[] OrgLogo { get; set; } = null!;
-    public byte[] OrgHeader { get; set; } = null!;
-    public string Verified { get; set; } = null!;
-    public int? CollegeId { get; set; }
-    public string OrgApproved { get; set; } = null!;
-    public virtual CollegeTable? College { get; set; } = null!;
+    public partial class OrgTable
+    {
+        public int OrgId { get; set; }
+        public string OrgName { get; set; } = null!;
+        public string OrgEmail { get; set; } = null!;
+        public string OrgDescription { get; set; } = null!;
+        public string OrgType { get; set; } = null!;
+        public string? OrgFacebook { get; set; } 
+        public string? OrgInstagram { get; set; } 
+        public string? OrgLinkedIn { get; set; } 
+        public byte[] OrgLogo { get; set; } = null!;
+        public byte[] OrgHeader { get; set; } = null!;
+        public bool Verified { get; set; } = false; // Changed to boolean
+        public int? CollegeId { get; set; }
+        public bool OrgApproved { get; set; } = false; // Changed to boolean for clarity
+        public virtual CollegeTable? College { get; set; } = null!;
 
-    // Navigation properties
-    public virtual ICollection<AdminTable> AdminTables { get; set; } = new List<AdminTable>();
-    public virtual ICollection<EventTable> EventTables { get; set; } = new List<EventTable>();
-    public virtual ICollection<FollowedOrgsTable> FollowedOrgsTables { get; set; } = new List<FollowedOrgsTable>();
-    public virtual ICollection<OrgHighlightsTable> OrgHighlightsTables { get; set; } = new List<OrgHighlightsTable>();
+        // Navigation properties
+        public virtual ICollection<AdminTable> AdminTables { get; set; } = new List<AdminTable>();
+        public virtual ICollection<EventTable> EventTables { get; set; } = new List<EventTable>();
+        public virtual ICollection<FollowedOrgsTable> FollowedOrgsTables { get; set; } = new List<FollowedOrgsTable>();
+        public virtual ICollection<OrgHighlightsTable> OrgHighlightsTables { get; set; } = new List<OrgHighlightsTable>();
 
-    // Additional fields
-    public int? ControlNumber { get; set; }
-    public int FollowerCount { get; set; }
+        // Additional fields
+        public string? ControlNumber { get; set; } 
+        public int FollowerCount { get; set; }
 
-    // Other navigation properties
-    public virtual ICollection<ReportTable> ReportTables { get; set; } = new List<ReportTable>();
+        public virtual ICollection<ReportTable> ReportTables { get; set; } = new List<ReportTable>();
+    }
 }

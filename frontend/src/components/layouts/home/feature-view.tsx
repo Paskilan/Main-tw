@@ -21,6 +21,7 @@ import SampleHeader1 from '@/sample_data/sample_header/sample_header.jpeg';
 import SampleHeader2 from '@/sample_data/sample_header/sample_header2.jpg';
 
 export default function FeatureView() {
+
     const { profile, loading } = useUser();
 
     return (

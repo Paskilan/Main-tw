@@ -12,8 +12,8 @@ using appdev.Models;
 namespace appdev.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250129105401_initCreate")]
-    partial class initCreate
+    [Migration("20250130103556_asd")]
+    partial class asd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -319,17 +319,18 @@ namespace appdev.Migrations
                         .HasColumnType("int")
                         .HasColumnName("CollegeID");
 
-                    b.Property<int?>("ControlNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("ControlNumber")
+                        .HasMaxLength(50)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("FollowerCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("OrgApproved")
-                        .IsRequired()
-                        .HasMaxLength(5)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(5)");
+                    b.Property<bool>("OrgApproved")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("OrgDescription")
                         .IsRequired()
@@ -343,23 +344,19 @@ namespace appdev.Migrations
                         .HasColumnType("varchar(150)");
 
                     b.Property<string>("OrgFacebook")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .IsUnicode(false)
                         .HasColumnType("varchar(150)");
 
                     b.Property<byte[]>("OrgHeader")
-                        .IsRequired()
                         .HasColumnType("image");
 
                     b.Property<string>("OrgInstagram")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .IsUnicode(false)
                         .HasColumnType("varchar(150)");
 
                     b.Property<string>("OrgLinkedIn")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .IsUnicode(false)
                         .HasColumnType("varchar(150)");
@@ -380,12 +377,10 @@ namespace appdev.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(150)");
 
-                    b.Property<string>("Verified")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .IsUnicode(false)
-                        .HasColumnType("char(10)")
-                        .IsFixedLength();
+                    b.Property<bool>("Verified")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("OrgId");
 

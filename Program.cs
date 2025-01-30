@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using appdev.Services;
+using Microsoft.AspNetCore.Http.Features;
 
 
 
@@ -19,6 +20,10 @@ builder.Services.Configure<EmailConfiguration>(
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50MB limit
+});
 
 builder.Services.AddCors(options =>
 {

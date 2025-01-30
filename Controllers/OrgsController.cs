@@ -3,40 +3,71 @@ using appdev.DTOs;
 using appdev.Services;
 using appdev.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace appdev.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class OrgsController : ControllerBase
     {
-        private readonly OrgService _OrgService;
+        private readonly OrgService _orgService;
+        private readonly ApplicationDbContext _context;
 
-        public OrgsController(OrgService orgService)
+        public OrgsController(OrgService orgService, ApplicationDbContext context)
         {
-            _OrgService = orgService;
+            _orgService = orgService;
+            _context = context;
         }
 
-        [HttpPost]
+        [HttpGet("orgDisplay")]
+        public async Task<ActionResult<IEnumerable<OrgResponseDto>>> GetOrgs()
+        {
+            var orgs = await _context.Orgs
+                .Select(o => new OrgResponseDto
+                {
+                    Id = o.OrgId,
+                    Name = o.OrgName,
+                    Description = o.OrgDescription,
+                    ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(o.OrgLogo)}" // Providing a data URL
+                })
+                .ToListAsync();
+
+            return Ok(orgs);
+        }
+
+        [HttpPost("create")]
         [Authorize]
-        public async Task<ActionResult<OrgTable>> CreateOrg([FromBody] CreateOrgDto request)
+        public async Task<IActionResult> CreateOrg([FromBody] CreateOrgDto createOrgDto)
         {
-            var collegeIdClaim = User.FindFirst("CollegeId")?.Value;
-            if (!int.TryParse(collegeIdClaim, out var collegeId))
+            if (string.IsNullOrEmpty(createOrgDto.ImageBase64))
             {
-                return BadRequest("Invalid CollegeId in token");
+                return BadRequest(new OrgResponse<OrgResponseDto>
+                {
+                    Success = false,
+                    Message = "Image is required"
+                });
             }
 
-            try
+            if (!ModelState.IsValid)
             {
-                var org = await _OrgService.CreateOrgAsync(request, collegeId);
-                return Ok(org);
+                return BadRequest(new OrgResponse<OrgResponseDto>
+                {
+                    Success = false,
+                    Message = "Invalid input data"
+                });
             }
-            catch (Exception ex)
+
+            var result = await _orgService.CreateOrgAsync(createOrgDto);
+
+            if (!result.Success)
             {
-                return StatusCode(500, ex.Message);
+                return BadRequest(result);
             }
+
+            return Ok(result);
         }
-}
+    }
 }

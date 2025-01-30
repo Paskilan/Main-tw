@@ -33,7 +33,7 @@ export default function ProfileSettingsView({ onEdit, firstName, lastName, profi
                         lastName: response.data.data.lastName,
                         collegeName: response.data.data.collegeName,
                         profilePicture: response.data.data.profilePicture
-                            ? `data:image/jpeg;base64,${response.data.data.profilePicture}`
+                            ?`data:image/jpeg;base64,${response.data.data.profilePicture}`
                             : ''
                     });
                 }

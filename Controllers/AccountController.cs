@@ -209,7 +209,7 @@ namespace AppDev.Controllers
             [Required]
             [MinLength(6)]
             public string Password { get; set; }
-
+            public IFormFile? ProfilePicture { get; set; } 
             public class UpdateProfileRequest
             {
                 public string FirstName { get; set; }

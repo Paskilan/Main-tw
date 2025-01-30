@@ -11,10 +11,10 @@ interface UserProfile {
   profilePicture: string; // This will be a base64 string
 }
 
-interface ApiResponse {
-  result: Record<string, unknown>;
-  value: UserProfile;
-}
+// interface ApiResponse {
+//   result: Record<string, unknown>;
+//   value: UserProfile;
+// }
 
 interface UserContextType {
   profile: UserProfile | null;

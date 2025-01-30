@@ -30,11 +30,12 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
             setCropModalOpen(true);
 
             if (fileInputRef.current) {
-                fileInputRef.current.value = ""; 
+                fileInputRef.current.value = "";
             }
         }
     };
 
+    
     const getCroppedImage = (
         imageSrc: string,
         croppedAreaPixels: PixelCrop
@@ -103,7 +104,7 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
                         <button
                             onClick={() => {
                                 setCroppedImage(null);
-                                onChange?.(null); 
+                                onChange?.(null); // Clear the image in parent
                             }}
                             className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 z-10"
                         >
@@ -120,7 +121,7 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
                     aria-label="Upload profile picture"
                     ref={fileInputRef}
                     type="file"
-                    name="profilePicture" 
+                    name="profilePicture" // Added for form handling
                     accept="image/*"
                     className="absolute inset-0 opacity-0 cursor-pointer z-0"
                     onChange={handleImageChange}
@@ -142,7 +143,7 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
                                 cropShape="rect"
                                 onCropChange={setCrop}
                                 onZoomChange={setZoom}
-                                onCropComplete={(croppedAreaPixels) => {
+                                onCropComplete={(croppedArea, croppedAreaPixels) => {
                                     setCroppedAreaPixels(croppedAreaPixels);
                                 }}
                             />

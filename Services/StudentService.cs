@@ -72,7 +72,6 @@ public class StudentService
         _context.Students.Remove(student);
         await _context.SaveChangesAsync();
         return true;
-      
     }
     public void ConfigureServices(IServiceCollection services)
     {
@@ -87,5 +86,6 @@ public class StudentService
         });
 
         services.AddControllers();
+
     }
 }

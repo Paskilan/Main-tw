@@ -16,8 +16,9 @@ public partial class OrgTable
     public byte[] OrgLogo { get; set; } = null!;
     public byte[] OrgHeader { get; set; } = null!;
     public string Verified { get; set; } = null!;
-    public int CollegeId { get; set; }
-    public virtual CollegeTable College { get; set; } = null!;
+    public int? CollegeId { get; set; }
+    public string OrgApproved { get; set; } = null!;
+    public virtual CollegeTable? College { get; set; } = null!;
 
     // Navigation properties
     public virtual ICollection<AdminTable> AdminTables { get; set; } = new List<AdminTable>();

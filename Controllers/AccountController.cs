@@ -2,11 +2,8 @@
 using appdev.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using static appdev.Services.AccountService;
 using appdev.DTOs;
 using static AppDev.Controllers.AccountController.RegisterRequest;
 
@@ -60,8 +57,9 @@ namespace AppDev.Controllers
                     Success = false,
                     Message = "Invalid credentials"
                 });
-            }
-            catch (Exception ex)
+}
+            catch (Exception)
+
             {
                 return StatusCode(500, new AuthResponse<UserDto>
                 {
@@ -98,7 +96,7 @@ namespace AppDev.Controllers
                     Message = result.Message
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, new AuthResponse<UserDto>
                 {
@@ -135,7 +133,7 @@ namespace AppDev.Controllers
                 return Ok(result);
             }
 
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, new AuthResponse<UserDto>
                 {
@@ -170,7 +168,7 @@ namespace AppDev.Controllers
 
                 return BadRequest(result);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, new AuthResponse<UserDto>
                 {
@@ -211,7 +209,7 @@ namespace AppDev.Controllers
             [Required]
             [MinLength(6)]
             public string Password { get; set; }
-
+            public IFormFile? ProfilePicture { get; set; } 
             public class UpdateProfileRequest
             {
                 public string FirstName { get; set; }

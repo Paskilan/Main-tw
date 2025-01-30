@@ -41,7 +41,10 @@ namespace appdev.Migrations
                     OrgLogo = table.Column<byte[]>(type: "image", nullable: false),
                     OrgHeader = table.Column<byte[]>(type: "image", nullable: false),
                     Verified = table.Column<string>(type: "char(10)", unicode: false, fixedLength: true, maxLength: 10, nullable: false),
-                    CollegeID = table.Column<int>(type: "int", nullable: false)
+                    CollegeID = table.Column<int>(type: "int", nullable: true),
+                    OrgApproved = table.Column<string>(type: "varchar(5)", unicode: false, maxLength: 5, nullable: false),
+                    ControlNumber = table.Column<int>(type: "int", nullable: true),
+                    FollowerCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -140,6 +143,7 @@ namespace appdev.Migrations
                     AdminID = table.Column<int>(type: "int", nullable: false),
                     OrgID = table.Column<int>(type: "int", nullable: false),
                     StudentID = table.Column<int>(type: "int", nullable: false),
+                    AdminName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrgOwner = table.Column<string>(type: "char(10)", unicode: false, fixedLength: true, maxLength: 10, nullable: false)
                 },
                 constraints: table =>
@@ -163,7 +167,8 @@ namespace appdev.Migrations
                 {
                     StudentID = table.Column<int>(type: "int", nullable: false),
                     OrgID = table.Column<int>(type: "int", nullable: false),
-                    OrgName = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false)
+                    OrgName = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    StudentName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -106,7 +106,7 @@ namespace appdev.Migrations
                         new
                         {
                             CollegeId = 7,
-                            CollegeName = "ollege of Law"
+                            CollegeName = "College of Law"
                         },
                         new
                         {
@@ -312,7 +312,7 @@ namespace appdev.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrgId"));
 
-                    b.Property<int>("CollegeId")
+                    b.Property<int?>("CollegeId")
                         .HasColumnType("int")
                         .HasColumnName("CollegeID");
 
@@ -321,6 +321,12 @@ namespace appdev.Migrations
 
                     b.Property<int>("FollowerCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("OrgApproved")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(5)");
 
                     b.Property<string>("OrgDescription")
                         .IsRequired()
@@ -429,9 +435,6 @@ namespace appdev.Migrations
                         .HasColumnType("int")
                         .HasColumnName("CollegeID");
 
-                    b.Property<int>("CollegeId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("OrgAdmin")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -473,8 +476,6 @@ namespace appdev.Migrations
                     b.HasKey("StudentId");
 
                     b.HasIndex("CollegeId");
-
-                    b.HasIndex("CollegeId1");
 
                     b.ToTable("StudentTable", (string)null);
                 });
@@ -552,7 +553,6 @@ namespace appdev.Migrations
                     b.HasOne("appdev.Models.CollegeTable", "College")
                         .WithMany("OrgTables")
                         .HasForeignKey("CollegeId")
-                        .IsRequired()
                         .HasConstraintName("FK_OrgTable_CollegeTable");
 
                     b.Navigation("College");
@@ -579,7 +579,7 @@ namespace appdev.Migrations
 
             modelBuilder.Entity("appdev.Models.StudentTable", b =>
                 {
-                    b.HasOne("CollegeTable", "College")
+                    b.HasOne("appdev.Models.CollegeTable", "College")
                         .WithMany("StudentTables")
                         .HasForeignKey("CollegeId")
                         .IsRequired()

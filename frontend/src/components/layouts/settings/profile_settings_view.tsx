@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export default function ProfileSettingsView({ onEdit }: { onEdit: () => void }) {
+export default function ProfileSettingsView({ onEdit, firstName, lastName, profilePicture }: { onEdit: () => void, firstName: string, lastName: string, profilePicture?: string }) {
     const [profileData, setProfileData] = useState({
         firstName: '',
         lastName: '',
@@ -46,7 +46,6 @@ export default function ProfileSettingsView({ onEdit }: { onEdit: () => void }) 
         }; fetchProfileData();
     }, []);
 
-
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -61,8 +60,8 @@ export default function ProfileSettingsView({ onEdit }: { onEdit: () => void }) 
                 <div>
                     <h2 className="h-10 font-museo font-semibold text-gray-600">Your profile picture</h2>
                     <div className="w-48 h-48 rounded-full overflow-hidden border-2 border-gray-200">
-                        {profileData.profilePicture ? (
-                            <img src={profileData.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                        {profilePicture ? (
+                            <img src={profilePicture} alt="Profile" className="w-full h-full object-cover" />
                         ) : (
                             <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                                 <span className="text-gray-500">No image</span>
@@ -74,13 +73,13 @@ export default function ProfileSettingsView({ onEdit }: { onEdit: () => void }) 
                     <div className="grid gap-2">
                         <label className="block form-label text-sm font-medium">First Name</label>
                         <p className="form-input w-full bg-gray-50 flex items-center">
-                            {profileData.firstName || <span className="text-gray-400">Not set</span>}
+                            {firstName || <span className="text-gray-400">Not set</span>}
                         </p>
                     </div>
                     <div className="grid gap-2">
                         <label className="block form-label text-sm font-medium">Last Name</label>
                         <p className="form-input bg-gray-50 flex items-center">
-                            {profileData.lastName || <span className="text-gray-400">Not set</span>}
+                            {lastName || <span className="text-gray-400">Not set</span>}
                         </p>
                     </div>
                     <div className="grid gap-2">

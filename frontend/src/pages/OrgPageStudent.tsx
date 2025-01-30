@@ -5,9 +5,6 @@ import { useState } from "react";
 import { Navbar } from "@/components/commons/Navbar";
 import OrgBanner from "@/components/layouts/org_page/OrgBanner";
 
-// Test Components
-import awsccIcon from "@/sample_data/sample_orgs/awscc_circle.png";
-
 // Mock Data
 const mockData = {
   name: "Sample Organization",
@@ -161,7 +158,7 @@ const OrgPageStudent = () => {
               </div>
 
               {/* Highlights */}
-              <div className="w-full h-auto bg-gray-200 rounded-lg p-3">
+              <div className="w-full h-auto bg-white shadow-xl rounded-lg p-3">
                 {/* Label */}
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md mb-4">
                   Highlights of the Organization
@@ -194,7 +191,7 @@ const OrgPageStudent = () => {
               </div>
 
               {/* Upcoming Events */}
-              <div className="w-full h-full bg-gray-200 rounded-lg p-3 overflow-y-auto">
+              <div className="w-full h-full bg-white shadow-xl rounded-lg p-3 overflow-y-auto">
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md mb-4">
                   Upcoming Events
                 </div>
@@ -256,7 +253,7 @@ const OrgPageStudent = () => {
             {/* Right Main Content */}
             <section className="w-2/5 space-y-6 pr-10 pt-6 flex flex-col">
               {/* Description */}
-              <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
+              <div className="w-full h-64 bg-white shadow-xl rounded-lg p-3">
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
                   Description
                 </div>
@@ -266,7 +263,7 @@ const OrgPageStudent = () => {
               </div>
 
               {/* Org Details */}
-              <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
+              <div className="w-full h-64 bg-white shadow-xl rounded-lg p-3">
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
                   Org Details
                 </div>
@@ -334,7 +331,7 @@ const OrgPageStudent = () => {
               </div>
 
               {/* Org Heads */}
-              <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
+              <div className="w-full h-64 bg-white shadow-xl rounded-lg p-3">
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
                   Org Heads
                 </div>
@@ -371,7 +368,7 @@ const OrgPageStudent = () => {
               </div>
 
               {/* Past Events */}
-              <div className="w-full h-full bg-gray-200 rounded-lg p-3 overflow-y-auto">
+              <div className="w-full h-full bg-white shadow-xl rounded-lg p-3 overflow-y-auto">
                 <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md mb-4">
                   Past Events
                 </div>

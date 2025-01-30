@@ -1,4 +1,4 @@
-import * as React from "react";
+
 import PaskilanStickman from '@/assets/paskilan_stickman.png';
 import {
     Carousel,
@@ -21,7 +21,7 @@ import SampleHeader1 from '@/sample_data/sample_header/sample_header.jpeg';
 import SampleHeader2 from '@/sample_data/sample_header/sample_header2.jpg';
 
 export default function FeatureView() {
-    const NAME = "Earl";
+    const NAME = "EARL";
 
     return (
         <div>

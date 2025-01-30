@@ -4,9 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using static AppDev.Controllers.AccountController;
+using static appdev.Controllers.AccountController;
 using appdev.DTOs;
-using static AppDev.Controllers.AccountController.RegisterRequest;
+using static appdev.Controllers.AccountController.RegisterRequest;
 
 namespace appdev.Services
 {

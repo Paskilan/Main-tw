@@ -1,19 +1,42 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import CreateGroupModal from "@/components/layouts/settings/CreateGroupModal";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; 
 import { CheckCircle } from "lucide-react";
 
+interface Group {
+    id: number;
+    name: string;
+    description: string;
+    imageUrl: string;
+}
+
 export default function ManageGroup() {
-    const [groups, setGroups] = useState([
-        { id: 1, name: "Group 1", description: "Description for Group 1", imageUrl: "https://via.placeholder.com/150" },
-        { id: 2, name: "Group 2", description: "Description for Group 2", imageUrl: "https://via.placeholder.com/150" }
-    ]);
+    const [groups, setGroups] = useState<Group[]>([]);
     const [showNotification, setShowNotification] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const handleNewGroup = (newGroup: { id: number; name: string; description: string; imageUrl: string }) => {
+    useEffect(() => {
+        const fetchGroups = async () => {
+            try {
+                const response = await axios.get('/api/orgDisplay');
+                console.log('API response:', response.data); // Debug here
+                if (Array.isArray(response.data)) {
+                    setGroups(response.data);
+                } else {
+                    console.error('Unexpected response:', response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching groups:', error);
+            }
+        };
+        fetchGroups();
+    }, []);
+
+    const handleNewGroup = (newGroup: Group) => {
+        console.log('New group:', newGroup); // Debugging log
         setGroups([...groups, newGroup]);
         setShowNotification(true);
         setTimeout(() => setShowNotification(false), 3000);
@@ -45,8 +68,8 @@ export default function ManageGroup() {
             </h1>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {groups.map(group => (
-                    <button 
-                        key={group.id} 
+                    <button
+                        key={group.id}
                         className="p-4 bg-white rounded-lg shadow-md text-left flex flex-col items-center gap-4 w-full h-full transform transition-transform hover:scale-105 hover:shadow-xl"
                         onClick={() => handleCardClick(group.id)}
                     >

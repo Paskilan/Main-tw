@@ -207,7 +207,6 @@ namespace appdev.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrgHighlightsTable_OrgTable");
             });
-
             modelBuilder.Entity<OrgTable>(entity =>
             {
                 entity.HasKey(e => e.OrgId);
@@ -217,34 +216,54 @@ namespace appdev.Models
                 entity.Property(e => e.OrgId)
                     .ValueGeneratedOnAdd()
                     .HasColumnName("OrgID");
+
                 entity.Property(e => e.OrgDescription).IsUnicode(false);
+
                 entity.Property(e => e.OrgEmail)
                     .HasMaxLength(150)
                     .IsUnicode(false);
+
                 entity.Property(e => e.OrgFacebook)
                     .HasMaxLength(150)
-                    .IsUnicode(false);
-                entity.Property(e => e.OrgHeader).HasColumnType("image");
+                    .IsUnicode(false)
+                    .IsRequired(false);
+
+                entity.Property(e => e.OrgHeader).HasColumnType("image")
+                    .IsRequired(false);
+
                 entity.Property(e => e.OrgInstagram)
                     .HasMaxLength(150)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .IsRequired(false); 
+
                 entity.Property(e => e.OrgLinkedIn)
                     .HasMaxLength(150)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .IsRequired(false); 
+
                 entity.Property(e => e.OrgLogo).HasColumnType("image");
+
                 entity.Property(e => e.OrgName)
                     .HasMaxLength(150)
                     .IsUnicode(false);
+
                 entity.Property(e => e.OrgType)
                     .HasMaxLength(150)
                     .IsUnicode(false);
+
                 entity.Property(e => e.Verified)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .IsFixedLength();
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false);
+
                 entity.Property(e => e.OrgApproved)
-                    .HasMaxLength(5)
-                    .IsUnicode(false);
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false);
+
+                entity.Property(e => e.ControlNumber)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .IsRequired(false);
+
                 entity.Property(e => e.CollegeId)
                     .HasColumnName("CollegeID")
                     .IsRequired(false);
@@ -256,6 +275,7 @@ namespace appdev.Models
                     .HasConstraintName("FK_OrgTable_CollegeTable")
                     .IsRequired(false);
             });
+
 
             modelBuilder.Entity<ReportTable>(entity =>
             {

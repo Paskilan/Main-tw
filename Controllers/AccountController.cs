@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using appdev.DTOs;
-using static AppDev.Controllers.AccountController.RegisterRequest;
+using static appdev.Controllers.AccountController.RegisterRequest;
 
-namespace AppDev.Controllers
+namespace appdev.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

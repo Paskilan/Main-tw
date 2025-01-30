@@ -2,9 +2,13 @@
 using appdev.Models;
 using appdev.DTOs;
 using Microsoft.EntityFrameworkCore;
+using static appdev.Controllers.OrgsController;
+using appdev.Controllers;
+
 
 namespace appdev.Services
 {
+
     public class OrgService
     {
         private readonly ApplicationDbContext _context;
@@ -16,77 +20,91 @@ namespace appdev.Services
             _emailService = emailService;
         }
 
-        public async Task<OrgTable> CreateOrgAsync(CreateOrgDto createOrgDto, int collegeId)
+        public async Task<OrgResponse<OrgResponseDto>> CreateOrgAsync(CreateOrgDto createOrgDto)
         {
-            if (string.IsNullOrEmpty(createOrgDto.Name))
-                throw new ArgumentException("Organization name is required.");
-
-            if (string.IsNullOrEmpty(createOrgDto.Email) || !Regex.IsMatch(createOrgDto.Email, @"^[^\s@]+@[^\s@]+\.[^\s@]+$"))
-                throw new ArgumentException("Invalid email format.");
-
-            if (await _context.Orgs.AnyAsync(o => o.OrgName.ToLower() == createOrgDto.Name.ToLower()))
-                throw new InvalidOperationException("An organization with this name already exists.");
-
-            var match = Regex.Match(createOrgDto.ImageUrl, @"data:image/(?<type>.+?);base64,(?<data>.+)");
-            if (!match.Success) throw new InvalidOperationException("Invalid image format");
-
-            var imageData = match.Groups["data"].Value;
-
-            var org = new OrgTable
+            try
             {
-                OrgName = createOrgDto.Name,
-                OrgDescription = createOrgDto.Description,
-                CollegeId = collegeId,
-                OrgLogo = Convert.FromBase64String(imageData),
-                Verified = createOrgDto.Verified,
-                OrgEmail = createOrgDto.Email,
-                OrgType = createOrgDto.Classification,
-                ControlNumber = createOrgDto.ControlNumber,
-                OrgApproved = ""
-            };
+                if (await _context.Orgs.AnyAsync(o => o.OrgName.ToLower() == createOrgDto.OrgName.ToLower()))
+                {
+                    return new OrgResponse<OrgResponseDto>
+                    {
+                        Success = false,
+                        Message = "An organization with this name already exists"
+                    };
+                }
 
-            _context.Orgs.Add(org);
-            await _context.SaveChangesAsync();
+                if (createOrgDto.Verified && string.IsNullOrEmpty(createOrgDto.ControlNumber))
+                {
+                    return new OrgResponse<OrgResponseDto>
+                    {
+                        Success = false,
+                        Message = "ControlNumber is required for verified organizations."
+                    };
+                }
 
-            await _emailService.SendOrgApprovalRequestEmailAsync(
-                org.OrgName,
-                createOrgDto.Email,
-                org.OrgDescription
-            );
+                var org = new OrgTable
+                {
+                    OrgName = createOrgDto.OrgName,
+                    OrgDescription = createOrgDto.Description,
+                    CollegeId = createOrgDto.CollegeId,
+                    OrgEmail = createOrgDto.Email,
+                    OrgType = createOrgDto.Classification,
+                    Verified = createOrgDto.Verified,
+                    ControlNumber = createOrgDto.ControlNumber,
+                    OrgApproved = false,
+                    OrgLogo = Convert.FromBase64String(createOrgDto.ImageBase64),
+                    OrgFacebook = createOrgDto.OrgFacebook ?? "",
+                    OrgInstagram = createOrgDto.OrgInstagram ?? "",
+                    OrgLinkedIn = createOrgDto.OrgLinkedIn ?? ""
+                };
 
-            return org;
-        }
-        public async Task<OrgTable> UpdateOrgApprovalStatusAsync(int orgId, bool isApproved, string? rejectionReason = null)
-        {
-            var org = await _context.Orgs.FindAsync(orgId);
-            if (org == null)
-                throw new InvalidOperationException("Organization not found");
+                _context.Orgs.Add(org);
+                await _context.SaveChangesAsync();
 
-            org.OrgApproved = isApproved ? "Yes" : "No";
-            await _context.SaveChangesAsync();
+                var orgDto = MapToResponseDto(org);
 
-            await _emailService.SendOrgApprovalStatusEmailAsync(
-                org.OrgEmail,
-                org.OrgName,
-                isApproved,
-                rejectionReason
-            );
-
-            return org;
-        }
-        private CreateOrgDto MapToOrgDto(OrgTable org)
-        {
-            return new CreateOrgDto
+                return new OrgResponse<OrgResponseDto>
+                {
+                    Success = true,
+                    Message = "Organization created successfully",
+                    Data = orgDto
+                };
+            }
+            catch (DbUpdateException dbEx)
             {
+                var innerExceptionMessage = dbEx.InnerException?.Message ?? "No inner exception";
+                return new OrgResponse<OrgResponseDto>
+                {
+                    Success = false,
+                    Message = $"An error occurred: {innerExceptionMessage}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new OrgResponse<OrgResponseDto>
+                {
+                    Success = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
+        }
+
+        private OrgResponseDto MapToResponseDto(OrgTable org)
+        {
+            return new OrgResponseDto
+            {
+                Id = org.OrgId,
                 Name = org.OrgName,
                 Description = org.OrgDescription,
+                CollegeId = org.CollegeId ?? 0,
+                ImageUrl = $"data:image/png;base64,{Convert.ToBase64String(org.OrgLogo)}",
+                Verified = org.Verified,
                 Email = org.OrgEmail,
                 Classification = org.OrgType,
-                ControlNumber = org.ControlNumber.GetValueOrDefault() | 0,
-                ImageUrl = Convert.ToBase64String(org.OrgLogo),
-                CollegeId = org.CollegeId | 0
+                ControlNumber = org.ControlNumber
             };
         }
     }
-    }
+}
+
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using appdev.Models;
 
@@ -11,9 +12,11 @@ using appdev.Models;
 namespace appdev.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250127094939_initCreate")]
+    partial class initCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,41 +25,7 @@ namespace appdev.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("appdev.Models.AdminTable", b =>
-                {
-                    b.Property<int>("AdminId")
-                        .HasColumnType("int")
-                        .HasColumnName("AdminID");
-
-                    b.Property<string>("AdminName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OrgId")
-                        .HasColumnType("int")
-                        .HasColumnName("OrgID");
-
-                    b.Property<string>("OrgOwner")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .IsUnicode(false)
-                        .HasColumnType("char(10)")
-                        .IsFixedLength();
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int")
-                        .HasColumnName("StudentID");
-
-                    b.HasKey("AdminId");
-
-                    b.HasIndex("OrgId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("AdminTable", (string)null);
-                });
-
-            modelBuilder.Entity("appdev.Models.CollegeTable", b =>
+            modelBuilder.Entity("CollegeTable", b =>
                 {
                     b.Property<int>("CollegeId")
                         .HasColumnType("int")
@@ -106,7 +75,7 @@ namespace appdev.Migrations
                         new
                         {
                             CollegeId = 7,
-                            CollegeName = "College of Law"
+                            CollegeName = "ollege of Law"
                         },
                         new
                         {
@@ -158,6 +127,36 @@ namespace appdev.Migrations
                             CollegeId = 17,
                             CollegeName = "College of Social Sciences and Development"
                         });
+                });
+
+            modelBuilder.Entity("appdev.Models.AdminTable", b =>
+                {
+                    b.Property<int>("AdminId")
+                        .HasColumnType("int")
+                        .HasColumnName("AdminID");
+
+                    b.Property<int>("OrgId")
+                        .HasColumnType("int")
+                        .HasColumnName("OrgID");
+
+                    b.Property<string>("OrgOwner")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("char(10)")
+                        .IsFixedLength();
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int")
+                        .HasColumnName("StudentID");
+
+                    b.HasKey("AdminId");
+
+                    b.HasIndex("OrgId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("AdminTable", (string)null);
                 });
 
             modelBuilder.Entity("appdev.Models.EventTable", b =>
@@ -261,10 +260,6 @@ namespace appdev.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("StudentName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("StudentId", "OrgId");
 
                     b.HasIndex("OrgId");
@@ -312,22 +307,9 @@ namespace appdev.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrgId"));
 
-                    b.Property<int?>("CollegeId")
+                    b.Property<int>("CollegeId")
                         .HasColumnType("int")
                         .HasColumnName("CollegeID");
-
-                    b.Property<string>("ControlNumber")
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<int>("FollowerCount")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("OrgApproved")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
 
                     b.Property<string>("OrgDescription")
                         .IsRequired()
@@ -341,19 +323,23 @@ namespace appdev.Migrations
                         .HasColumnType("varchar(150)");
 
                     b.Property<string>("OrgFacebook")
+                        .IsRequired()
                         .HasMaxLength(150)
                         .IsUnicode(false)
                         .HasColumnType("varchar(150)");
 
                     b.Property<byte[]>("OrgHeader")
+                        .IsRequired()
                         .HasColumnType("image");
 
                     b.Property<string>("OrgInstagram")
+                        .IsRequired()
                         .HasMaxLength(150)
                         .IsUnicode(false)
                         .HasColumnType("varchar(150)");
 
                     b.Property<string>("OrgLinkedIn")
+                        .IsRequired()
                         .HasMaxLength(150)
                         .IsUnicode(false)
                         .HasColumnType("varchar(150)");
@@ -374,10 +360,12 @@ namespace appdev.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(150)");
 
-                    b.Property<bool>("Verified")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                    b.Property<string>("Verified")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("char(10)")
+                        .IsFixedLength();
 
                     b.HasKey("OrgId");
 
@@ -496,7 +484,7 @@ namespace appdev.Migrations
 
             modelBuilder.Entity("appdev.Models.EventTable", b =>
                 {
-                    b.HasOne("appdev.Models.CollegeTable", "College")
+                    b.HasOne("CollegeTable", "College")
                         .WithMany("EventTables")
                         .HasForeignKey("CollegeId")
                         .IsRequired()
@@ -545,9 +533,10 @@ namespace appdev.Migrations
 
             modelBuilder.Entity("appdev.Models.OrgTable", b =>
                 {
-                    b.HasOne("appdev.Models.CollegeTable", "College")
+                    b.HasOne("CollegeTable", "College")
                         .WithMany("OrgTables")
                         .HasForeignKey("CollegeId")
+                        .IsRequired()
                         .HasConstraintName("FK_OrgTable_CollegeTable");
 
                     b.Navigation("College");
@@ -574,8 +563,7 @@ namespace appdev.Migrations
 
             modelBuilder.Entity("appdev.Models.StudentTable", b =>
                 {
-
-                    b.HasOne("appdev.Models.CollegeTable", "College")
+                    b.HasOne("CollegeTable", "College")
                         .WithMany("StudentTables")
                         .HasForeignKey("CollegeId")
                         .IsRequired()
@@ -584,7 +572,7 @@ namespace appdev.Migrations
                     b.Navigation("College");
                 });
 
-            modelBuilder.Entity("appdev.Models.CollegeTable", b =>
+            modelBuilder.Entity("CollegeTable", b =>
                 {
                     b.Navigation("EventTables");
 

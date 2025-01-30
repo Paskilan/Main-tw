@@ -5,7 +5,6 @@ import FormInput from "@/components/commons/FormInput";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import ProfileSettingsView from "./profile_settings_view";
-import axios from "axios";
 
 
 export default function ProfileSettingsUpdate() {

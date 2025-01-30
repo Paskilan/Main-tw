@@ -1,4 +1,4 @@
-import React from "react";
+
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 /**pages */
@@ -11,6 +11,7 @@ import RegisterPage from "./pages/RegisterPage";
 import OrgPageStudent from "./pages/OrgPageStudent";
 import OrgPageAdmin from "./pages/OrgPageAdmin";
 import TemporaryEventPage from "./pages/TemporaryEventPage";
+import { UserProvider } from './contexts/UserContext';
 
 /**styles */
 import "./App.css";
@@ -18,6 +19,7 @@ import "./App.css";
 function App() {
   return (
     <Router>
+      <UserProvider>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/*" element={<HomePage />} />
@@ -29,6 +31,7 @@ function App() {
         <Route path="/org/AdminView" element={<OrgPageAdmin />} />
         <Route path="/temporary-event" element={<TemporaryEventPage />} />
       </Routes>
+      </UserProvider>
     </Router>
   );
 }

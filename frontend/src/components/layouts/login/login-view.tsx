@@ -1,20 +1,33 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import PaskilanCircle from "@/assets/paskilan_circle.png";
 import FormInput from "@/components/commons/FormInput";
 
-interface LoginFormProps {
-    onSubmit: (formData: { email: string; password: string }) => void;
-    emailError?: string; // New prop to handle email error message
-}
+export function LoginView() {
+    const navigate = useNavigate();
+    const [error, setError] = useState<string | null>(null);
 
-export function LoginView({ onSubmit, emailError }: LoginFormProps) {
-    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
-        onSubmit({ email, password });
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_API_BASE_URL}/api/account/login`,
+                { email, password }
+            );
+
+            localStorage.setItem("authToken", response.data.token);
+            navigate("/feature");
+        } catch (err) {
+            setError("Invalid credentials");
+            console.error("Login failed:", err);
+        }
     };
 
     return (
@@ -33,10 +46,8 @@ export function LoginView({ onSubmit, emailError }: LoginFormProps) {
                     placeholder="juandc@iskolarngbayan.pup.edu.ph"
                     required
                 />
-                {/* Show error message under the email input */}
-                {emailError && (
-                    <p className="text-xs text-red-500">{emailError}</p>
-                )}
+                {error && <p className="text-xs text-red-500">{error}</p>
+                }
 
                 <FormInput
                     label="Password"

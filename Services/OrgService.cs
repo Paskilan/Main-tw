@@ -2,13 +2,10 @@
 using appdev.Models;
 using appdev.DTOs;
 using Microsoft.EntityFrameworkCore;
-using static appdev.Controllers.OrgsController;
-using appdev.Controllers;
-
+using System.Security.Claims;
 
 namespace appdev.Services
 {
-
     public class OrgService
     {
         private readonly ApplicationDbContext _context;
@@ -20,10 +17,23 @@ namespace appdev.Services
             _emailService = emailService;
         }
 
-        public async Task<OrgResponse<OrgResponseDto>> CreateOrgAsync(CreateOrgDto createOrgDto)
+        public async Task<OrgResponse<OrgResponseDto>> CreateOrgAsync(CreateOrgDto createOrgDto, ClaimsPrincipal user)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                var studentIdClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+                if (studentIdClaim == null)
+                {
+                    return new OrgResponse<OrgResponseDto>
+                    {
+                        Success = false,
+                        Message = "Student ID not found in authentication token"
+                    };
+                }
+
+                int studentId = int.Parse(studentIdClaim.Value);
+
                 if (await _context.Orgs.AnyAsync(o => o.OrgName.ToLower() == createOrgDto.OrgName.ToLower()))
                 {
                     return new OrgResponse<OrgResponseDto>
@@ -61,6 +71,18 @@ namespace appdev.Services
                 _context.Orgs.Add(org);
                 await _context.SaveChangesAsync();
 
+                var admin = new AdminTable
+                {
+                    StudentId = studentId,
+                    OrgId = org.OrgId,
+                    OrgOwner = true
+                };
+
+                _context.Admins.Add(admin);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
                 var orgDto = MapToResponseDto(org);
 
                 return new OrgResponse<OrgResponseDto>
@@ -72,15 +94,17 @@ namespace appdev.Services
             }
             catch (DbUpdateException dbEx)
             {
+                await transaction.RollbackAsync();
                 var innerExceptionMessage = dbEx.InnerException?.Message ?? "No inner exception";
                 return new OrgResponse<OrgResponseDto>
                 {
                     Success = false,
-                    Message = $"An error occurred: {innerExceptionMessage}"
+                    Message = $"Database error: {innerExceptionMessage}"
                 };
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 return new OrgResponse<OrgResponseDto>
                 {
                     Success = false,
@@ -106,5 +130,3 @@ namespace appdev.Services
         }
     }
 }
-
-

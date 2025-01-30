@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace appdev.Migrations
 {
     /// <inheritdoc />
-    public partial class asd : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -140,15 +140,13 @@ namespace appdev.Migrations
                 name: "AdminTable",
                 columns: table => new
                 {
-                    AdminID = table.Column<int>(type: "int", nullable: false),
                     OrgID = table.Column<int>(type: "int", nullable: false),
                     StudentID = table.Column<int>(type: "int", nullable: false),
-                    AdminName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OrgOwner = table.Column<string>(type: "char(10)", unicode: false, fixedLength: true, maxLength: 10, nullable: false)
+                    OrgOwner = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AdminTable", x => x.AdminID);
+                    table.PrimaryKey("PK_AdminTable", x => new { x.OrgID, x.StudentID });
                     table.ForeignKey(
                         name: "FK_AdminTable_OrgTable",
                         column: x => x.OrgID,
@@ -233,11 +231,6 @@ namespace appdev.Migrations
                     { 16, "PUP Senior Highschool" },
                     { 17, "College of Social Sciences and Development" }
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AdminTable_OrgID",
-                table: "AdminTable",
-                column: "OrgID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AdminTable_StudentID",

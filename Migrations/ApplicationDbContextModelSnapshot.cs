@@ -24,32 +24,19 @@ namespace appdev.Migrations
 
             modelBuilder.Entity("appdev.Models.AdminTable", b =>
                 {
-                    b.Property<int>("AdminId")
-                        .HasColumnType("int")
-                        .HasColumnName("AdminID");
-
-                    b.Property<string>("AdminName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("OrgId")
                         .HasColumnType("int")
                         .HasColumnName("OrgID");
-
-                    b.Property<string>("OrgOwner")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .IsUnicode(false)
-                        .HasColumnType("char(10)")
-                        .IsFixedLength();
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int")
                         .HasColumnName("StudentID");
 
-                    b.HasKey("AdminId");
+                    b.Property<bool>("OrgOwner")
+                        .HasColumnType("bit")
+                        .HasColumnName("OrgOwner");
 
-                    b.HasIndex("OrgId");
+                    b.HasKey("OrgId", "StudentId");
 
                     b.HasIndex("StudentId");
 

@@ -16,9 +16,6 @@ public partial class StudentTable
     public byte[] StudentProfilePicture { get; set; } = null!;
     public int OrgCount { get; set; }
     public string OrgAdmin { get; set; } = null!;
-
-    public virtual CollegeTable CollegeName { get; set; } = null!;
-
     public virtual CollegeTable College { get; set; } = null!;
     public virtual ICollection<AdminTable> AdminTables { get; set; } = new List<AdminTable>();
     public virtual ICollection<FollowedOrgsTable> FollowedOrgsTables { get; set; } = new List<FollowedOrgsTable>();

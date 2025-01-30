@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using appdev.Models;
 
@@ -11,9 +12,11 @@ using appdev.Models;
 namespace appdev.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250127094939_initCreate")]
+    partial class initCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,41 +25,7 @@ namespace appdev.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("appdev.Models.AdminTable", b =>
-                {
-                    b.Property<int>("AdminId")
-                        .HasColumnType("int")
-                        .HasColumnName("AdminID");
-
-                    b.Property<string>("AdminName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OrgId")
-                        .HasColumnType("int")
-                        .HasColumnName("OrgID");
-
-                    b.Property<string>("OrgOwner")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .IsUnicode(false)
-                        .HasColumnType("char(10)")
-                        .IsFixedLength();
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int")
-                        .HasColumnName("StudentID");
-
-                    b.HasKey("AdminId");
-
-                    b.HasIndex("OrgId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("AdminTable", (string)null);
-                });
-
-            modelBuilder.Entity("appdev.Models.CollegeTable", b =>
+            modelBuilder.Entity("CollegeTable", b =>
                 {
                     b.Property<int>("CollegeId")
                         .HasColumnType("int")
@@ -160,6 +129,36 @@ namespace appdev.Migrations
                         });
                 });
 
+            modelBuilder.Entity("appdev.Models.AdminTable", b =>
+                {
+                    b.Property<int>("AdminId")
+                        .HasColumnType("int")
+                        .HasColumnName("AdminID");
+
+                    b.Property<int>("OrgId")
+                        .HasColumnType("int")
+                        .HasColumnName("OrgID");
+
+                    b.Property<string>("OrgOwner")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("char(10)")
+                        .IsFixedLength();
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int")
+                        .HasColumnName("StudentID");
+
+                    b.HasKey("AdminId");
+
+                    b.HasIndex("OrgId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("AdminTable", (string)null);
+                });
+
             modelBuilder.Entity("appdev.Models.EventTable", b =>
                 {
                     b.Property<int>("EventId")
@@ -261,10 +260,6 @@ namespace appdev.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("StudentName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("StudentId", "OrgId");
 
                     b.HasIndex("OrgId");
@@ -315,12 +310,6 @@ namespace appdev.Migrations
                     b.Property<int>("CollegeId")
                         .HasColumnType("int")
                         .HasColumnName("CollegeID");
-
-                    b.Property<int?>("ControlNumber")
-                        .HasColumnType("int");
-
-                    b.Property<int>("FollowerCount")
-                        .HasColumnType("int");
 
                     b.Property<string>("OrgDescription")
                         .IsRequired()
@@ -429,9 +418,6 @@ namespace appdev.Migrations
                         .HasColumnType("int")
                         .HasColumnName("CollegeID");
 
-                    b.Property<int>("CollegeId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("OrgAdmin")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -474,8 +460,6 @@ namespace appdev.Migrations
 
                     b.HasIndex("CollegeId");
 
-                    b.HasIndex("CollegeId1");
-
                     b.ToTable("StudentTable", (string)null);
                 });
 
@@ -500,7 +484,7 @@ namespace appdev.Migrations
 
             modelBuilder.Entity("appdev.Models.EventTable", b =>
                 {
-                    b.HasOne("appdev.Models.CollegeTable", "College")
+                    b.HasOne("CollegeTable", "College")
                         .WithMany("EventTables")
                         .HasForeignKey("CollegeId")
                         .IsRequired()
@@ -549,7 +533,7 @@ namespace appdev.Migrations
 
             modelBuilder.Entity("appdev.Models.OrgTable", b =>
                 {
-                    b.HasOne("appdev.Models.CollegeTable", "College")
+                    b.HasOne("CollegeTable", "College")
                         .WithMany("OrgTables")
                         .HasForeignKey("CollegeId")
                         .IsRequired()
@@ -588,7 +572,7 @@ namespace appdev.Migrations
                     b.Navigation("College");
                 });
 
-            modelBuilder.Entity("appdev.Models.CollegeTable", b =>
+            modelBuilder.Entity("CollegeTable", b =>
                 {
                     b.Navigation("EventTables");
 

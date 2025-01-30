@@ -5,14 +5,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 
 type PixelCrop = {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-};
 
+    x: number
+    y: number
+    width: number
+    height: number
+}
 interface PictureUploaderInputProps {
-    onChange?: (file: File | null) => void;
+    onChange?: (file: File | null) => void
 }
 
 export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) => {
@@ -29,11 +29,7 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
             const file = event.target.files[0];
             setSelectedImage(URL.createObjectURL(file));
             setCropModalOpen(true);
-
-            if (onChange) {
-                onChange(file); // Notify parent about the image upload
-            }
-
+          
             if (fileInputRef.current) {
                 fileInputRef.current.value = ""; 
             }

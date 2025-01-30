@@ -6,9 +6,6 @@ import { Input } from '@/components/ui/input';
 import NavbarTexture from '@/assets/navbar_texture.png';
 import PaskilanCircle from '@/assets/paskilan_circle.png';
 
-/** sample navbar profile TODO : remove in prod*/
-import EarlSamplePic from '@/sample_data/sample_profile.png';
-
 
 export function Navbar() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -58,15 +55,6 @@ export function Navbar() {
 
         {/* Right Section */}
         <div className="flex items-center space-x-4 gap-2 p-4">
-          <FiHelpCircle size={24} className="cursor-pointer hover:text-white" />
-          <FiBell size={24} className="cursor-pointer hover:text-white" />
-          
-          {/* User Profile Picture */}
-          <img
-            src={EarlSamplePic}
-            alt="User Profile"
-            className="w-8 h-8 rounded-full object-cover cursor-pointer"
-          />
           <Link to="/settings" className="cursor-pointer hover:text-white">
             <FiSettings size={24} />
           </Link>

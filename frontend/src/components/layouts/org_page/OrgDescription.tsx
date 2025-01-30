@@ -15,7 +15,7 @@ const OrgDescription = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="w-full h-64 bg-gray-200 rounded-lg p-3">
+    <div className="w-full h-64 bg-white shadow-xl rounded-lg p-3">
       <div className="flex justify-between items-center mb-4">
         <div className="bg-yellow-400 text-red-800 font-museo font-bold px-4 rounded-full inline-block shadow-md">
           Description

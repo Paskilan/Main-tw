@@ -8,7 +8,7 @@ import {
     CarouselPrevious,
 } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
-
+import { useUser } from '@/contexts/UserContext';
 // Importing sample data
 import { events, orgs } from '@/sample_data/features/homepage';
 
@@ -21,15 +21,18 @@ import SampleHeader1 from '@/sample_data/sample_header/sample_header.jpeg';
 import SampleHeader2 from '@/sample_data/sample_header/sample_header2.jpg';
 
 export default function FeatureView() {
-    const NAME = "EARL";
+
+    const { profile, loading } = useUser();
 
     return (
         <div>
             {/* Feature Heading */}
             <div className="relative w-full h-[260px] left-0">
                 <h1 className="h1-text text-shadow shadow-gray-900 absolute top-[95px] left-0">
-                    <span className="h1-text italic text-pup-maroon1">What's up, </span>
-                    <span className="h1-text text-pup-gold2">{NAME.toUpperCase()}</span>
+                <span className="h1-text italic text-pup-maroon1">What's up, </span>
+                <span className="h1-text text-pup-gold2 truncate max-w-[200px]">
+                {loading ? '...' : profile?.firstName.toUpperCase()}
+                </span>
                     <span className="h1-text text-pup-maroon1">!</span>
                 </h1>
                 <img

@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 
 type PixelCrop = {
+
     x: number
     y: number
     width: number
@@ -28,7 +29,7 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
             const file = event.target.files[0];
             setSelectedImage(URL.createObjectURL(file));
             setCropModalOpen(true);
-
+          
             if (fileInputRef.current) {
                 fileInputRef.current.value = ""; 
             }

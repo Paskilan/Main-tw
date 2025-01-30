@@ -5,7 +5,9 @@ import OrgBanner from "@/components/layouts/org_page/OrgBanner";
 import OrgHighlights from "@/components/layouts/org_page/OrgHighlights";
 import OrgDescription from "@/components/layouts/org_page/OrgDescription";
 import OrgDetails from "@/components/layouts/org_page/OrgDetails";
+
 import { ProfilePictureButton } from "@/components/layouts/org_page/ProfilePictureButton";
+
 import { EventModal } from "@/components/layouts/settings/EventModal";
 
 const mockData = {
@@ -199,6 +201,7 @@ const OrgPageAdmin = () => {
     });
   };
 
+
   const handleSavePictures = (profilePic: string, headerPic: string) => {
     setOrgData((prevData) => ({
       ...prevData,
@@ -206,6 +209,7 @@ const OrgPageAdmin = () => {
       bannerImageUrl: headerPic,
     }));
   };
+
 
   return (
     <>

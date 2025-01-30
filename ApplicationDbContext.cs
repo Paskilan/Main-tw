@@ -32,26 +32,25 @@ namespace appdev.Models
         {
             modelBuilder.Entity<AdminTable>(entity =>
             {
-                entity.HasKey(e => e.AdminId);
+                entity.HasKey(e => new { e.OrgId, e.StudentId });
 
                 entity.ToTable("AdminTable");
+               
+                entity.Property(e => e.OrgId)
+                    .HasColumnName("OrgID");  
 
-                entity.Property(e => e.AdminId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("AdminID");
+                entity.Property(e => e.StudentId)
+                    .HasColumnName("StudentID");
 
-                entity.Property(e => e.OrgId).HasColumnName("OrgID");
                 entity.Property(e => e.OrgOwner)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .IsFixedLength();
-                entity.Property(e => e.StudentId).HasColumnName("StudentID");
-
-                entity.HasOne(d => d.Org)
+                    .IsRequired()
+                    .HasColumnName("OrgOwner");
+               
+                entity.HasOne(d => d.Org) 
                     .WithMany(p => p.AdminTables)
-                    .HasForeignKey(d => d.OrgId)
+                    .HasForeignKey(d => d.OrgId)  
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AdminTable_OrgTable");
+                    .HasConstraintName("FK_AdminTable_OrgTable"); 
 
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.AdminTables)

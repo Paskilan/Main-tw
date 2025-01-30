@@ -36,7 +36,7 @@ export default function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormP
         if (!email.trim()) return "Email is required.";
         if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return "Invalid email format.";
         if (isValidated && !controlNumber.trim()) return "Control number is required for validated organizations.";
-        if (isValidated && !controlNumber.match(/^\d+$/)) return "Control number must be a number.";
+        if (isValidated && !controlNumber.match(/^\d{4}-[A-Z]{3}-\d{3}$/)) return "Control number must follow the format: 0000-AAA-000";
         if (!description.trim()) return "Description is required.";
         if (!classification) return "Classification is required.";
         if (classification === "college" && !college) return "College selection is required.";
@@ -104,7 +104,7 @@ export default function GroupDetailsForm({ onBack, onSubmit }: GroupDetailsFormP
             {isValidated && (
                 <FormInput
                     label="Control Number *"
-                    placeholder="Enter control number"
+                    placeholder="Ex. 0000-AAA-000"
                     value={controlNumber}
                     onChange={(e: { target: { value: string } }) => setControlNumber(e.target.value)}
                     labelClassName="block form-label"

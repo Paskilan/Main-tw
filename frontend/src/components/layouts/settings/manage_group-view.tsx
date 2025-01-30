@@ -3,13 +3,12 @@ import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import CreateGroupModal from "@/components/layouts/settings/CreateGroupModal";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CheckCircle } from "lucide-react";
 
 interface Group {
     id: number;
     name: string;
-    description: string;
     imageUrl: string;
 }
 
@@ -21,30 +20,30 @@ export default function ManageGroup() {
     useEffect(() => {
         const fetchGroups = async () => {
             try {
-                const response = await axios.get('/api/orgDisplay');
-                console.log('API response:', response.data); // Debug here
-                if (Array.isArray(response.data)) {
-                    setGroups(response.data);
-                } else {
-                    console.error('Unexpected response:', response.data);
-                }
+                const token = localStorage.getItem("authToken");
+                const response = await axios.get(
+                    `${import.meta.env.VITE_API_BASE_URL}/api/orgs/orgDisplay`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+
+                setGroups(response.data);
             } catch (error) {
                 console.error('Error fetching groups:', error);
             }
         };
+
         fetchGroups();
     }, []);
 
     const handleNewGroup = (newGroup: Group) => {
-        console.log('New group:', newGroup); // Debugging log
-        setGroups([...groups, newGroup]);
+        setGroups(prevGroups => [...prevGroups, newGroup]);
         setShowNotification(true);
         setTimeout(() => setShowNotification(false), 3000);
         setIsDialogOpen(false);
-    };
-
-    const handleCardClick = (groupId: number) => {
-        alert(`Group ${groupId} clicked`);
     };
 
     return (
@@ -66,12 +65,12 @@ export default function ManageGroup() {
             <h1 className='text-4xl font-semibold text-pup-maroon2 tracking-tight mb-6'>
                 Your Groups
             </h1>
+
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {groups.map(group => (
                     <button
                         key={group.id}
                         className="p-4 bg-white rounded-lg shadow-md text-left flex flex-col items-center gap-4 w-full h-full transform transition-transform hover:scale-105 hover:shadow-xl"
-                        onClick={() => handleCardClick(group.id)}
                     >
                         <div className="w-24 h-24 overflow-hidden rounded-full border-4 border-pup-maroon2">
                             <img src={group.imageUrl} alt={group.name} className="w-full h-full object-cover" />

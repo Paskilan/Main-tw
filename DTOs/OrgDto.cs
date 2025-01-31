@@ -7,7 +7,7 @@
         public string Email { get; set; }
         public string Classification { get; set; }
         public int? CollegeId { get; set; }
-        public string? ControlNumber { get; set; } // Ensure this field is present
+        public string? ControlNumber { get; set; }
         public bool Verified { get; set; }
         public string ImageBase64 { get; set; }
         public string? OrgFacebook { get; set; }

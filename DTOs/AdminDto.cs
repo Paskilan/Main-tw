@@ -45,6 +45,7 @@ namespace appdev.DTOs
         public byte[] Picture { get; set; }
         public string Organizer { get; set; }
         public string Host { get; set; }
+        public string RegistrationLink { get; set; }
         public string FreeOrPaid { get; set; }
         public string Cost { get; set; }
     }

@@ -1,54 +1,93 @@
-
-
 export interface OrganizationDTO {
     orgId: number;
-    orgDetails: {
-        name: string;
-        email: string;
-        collegeName: string;
-        socials: {
-            facebook?: string;
-            instagram?: string;
-            linkedin?: string;
-        };
-    }
+    orgDetails: OrgDetailsDTO;
     name: string;
-    description: string;
+    collegeId: number;
     email: string;
+    description: string;
     classification: string;
-    collegeId?: number;
-    controlNumber?: string;
-    isVerified: boolean;
-    imageUrl: string;
-    headerImageUrl?: string;
-    followerCount: number;
     collegeName: string;
-    socials: {
-        facebook?: string;
-        instagram?: string;
-        linkedin?: string;
-    };
+    socials: SocialMediaDTO;
+    imageUrl: string;
+    headerImageUrl: string;
+    isVerified: boolean;
+    followerCount: number;
     upcomingEvents: EventDTO[];
     pastEvents: EventDTO[];
-    highlights: OrgHighlightDTO[];
-    orgHeads: OrgHeadDTO[];
+    highlights: HighlightDTO[];
     admins: AdminDTO[];
+}
+
+export interface OrgDetailsDTO {
+    name: string;
+    email: string;
+    collegeName: string;
+    socials: SocialMediaDTO;
 }
 
 export interface EventCreateDTO {
     eventName: string;
-    when: string;  // ISO date string
+    when: string;
+    where: string;
     platform: string;
     location: string;
     participantsCount: string;
     eventDetails: string;
     topic: string;
-    exclusivity: 'uniwide' | 'college';
-    picture: File | null;
+    exclusivity: string;
+    imageUrl: string;
     organizer: string;
     host: string;
-    freeOrPaid: 'free' | 'paid';
-    cost?: string;
+    registrationLink: string;
+    freeOrPaid: string;
+    cost: string;
+}
+
+export interface SocialMediaDTO {
+    facebook: string;
+    instagram: string;
+    linkedin: string;
+}
+
+export interface EventDTO {
+    eventId: number;
+    eventName: string;
+    when: string;
+    where: string;
+    platform: string;
+    location: string;
+    participantsCount: string;
+    eventDetails: string;
+    topic: string;
+    exclusivity: string;
+    imageUrl: string;
+    organizer: string;
+    host: string;
+    freeOrPaid: string;
+    registrationLink: string;
+    cost: string;
+    rsvpCount: number;
+}
+
+export interface HighlightDTO {
+    id: number;
+    title: string;
+    description: string;
+    imageUrl: string;
+}
+
+export interface AdminDTO {
+    studentId: number;
+    name: string;
+    email: string;
+}
+
+export interface AdminUpdateDTO {
+    admins: AdminDTO[];
+}
+
+export interface HighlightUpdateDTO {
+    highlights: HighlightDTO[];
 }
 
 export interface ImageUploadResponse {
@@ -60,38 +99,6 @@ export interface ApiResponse<T> {
     data?: T;
     message: string;
     error?: string;
-}
-export interface EventDTO {
-    eventId: number;
-    title: string;
-    description: string;
-    date: string;
-    mode: string;
-    location: string;
-    host: string;
-    imageUrl: string;
-    rsvpCount: number;
-    registration: string;
-}
-
-export interface OrgHighlightDTO {
-    id: number;
-    title: string;
-    description: string;
-    imageUrl: string;
-}
-
-export interface OrgHeadDTO {
-    id: number;
-    name: string;
-    role: string;
-    imageUrl: string;
-}
-
-export interface AdminDTO {
-    studentId: number;
-    name: string;
-    email: string;
 }
 
 export const transformEventData = (formData: EventCreateDTO) => ({

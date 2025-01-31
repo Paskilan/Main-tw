@@ -244,6 +244,7 @@ namespace appdev.Models
 
                 entity.Property(e => e.OrgName)
                     .HasMaxLength(150)
+                    .IsRequired(false) //nawala pala to 
                     .IsUnicode(false);
 
                 entity.Property(e => e.OrgType)
@@ -251,10 +252,6 @@ namespace appdev.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Verified)
-                    .HasColumnType("bit")
-                    .HasDefaultValue(false);
-
-                entity.Property(e => e.OrgApproved)
                     .HasColumnType("bit")
                     .HasDefaultValue(false);
 

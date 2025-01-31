@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { Navbar } from "@/components/commons/Navbar";
 import OrgBanner from "@/components/layouts/org_page/OrgBanner";
@@ -8,7 +8,7 @@ import OrgDetails from "@/components/layouts/org_page/OrgDetails";
 import { ManageAdminsButton } from "@/components/layouts/org_page/ManageAdminsButton";
 import { ProfilePictureButton } from "@/components/layouts/org_page/ProfilePictureButton";
 import { EventModal } from "@/components/layouts/settings/EventModal";
-import { OrganizationDTO } from "../types/orgAdmin";
+import { EventCreateDTO, OrganizationDTO } from "../types/orgAdmin";
 import axios from "axios";
 
 const OrgPageAdmin = () => {
@@ -18,7 +18,7 @@ const OrgPageAdmin = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const loadOrganizationData = async () => {
+    const loadOrganizationData = useCallback(async () => {
         const token = localStorage.getItem("authToken");
         if (!token) {
             setError("Authentication required. Please log in.");
@@ -27,13 +27,14 @@ const OrgPageAdmin = () => {
         try {
             setIsLoading(true);
             const response = await axios.get(
-                `${import.meta.env.VITE_API_BASE_URL}/organization/${orgId}`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}`,
                 {
                     headers: {
                     Authorization: `Bearer ${token}`
                     }
             });
-            const data = await response.data();  
+            const data = response.data;
+            
             if (response.status === 200) {
                 setOrgData(data);
                 setError(null);
@@ -44,17 +45,17 @@ const OrgPageAdmin = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+}, [orgId]);
 
     useEffect(() => {
         loadOrganizationData();
-    }, [orgId]);
+    }, [loadOrganizationData]);
    
 
     const handleUpdateDescription = async (newDescription: string) => {
         try {
             await axios.put(
-                `${import.meta.env.VITE_API_BASE_URL}/organization/${orgId}/description`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/description`,
                 JSON.stringify(newDescription),
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -72,7 +73,7 @@ const OrgPageAdmin = () => {
         linkedin?: string;
     }) => {
         try {
-            await axios.put(`${import.meta.env.VITE_API_BASE_URL}/organization/${orgId}/socials`, {
+            await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/socials`, {
                 facebook: socials.facebook || "",
                 instagram: socials.instagram || "",
                 linkedin: socials.linkedin || ""
@@ -93,7 +94,7 @@ const OrgPageAdmin = () => {
 
     const handleSaveLogo = async (OrglogoUrl: string) => {
         try {
-            await axios.put(`${import.meta.env.VITE_API_BASE_URL}/organization/${orgId}/logo`,
+            await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/logo`,
                 { logo: OrglogoUrl }, 
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -107,7 +108,7 @@ const OrgPageAdmin = () => {
 
     const handleSaveHeader = async (OrgheaderUrl: string) => {
         try {
-            await axios.put(`${import.meta.env.VITE_API_BASE_URL}/organization/${orgId}/header`,
+            await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/header`,
                 { header: OrgheaderUrl }, 
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -117,15 +118,6 @@ const OrgPageAdmin = () => {
             setError("Failed to update header");
             console.error(error);
         }
-    };
-
-    const convertFileToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = error => reject(error);
-        });
     };
 
     const handleCreateEvent = async (formData: {
@@ -145,19 +137,28 @@ const OrgPageAdmin = () => {
         cost?: string;
     }) => {
         try {
-            const eventDto = {
-                title: formData.eventName,
-                description: formData.eventDetails,
-                date: new Date(formData.when),
-                mode: formData.where,
-                location: formData.where === "online" ? formData.platform : formData.location,
+            const eventDto: EventCreateDTO = {
+                eventName: formData.eventName,
+                when: formData.when,
+                where: formData.where,
+                platform: formData.platform || '',
+                location: formData.location || '',
+                participantsCount: formData.participantsCount,
+                eventDetails: formData.eventDetails,
+                topic: formData.topic,
+                exclusivity: formData.exclusivity,
+                imageUrl: formData.picture ? await convertFileToBase64(formData.picture) : '',
+                organizer: formData.organizer,
                 host: formData.host,
-                header: null,
-                rsvpCount: 0,
-                registration: formData.freeOrPaid === "free" ? "Free" : `Paid - ${formData.cost}`
+                freeOrPaid: formData.freeOrPaid,
+                cost: formData.cost || '',
+                registrationLink: ''
             };
 
-            await axios.post(`${import.meta.env.VITE_API_BASE_URL}/organization/${orgId}/events`, eventDto);
+            await axios.post(
+                `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/events`,
+                eventDto
+            );
             await loadOrganizationData();
             setIsModalOpen(false);
             setError(null);
@@ -167,10 +168,19 @@ const OrgPageAdmin = () => {
         }
     };
 
+    const convertFileToBase64 = async (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = error => reject(error);
+        });
+    };
+
     const handleUpdateAdmins = async (newAdmins: any[]) => {
         try {
             await axios.put(
-                `${import.meta.env.VITE_API_BASE_URL}/organization/${orgId}/admins`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/admins`,
                 newAdmins,
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -189,7 +199,7 @@ const OrgPageAdmin = () => {
     }) => {
         try {
             await axios.put(
-                `${import.meta.env.VITE_API_BASE_URL}/organization/${orgId}/details`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/details`,
                 details,
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -210,7 +220,7 @@ const OrgPageAdmin = () => {
     const handleUpdateHighlights = async (newHighlights: any[]) => {
         try {
             await axios.put(
-                `${import.meta.env.VITE_API_BASE_URL}/organization/${orgId}/highlights`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/highlights`,
                 newHighlights,
                 { headers: { 'Content-Type': 'application/json' } }
             );
@@ -309,7 +319,7 @@ const OrgPageAdmin = () => {
                                             key={index}
                                             className="flex items-center bg-white shadow-lg rounded-lg p-1"
                                         >
-                                            {/* Event details */}
+                                            
                                         </div>
                                     ))}
                                 </div>

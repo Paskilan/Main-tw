@@ -1,10 +1,8 @@
 ﻿using appdev.Models;
 using appdev.DTOs;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using Azure.Core;
-using System.Security.Cryptography;
-using static System.Net.Mime.MediaTypeNames;
+using Microsoft.Extensions.Logging;
+
 
 namespace appdev.Services
 {
@@ -12,71 +10,80 @@ namespace appdev.Services
     {
         Task<OrganizationDTO> GetOrganizationDetailsAsync(int orgId);
         Task UpdateOrganizationDescriptionAsync(int orgId, string description);
-        Task UpdateOrganizationSocialsAsync(int orgId, string facebook, string instagram, string linkedin);
         Task UpdateOrganizationImagesAsync(int orgId, byte[] logo, byte[] header);
         Task UpdateOrganizationDetailsAsync(int orgId, string Organization, string College, string Email);
-        Task UpdateOrganizationSocialsAsync(int orgId, List<SocialMediaDTO> socials);
         Task UpdateOrganizationLogoAsync(int orgId, byte[] image);
         Task UpdateOrganizationHeaderAsync(int orgId, byte[] image);
         Task UpdateOrganizationHighlightsAsync(int orgId, List<HighlightDTO> highlights);
+       
         Task<List<EventDTO>> GetUpcomingEventsAsync(int orgId);
         Task<List<EventDTO>> GetPastEventsAsync(int orgId);
-        Task CreateEventAsync(int orgId, EventDTO eventDto);
         Task UpdateAdminsAsync(int orgId, List<AdminDTO> admins);
+        Task UpdateOrganizationSocialsAsync(int orgId, List<SocialMediaDTO> socials);
+        Task CreateEventAsync(int orgId, EventCreateDTO eventDto);
     }
 
     public class AdminService : IAdminService
     {
         private readonly ApplicationDbContext _context;
-
-        public AdminService(ApplicationDbContext context)
+        private readonly ILogger<AdminService> _logger;
+        public AdminService(ApplicationDbContext context, ILogger<AdminService> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<OrganizationDTO> GetOrganizationDetailsAsync(int orgId)
         {
-            var org = await _context.Orgs
-                .Include(o => o.EventTables)
-                .Include(o => o.OrgHighlightsTables)
-                .Include(o => o.AdminTables)
-                .FirstOrDefaultAsync(o => o.OrgId == orgId);
-
-            if (org == null)
-                throw new NotFoundException("Organization not found");
-
-            return new OrganizationDTO
+            try
             {
-                OrgId = org.OrgId,
-                Name = org.OrgName,
-                Email = org.OrgEmail,
-                Description = org.OrgDescription,
-                Classification = org.OrgType,
-                Socials = new SocialMediaDTO
+                var org = await _context.Orgs
+                    .Include(o => o.EventTables)
+                    .Include(o => o.OrgHighlightsTables)
+                    .Include(o => o.AdminTables)
+                    .FirstOrDefaultAsync(o => o.OrgId == orgId);
+
+                if (org == null)
+                    throw new NotFoundException("Organization not found");
+
+                return new OrganizationDTO
                 {
-                    Facebook = org.OrgFacebook,
-                    Instagram = org.OrgInstagram,
-                    LinkedIn = org.OrgLinkedIn
-                },
-                ImageUrl = Convert.ToBase64String(org.OrgLogo),
-                HeaderImageUrl = Convert.ToBase64String(org.OrgHeader),
-                CollegeName = org.College?.CollegeName,
-                IsVerified = org.Verified,
-                CollegeId = org.CollegeId ?? 0,
-                FollowerCount = org.FollowerCount,
-                UpcomingEvents = await GetUpcomingEventsAsync(orgId),
-                PastEvents = await GetPastEventsAsync(orgId),
-                Highlights = org.OrgHighlightsTables.Select(h => new HighlightDTO
-                {
-                    Id = h.OrgHighlightsId,
-                    Title = h.OrgHighlightsTitle,
-                    Description = h.OrgHighlightsDescription,
-                    ImageUrl = Convert.ToBase64String(h.OrgHighlightsImage)
-                }).ToList()
-            };
+                    OrgId = org.OrgId,
+                    Name = org.OrgName,
+                    Email = org.OrgEmail,
+                    Description = org.OrgDescription,
+                    Classification = org.OrgType,
+                    Socials = new SocialMediaDTO
+                    {
+                        Facebook = org.OrgFacebook,
+                        Instagram = org.OrgInstagram,
+                        LinkedIn = org.OrgLinkedIn
+                    },
+                    ImageUrl = Convert.ToBase64String(org.OrgLogo),
+                    HeaderImageUrl = Convert.ToBase64String(org.OrgHeader),
+                    CollegeName = org.College?.CollegeName,
+                    IsVerified = org.Verified,
+                    CollegeId = org.CollegeId ?? 0,
+                    FollowerCount = org.FollowerCount,
+                    UpcomingEvents = await GetUpcomingEventsAsync(orgId),
+                    PastEvents = await GetPastEventsAsync(orgId),
+                    Highlights = org.OrgHighlightsTables.Select(h => new HighlightDTO
+                    {
+                        Id = h.OrgHighlightsId,
+                        Title = h.OrgHighlightsTitle,
+                        Description = h.OrgHighlightsDescription,
+                        ImageUrl = Convert.ToBase64String(h.OrgHighlightsImage)
+                    }).ToList()
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Detailed error retrieving organization details for OrgId: {orgId}");
+                throw;
+            }
         }
 
-        public async Task UpdateOrganizationDescriptionAsync(int orgId, string description)
+            public async Task UpdateOrganizationDescriptionAsync(int orgId, string description)
         {
             var org = await _context.Orgs.FindAsync(orgId);
             if (org == null)
@@ -95,6 +102,26 @@ namespace appdev.Services
             org.OrgName = Organization;
             org.College = new CollegeTable { CollegeName = College };
             org.OrgEmail = Email;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateOrganizationLogoAsync(int orgId, byte[] image)
+        {
+            var org = await _context.Orgs.FindAsync(orgId);
+            if (org == null)
+                throw new NotFoundException("Organization not found");
+
+            org.OrgLogo = image;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateOrganizationHeaderAsync(int orgId, byte[] image)
+        {
+            var org = await _context.Orgs.FindAsync(orgId);
+            if (org == null)
+                throw new NotFoundException("Organization not found");
+
+            org.OrgHeader = image;
             await _context.SaveChangesAsync();
         }
 
@@ -142,7 +169,7 @@ namespace appdev.Services
                 .ToListAsync();
         }
 
-        public async Task CreateEventAsync(int orgId, EventDTO eventDto)
+        public async Task CreateEventAsync(int orgId, EventCreateDTO eventDto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -157,11 +184,11 @@ namespace appdev.Services
                     EventName = eventDto.EventName,
                     EventDescription = eventDto.EventDetails,
                     EventDate = DateOnly.Parse(eventDto.When),
-                    EventMode = eventDto.Platform,
+                    EventMode = eventDto.Where,
                     EventLocation = eventDto.Location,
                     EventHost = eventDto.Host,
-                    EventHeader = Convert.FromBase64String(eventDto.ImageUrl),
-                    Rsvpcount = eventDto.RsvpCount,
+                    EventHeader = eventDto.Picture,
+                    Rsvpcount = 0,
                     EventRegistration = eventDto.RegistrationLink,
                     OrgName = org.OrgName
                 };
@@ -177,15 +204,19 @@ namespace appdev.Services
             }
         }
 
-        public async Task UpdateOrganizationSocialsAsync(int orgId, string facebook, string instagram, string linkedin)
+        public async Task UpdateOrganizationSocialsAsync(int orgId, List<SocialMediaDTO> socials)
         {
             var org = await _context.Orgs.FindAsync(orgId);
             if (org == null)
                 throw new NotFoundException("Organization not found");
 
-            org.OrgFacebook = facebook;
-            org.OrgInstagram = instagram;
-            org.OrgLinkedIn = linkedin;
+            if (socials.Count > 0)
+            {
+                var socialMedia = socials[0];
+                org.OrgFacebook = socialMedia.Facebook;
+                org.OrgInstagram = socialMedia.Instagram;
+                org.OrgLinkedIn = socialMedia.LinkedIn;
+            }
             await _context.SaveChangesAsync();
         }
 

@@ -273,6 +273,10 @@ namespace appdev.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(max)");
 
+                    b.Property<byte[]>("OrgHighlightsImage")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("OrgHighlightsTitle")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -350,7 +354,6 @@ namespace appdev.Migrations
                         .HasColumnType("image");
 
                     b.Property<string>("OrgName")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .IsUnicode(false)
                         .HasColumnType("varchar(150)");
@@ -561,7 +564,6 @@ namespace appdev.Migrations
 
             modelBuilder.Entity("appdev.Models.StudentTable", b =>
                 {
-
                     b.HasOne("appdev.Models.CollegeTable", "College")
                         .WithMany("StudentTables")
                         .HasForeignKey("CollegeId")

@@ -1,5 +1,13 @@
 import axios, { AxiosError } from 'axios';
-import { EventCreateDTO, ApiResponse, ImageUploadResponse, transformEventData } from '../types/orgAdmin';
+import {
+    EventCreateDTO,
+    ApiResponse,
+    ImageUploadResponse,
+    transformEventData,
+    OrganizationDTO,
+    AdminDTO,
+    HighlightDTO
+} from '../types/orgAdmin';
 
 class OrgAdminService {
     private readonly baseUrl: string;
@@ -53,17 +61,21 @@ class OrgAdminService {
         }
     }
 
+    async getOrganizationDetails(orgId: number): Promise<ApiResponse<OrganizationDTO>> {
+        return this.request('GET', `api/Admin/${orgId}`);
+    }
+
     async uploadImage(
         orgId: number,
         type: 'logo' | 'header',
-        file: File
+        file: string
     ): Promise<ApiResponse<ImageUploadResponse>> {
         const formData = new FormData();
         formData.append('file', file);
 
         return this.request(
             'PUT',
-            `/organization/${orgId}/${type}`,
+            `/api/Admin/${orgId}/${type}`,
             formData,
             true
         );
@@ -76,8 +88,8 @@ class OrgAdminService {
         const transformedData = transformEventData(eventData);
         const formData = new FormData();
 
-        if (eventData.picture) {
-            formData.append('picture', eventData.picture);
+        if (eventData.imageUrl) {
+            formData.append('picture', eventData.imageUrl);
         }
 
         Object.entries(transformedData).forEach(([key, value]) => {
@@ -88,9 +100,64 @@ class OrgAdminService {
 
         return this.request(
             'POST',
-            `/organization/${orgId}/events`,
+            `/api/Admin/${orgId}/events`,
             formData,
             true
+        );
+    }
+
+    async updateDescription(
+        orgId: number,
+        description: string
+    ): Promise<ApiResponse<void>> {
+        return this.request(
+            'PUT',
+            `/api/Admin/${orgId}/description`,
+            { description }
+        );
+    }
+
+    async updateImages(
+        orgId: number,
+        imageData: { logo?: File; header?: File }
+    ): Promise<ApiResponse<void>> {
+        const formData = new FormData();
+
+        if (imageData.logo) {
+            formData.append('logo', imageData.logo);
+        }
+
+        if (imageData.header) {
+            formData.append('header', imageData.header);
+        }
+
+        return this.request(
+            'PUT',
+            `/api/Admin/${orgId}/images`,
+            formData,
+            true
+        );
+    }
+
+    async updateHighlights(
+        orgId: number,
+        highlights: HighlightDTO[]
+    ): Promise<ApiResponse<void>> {
+        return this.request(
+            'PUT',
+            `/api/Admin/${orgId}/highlights`,
+            { highlights }
+        );
+    }
+
+    async updateAdmins(
+        orgId: number,
+        admins: AdminDTO[]
+    ): Promise<ApiResponse<void>> {
+        return this.request(
+            'PUT',
+            `/api/Admin/${orgId}/admins`,
+            { admins }
         );
     }
 }

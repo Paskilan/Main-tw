@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using appdev.DTOs;
 using appdev.Services;
+using static appdev.Services.AdminService;
+using System.ComponentModel.DataAnnotations;
 
 namespace appdev.Controllers
+
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -17,7 +20,7 @@ namespace appdev.Controllers
             _logger = logger;
         }
 
-        [HttpGet("organization/{orgId}")]
+        [HttpGet("{orgId}")]
         public async Task<ActionResult<OrganizationDTO>> GetOrganizationDetails(int orgId)
         {
             try
@@ -35,7 +38,7 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPut("organization/{orgId}/description")]
+        [HttpPut("/{orgId}/description")]
         public async Task<IActionResult> UpdateOrganizationDescription(int orgId, [FromBody] string description)
         {
             if (string.IsNullOrWhiteSpace(description))
@@ -53,7 +56,7 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPut("organization/{orgId}/details")]
+        [HttpPut("/{orgId}/details")]
         public async Task<IActionResult> UpdateOrganizationDetails(int orgId, [FromBody] OrganizationDetailsUpdateRequest request)
         {
             if (request == null)
@@ -71,7 +74,7 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPut("organization/{orgId}/socials")]
+        [HttpPut("/{orgId}/socials")]
         public async Task<IActionResult> UpdateOrganizationSocials(int orgId, [FromBody] List<SocialMediaDTO> socials)
         {
             if (socials == null || socials.Count == 0)
@@ -89,7 +92,7 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPut("organization/{orgId}/logo")]
+        [HttpPut("/{orgId}/logo")]
         public async Task<IActionResult> UpdateOrganizationLogo(int orgId, byte[] image)
         {
             if (image == null || image.Length == 0)
@@ -107,7 +110,7 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPut("organization/{orgId}/header")]
+        [HttpPut("/{orgId}/header")]
         public async Task<IActionResult> UpdateOrganizationHeader(int orgId, byte[] image)
         {
             if (image == null || image.Length == 0)
@@ -125,7 +128,7 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPut("organization/{orgId}/highlights")]
+        [HttpPut("/{orgId}/highlights")]
         public async Task<IActionResult> UpdateOrganizationHighlights(int orgId, [FromBody] List<HighlightDTO> highlights)
         {
             if (highlights == null || highlights.Count == 0)
@@ -143,7 +146,7 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPost("organization/{orgId}/events")]
+        [HttpPost("/{orgId}/events")]
         public async Task<IActionResult> CreateEvent(int orgId, [FromForm] EventCreateRequest request)
         {
             if (request == null)
@@ -172,13 +175,17 @@ namespace appdev.Controllers
                 await _adminService.CreateEventAsync(orgId, eventDto);
                 return StatusCode(201, new { message = "Event created successfully." });
             }
-            catch (Exception ex)
+            catch (NotFoundException ex)
             {
-                _logger.LogError(ex, "Error creating event.");
-                return StatusCode(500, new { message = "An error occurred while creating the event." });
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
         }
     }
+    
 
     public class OrganizationDetailsUpdateRequest
     {

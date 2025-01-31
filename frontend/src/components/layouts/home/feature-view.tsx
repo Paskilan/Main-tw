@@ -1,4 +1,3 @@
-
 import PaskilanStickman from '@/assets/paskilan_stickman.png';
 import {
     Carousel,
@@ -9,6 +8,7 @@ import {
 } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
 import { useUser } from '@/contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 // Importing sample data
 import { events, orgs } from '@/sample_data/features/homepage';
 
@@ -21,7 +21,13 @@ import SampleHeader1 from '@/sample_data/sample_header/sample_header.jpeg';
 import SampleHeader2 from '@/sample_data/sample_header/sample_header2.jpg';
 
 export default function FeatureView() {
+    const navigate = useNavigate();
     const { profile, loading } = useUser();
+
+    const handleEventClick = (index: number) => {
+        localStorage.setItem('selectedEventIndex', index.toString());
+        navigate('/event');
+    };
 
     return (
         <div>
@@ -108,7 +114,8 @@ export default function FeatureView() {
                             {events.map((event, index) => (
                                 <CarouselItem
                                     key={index}
-                                    className="flex-shrink-0 w-[540px] h-full basis-1/2"
+                                    className="flex-shrink-0 w-[540px] h-full basis-1/2 cursor-pointer"
+                                    onClick={() => handleEventClick(index)}
                                 >
                                     <EventCards
                                         eventName={event.name}
@@ -118,7 +125,10 @@ export default function FeatureView() {
                                         followers={event.followers}
                                         imageSrc={event.imageSrc}
                                         eventPrice={event.price}
-                                        onFollow={() => alert(`Followed ${event.name}!`)}
+                                        onFollow={(e) => {
+                                            e.stopPropagation(); // Prevent card click when following
+                                            alert(`Followed ${event.name}!`);
+                                        }}
                                     />
                                 </CarouselItem>
                             ))}

@@ -1,7 +1,6 @@
 import PaskilanStickman from '@/assets/paskilan_stickman.png';
 import { useState } from "react";
 import MultiSelectInput from "@/components/commons/MultiSelectInput";
-import SingleSelectInput from "@/components/commons/SingleSelectInput";
 import { orgs } from "@/sample_data/features/homepage";
 import { OrgCards } from './OrgCards';
 
@@ -46,22 +45,6 @@ const OrgsView = () => {
                     label="College"
                     labelClassName="font-poppins text-pup-maroon2 text-lg tracking-tight"
                     onChange={(selected) => setSelectedColleges(selected)}
-                />
-
-                <SingleSelectInput
-                    Data={[
-                        { value: "New", label: "New" },
-                        { value: "Alphabetical", label: "Alphabetical" }
-                    ]}
-                    value={relevance}
-                    onChange={(selected) => setRelevance(selected)}
-                    ButtonClassName="rounded-full h-[45px] w-full sm:w-[250px] text-xl 
-                                         text-pup-maroon2 border-pup-maroon1 
-                                         hover:bg-pup-maroon1 hover:text-white"
-                    divClassName="flex flex-col gap-2"
-                    label="Relevance"
-                    placeholder="Select relevance..."
-                    labelClassName="font-poppins text-pup-maroon2 text-lg tracking-tight"
                 />
             </div>
 

@@ -8,7 +8,7 @@ import Org3 from "@/sample_data/sample_orgs/gdg_circle.png";
 import Org4 from "@/sample_data/sample_orgs/cisco_connect.jpg";
 
 export default function GroupSidebar() {
-    const sampleOrgs = [Org1, Org2, Org3, Org4];
+    const sampleOrgs = [Org2];
 
     return (
         <div

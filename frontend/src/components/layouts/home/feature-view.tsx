@@ -177,7 +177,7 @@ export default function FeatureView() {
                                         category={org.category}
                                         followers={org.followers}
                                         imageSrc={org.imageSrc}
-                                        onFollow={() => alert(`Followed ${org.name}!`)}
+                                        
                                     />
                                 </CarouselItem>
                             ))}

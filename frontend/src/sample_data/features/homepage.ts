@@ -159,7 +159,7 @@ export const orgs = [
         description: "Unleash your creativity! 🎨 The Creative Arts Club is a space for students passionate about painting, drawing, digital art, and crafts. Join us for workshops, exhibitions, and collaborative projects.",
         category: "Arts Organization",
         followers: 150,
-        imageSrc: "./src/sample_data/sample_orgs/awscc_circle.png",
+        imageSrc: "./src/sample_data/sample_orgs/gdg_circle.png",
     },
 
     {
@@ -167,15 +167,15 @@ export const orgs = [
         description: "For gamers, by gamers! 🎮 The PUP Esports Club brings together students who love competitive gaming, whether it's FPS, MOBAs, or strategy games. Join our tournaments, scrims, and training sessions!",
         category: "Gaming Organization",
         followers: 1200,
-        imageSrc: "./src/sample_data/sample_orgs/awscc_circle.png",
+        imageSrc: "./src/sample_data/sample_orgs/pup_circle.png",
     },
 
     {
-        name: "Philippine Society of Information Technology Students",
+        name: "Society of Information",
         description: "Building the future of IT professionals! 💻 The PSITS-PUP chapter is dedicated to enhancing the skills of IT students through training, hackathons, networking, and industry collaborations.",
         category: "Tech Organization",
         followers: 2500,
-        imageSrc: "./src/sample_data/sample_orgs/awscc_circle.png",
+        imageSrc: "./src/sample_data/sample_orgs/cisco_connect.jpg",
     },
 
     {
@@ -183,6 +183,6 @@ export const orgs = [
         description: "Sharpen your critical thinking and public speaking skills! 🗣️ The PUP Debate Society welcomes students who love discussing ideas, competing in debate tournaments, and engaging in intellectual discourse.",
         category: "Academic Organization",
         followers: 900,
-        imageSrc: "./src/sample_data/sample_orgs/awscc_circle.png",
+        imageSrc: "./src/sample_data/sample_orgs/pup_circle.png",
     },
 ];

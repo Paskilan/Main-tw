@@ -5,11 +5,33 @@ import { useState } from "react";
 import { Navbar } from "@/components/commons/Navbar";
 import OrgBanner from "@/components/layouts/org_page/OrgBanner";
 
+// Imported Images
+import OrgPicture from "@/assets/pictures/awshead.jpeg";
+import OrgPicture1 from "@/assets/pictures/IMG_6893.jpeg";
+import OrgPicture2 from "@/assets/pictures/IMG_7095.jpeg";
+import OrgPicture3 from "@/assets/pictures/IMG_7101.jpeg";
+import OrgPicture4 from "@/assets/pictures/IMG_7505.jpeg";
+import pic1 from "@/assets/pictures/person1.jpg";
+import pic2 from "@/assets/pictures/person2.jpg";
+import pic3 from "@/assets/pictures/person3.jpg";
+import pic4 from "@/assets/pictures/person4.jpg";
+import pic5 from "@/assets/pictures/person5.jpg";
+
+import HeaderPicture1 from "@/assets/pictures/women.png";
+import HeaderPicture2 from "@/assets/pictures/tech.jpg";
+import HeaderPicture3 from "@/assets/pictures/cisco.png";
+import HeaderPicture4 from "@/assets/pictures/tft.jpg";
+
+import Logo1 from "@/sample_data/sample_orgs/gdg_circle.png";
+import Logo2 from "@/sample_data/sample_orgs/awscc_circle.png";
+import Logo3 from "@/sample_data/sample_orgs/cisco_connect.jpg";
+import Logo4 from "@/sample_data/sample_orgs/pup_circle.png";
+
 // Mock Data
 const mockData = {
-  name: "Sample Organization",
-  bannerImageUrl: "https://via.placeholder.com/1920x1080",
-  imageUrl: "https://via.placeholder.com/100",
+  name: "AWS Cloud Club PUP Manila",
+  bannerImageUrl: OrgPicture,
+  imageUrl: Logo2,
   followersCount: 1204,
   status: "Accredited",
   upcomingEvents: [
@@ -17,45 +39,45 @@ const mockData = {
       title: "League Finals 2024",
       date: "January 20, 2025 | 7:00 PM",
       description: "Join us for the exciting finals of League 2024!",
-      image: "https://via.placeholder.com/100",
+      image: HeaderPicture4,
     },
     {
       title: "Tech Meetup",
       date: "February 10, 2025 | 10:00 AM",
       description: "A networking event for tech enthusiasts and professionals.",
-      image: "https://via.placeholder.com/100",
+      image: HeaderPicture2,
     },
     {
       title: "Charity Run",
       date: "March 15, 2025 | 6:00 AM",
       description: "Run for a cause and make a difference in the community.",
-      image: "https://via.placeholder.com/100",
+      image: HeaderPicture3,
     },
     {
       title: "Workshop on AI",
       date: "April 25, 2025 | 9:00 AM",
       description: "Hands-on workshop exploring the basics of AI technology.",
-      image: "https://via.placeholder.com/100",
+      image: HeaderPicture1,
     },
   ],
   highlights: [
     {
       id: 1,
-      imageUrl: "https://via.placeholder.com/300x400",
-      title: "Event Name 1",
-      description: "A brief description of Event 1 goes here.",
+      imageUrl: HeaderPicture1,
+      title: "Charity Run 2024",
+      description: "Run for a cause and make a difference in the community.",
     },
     {
       id: 2,
-      imageUrl: "https://via.placeholder.com/300x400",
-      title: "Event Name 2",
-      description: "A brief description of Event 2 goes here.",
+      imageUrl: HeaderPicture2,
+      title: "Tech Meetup",
+      description: "A networking event for tech enthusiasts and professionals.",
     },
     {
       id: 3,
-      imageUrl: "https://via.placeholder.com/300x400",
-      title: "Event Name 3",
-      description: "A brief description of Event 3 goes here.",
+      imageUrl: HeaderPicture3,
+      title: "Workshop on AI",
+      description: "Hands-on workshop exploring the basics of AI technology.",
     },
   ],
   orgdescription:
@@ -73,28 +95,28 @@ const mockData = {
   orgHeads: [
     {
       name: "John Doe",
-      imageUrl: "https://via.placeholder.com/100",
+      imageUrl: pic1,
       role: "President",
     },
     {
       name: "Jane Smithy",
-      imageUrl: "https://via.placeholder.com/100",
+      imageUrl: pic2,
       role: "Vice President",
     },
     {
       name: "Sam Wilson",
-      imageUrl: "https://via.placeholder.com/100",
+      imageUrl: pic3,
       role: "Secretary",
     },
   ],
   pastEvents: [
     {
       title: "Tech Conference 2024",
-      imageUrl: "https://via.placeholder.com/100",
+      imageUrl: HeaderPicture2,
     },
     {
       title: "Leadership Summit",
-      imageUrl: "https://via.placeholder.com/100",
+      imageUrl: HeaderPicture3,
     },
   ],
 };
@@ -152,9 +174,6 @@ const OrgPageStudent = () => {
                 {/* Buttons */}
                 <div className="flex items-center justify-start space-x-4">
                   <button className="px-5 py-2 bg-red-900 text-white text-l font-museo rounded-lg shadow-md hover:bg-red-700">
-                    Ask me!
-                  </button>
-                  <button className="px-5 py-2 bg-red-900 text-white text-l font-museo rounded-lg shadow-md hover:bg-red-700">
                     Follow
                   </button>
                 </div>
@@ -169,7 +188,7 @@ const OrgPageStudent = () => {
 
                 {/* Pictures with event details */}
                 <div className="grid grid-cols-3 gap-4">
-                  {mockData.highlights.map((highlight) => (
+                  {orgData.highlights.map((highlight) => (
                     <div
                       key={highlight.id}
                       className="relative bg-gray-100 rounded-lg overflow-hidden shadow-md"
@@ -208,9 +227,7 @@ const OrgPageStudent = () => {
                         {/* Event Image */}
                         <div className="flex-shrink-0">
                           <img
-                            src={
-                              event.image || "https://via.placeholder.com/100"
-                            }
+                            src={event.image}
                             alt={event.title}
                             className="w-20 h-20 rounded-lg object-cover"
                           />
@@ -348,9 +365,7 @@ const OrgPageStudent = () => {
                         className="flex-shrink-0 flex flex-col items-center text-center"
                       >
                         <img
-                          src={
-                            head.imageUrl || "https://via.placeholder.com/100"
-                          }
+                          src={head.imageUrl}
                           alt={head.name}
                           className="w-16 h-16 rounded-full border-2 border-yellow-400 object-cover"
                         />
@@ -386,10 +401,7 @@ const OrgPageStudent = () => {
                         {/* Event Image */}
                         <div className="flex-shrink-0 mr-4">
                           <img
-                            src={
-                              event.imageUrl ||
-                              "https://via.placeholder.com/100"
-                            }
+                            src={event.imageUrl}
                             alt={event.title}
                             className="w-24 h-24 rounded-lg object-cover"
                           />

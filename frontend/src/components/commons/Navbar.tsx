@@ -8,6 +8,7 @@ import NavbarTexture from '@/assets/navbar_texture.png';
 import PaskilanCircle from '@/assets/paskilan_circle.png';
 import { useUser } from '@/contexts/UserContext';
 
+
 export function Navbar() {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const { profile, loading } = useUser();
@@ -53,8 +54,6 @@ export function Navbar() {
 
         {/* Right Section */}
         <div className="flex items-center space-x-4 gap-2 p-4">
-          <FiHelpCircle size={24} className="cursor-pointer hover:text-white" />
-          <FiBell size={24} className="cursor-pointer hover:text-white" />
           
         {/* User Profile Picture */}
         {!loading && profile && (
@@ -66,6 +65,7 @@ export function Navbar() {
             />
           </Link>
         )}
+
           <Link to="/settings" className="cursor-pointer hover:text-white">
             <FiSettings size={24} />
           </Link>

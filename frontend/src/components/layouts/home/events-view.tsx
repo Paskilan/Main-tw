@@ -1,6 +1,5 @@
 import { FunctionComponent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SingleSelectInput from "@/components/commons/SingleSelectInput";
 import MultiSelectInput from "@/components/commons/MultiSelectInput";
 import { events } from "@/sample_data/features/homepage";
 import { BsStarFill, BsFillStarFill } from "react-icons/bs";
@@ -45,7 +44,6 @@ const formatEventDate = (startDate: string | Date, startTime: string, endTime: s
 const EventsView: FunctionComponent = () => {
   const navigate = useNavigate();
   const [selectedColleges, setSelectedColleges] = useState<string[]>([]);
-  const [relevance, setRelevance] = useState<string>("New");
   const [currentPage, setCurrentPage] = useState(1);
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
 
@@ -73,18 +71,6 @@ const EventsView: FunctionComponent = () => {
           Upcoming Events
         </h1>
         <div className="flex flex-wrap sm:flex-nowrap gap-4 items-center">
-          <SingleSelectInput
-            Data={[
-              { value: "New", label: "New" },
-              { value: "Alphabetical", label: "Alphabetical" },
-            ]}
-            value={relevance}
-            onChange={(selected) => setRelevance(selected)}
-            ButtonClassName="rounded-full h-[45px] w-full sm:w-[250px] text-base border-pup-maroon1 text-pup-maroon1
-                            hover:bg-pup-maroon1 hover:text-white"
-            placeholder="Sort by"
-            label=" "
-          />
           <MultiSelectInput
             value={selectedColleges}
             onChange={(selected) => setSelectedColleges(selected)}

@@ -8,12 +8,49 @@ import OrgDetails from "@/components/layouts/org_page/OrgDetails";
 import { ManageAdminsButton } from "@/components/layouts/org_page/ManageAdminsButton";
 import { ProfilePictureButton } from "@/components/layouts/org_page/ProfilePictureButton";
 import { EventModal } from "@/components/layouts/settings/EventModal";
-import { EventCreateDTO, OrganizationDTO } from "../types/orgAdmin";
-import axios from "axios";
+import {  OrganizationDTO, HighlightDTO } from "../types/orgAdmin";
+
+
+interface FileUploadResponse {
+    success: boolean;
+    base64Data?: string;
+    error?: string;
+}
 
 const OrgPageAdmin = () => {
     const { orgId } = useParams<{ orgId: string }>();
-    const [orgData, setOrgData] = useState<OrganizationDTO | null>(null);
+    const [orgData, setOrgData] = useState<OrganizationDTO>({
+        orgId: 0,
+        orgDetails: {
+            name: '',
+            email: '',
+            collegeName: '',
+            socials: {
+                facebook: '',
+                instagram: '',
+                linkedin: ''
+            }
+        },
+        name: '',
+        collegeId: 0,
+        email: '',
+        description: '',
+        classification: '',
+        collegeName: '',
+        socials: {
+            facebook: '',
+            instagram: '',
+            linkedin: ''
+        },
+        imageUrl: '',
+        headerImageUrl: '',
+        isVerified: false,
+        followerCount: 0,
+        upcomingEvents: [],
+        pastEvents: [],
+        highlights: [],
+        admins: []
+    });
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -26,15 +63,14 @@ const OrgPageAdmin = () => {
         }
         try {
             setIsLoading(true);
-            const response = await axios.get(
+            const response = await fetch(
                 `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}`,
                 {
-                    headers: {
-                    Authorization: `Bearer ${token}`
-                    }
-            });
-            const data = response.data;
-            
+                    method: "GET",
+                }
+            );
+            const data = await response.json();
+
             if (response.status === 200) {
                 setOrgData(data);
                 setError(null);
@@ -45,22 +81,29 @@ const OrgPageAdmin = () => {
         } finally {
             setIsLoading(false);
         }
-}, [orgId]);
+    }, [orgId]);
 
     useEffect(() => {
         loadOrganizationData();
     }, [loadOrganizationData]);
-   
 
     const handleUpdateDescription = async (newDescription: string) => {
         try {
-            await axios.put(
+            const response = await fetch(
                 `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/description`,
-                JSON.stringify(newDescription),
-                { headers: { 'Content-Type': 'application/json' } }
+                {
+                    method: "PUT",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newDescription),
+                }
             );
-            setOrgData(prev => prev ? { ...prev, description: newDescription } : null);
-            setError(null);
+
+            if (response.ok) {
+                setOrgData(prev => prev ? { ...prev, description: newDescription } : prev);
+                setError(null);
+            }
         } catch (error) {
             setError("Failed to update description");
             console.error(error);
@@ -68,57 +111,79 @@ const OrgPageAdmin = () => {
     };
 
     const handleUpdateSocials = async (socials: {
-        facebook?: string;
-        instagram?: string;
-        linkedin?: string;
+        facebook?: string,
+        instagram?: string,
+        linkedin?: string
     }) => {
         try {
-            await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/socials`, {
-                facebook: socials.facebook || "",
-                instagram: socials.instagram || "",
-                linkedin: socials.linkedin || ""
-            });
-            setOrgData(prev => prev ? {
-                ...prev,
-                orgDetails: {
-                    ...prev.orgDetails,
-                    socials: { ...prev.orgDetails.socials, ...socials }
+            const response = await fetch(
+                `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/socials`,
+                {
+                    method: "PUT",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify([{ 
+                        facebook: socials.facebook || "",
+                        instagram: socials.instagram || "",
+                        linkedin: socials.linkedin || ""
+                    }])
                 }
-            } : null);
-            setError(null);
+            );
+
+            if (response.ok) {
+                setOrgData(prev => prev ? {
+                    ...prev,
+                    orgDetails: {
+                        ...prev.orgDetails,
+                        socials: { ...prev.orgDetails.socials, ...socials }
+                    }
+                } : prev);
+                setError(null);
+            }
         } catch (error) {
             setError("Failed to update social media links");
             console.error(error);
         }
     };
 
-    const handleSaveLogo = async (OrglogoUrl: string) => {
+    const handleSaveLogo = async (base64String: string) => {
         try {
-            await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/logo`,
-                { logo: OrglogoUrl }, 
-                { headers: { 'Content-Type': 'application/json' } }
+            const response = await fetch(
+                `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/logo`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ image: base64String }),
+                }
             );
-            await loadOrganizationData();
-            setError(null);
+
+            if (response.ok) await loadOrganizationData();
         } catch (error) {
             setError("Failed to update logo");
-            console.error(error);
         }
     };
 
-    const handleSaveHeader = async (OrgheaderUrl: string) => {
-        try {
-            await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/header`,
-                { header: OrgheaderUrl }, 
-                { headers: { 'Content-Type': 'application/json' } }
-            );
-            await loadOrganizationData();
-            setError(null);
-        } catch (error) {
-            setError("Failed to update header");
-            console.error(error);
-        }
-    };
+    const handleSaveHeader = async (base64String: string) => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/header`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ image: base64String }),
+      }
+    );
+
+    if (response.ok) await loadOrganizationData();
+  } catch (error) {
+    setError("Failed to update header");
+  }
+};
 
     const handleCreateEvent = async (formData: {
         eventName: string;
@@ -137,55 +202,55 @@ const OrgPageAdmin = () => {
         cost?: string;
     }) => {
         try {
-            const eventDto: EventCreateDTO = {
-                eventName: formData.eventName,
-                when: formData.when,
-                where: formData.where,
-                platform: formData.platform || '',
-                location: formData.location || '',
-                participantsCount: formData.participantsCount,
-                eventDetails: formData.eventDetails,
-                topic: formData.topic,
-                exclusivity: formData.exclusivity,
-                imageUrl: formData.picture ? await convertFileToBase64(formData.picture) : '',
-                organizer: formData.organizer,
-                host: formData.host,
-                freeOrPaid: formData.freeOrPaid,
-                cost: formData.cost || '',
-                registrationLink: ''
-            };
+            const form = new FormData();
 
-            await axios.post(
-                `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/events`,
-                eventDto
-            );
+             Object.entries(formData).forEach(([key, value]) => {
+            if (key !== 'picture' && value !== null && value !== undefined) {
+                form.append(key, value.toString());
+            }
+        });
+
+        // Handle file separately
+        if (formData.picture) {
+            form.append('Picture', formData.picture);
+        }
+
+        const response = await fetch(
+            `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/events`,
+            {
+                method: "POST",
+                body: form
+            }
+        );
+
+        if (response.ok) {
             await loadOrganizationData();
             setIsModalOpen(false);
             setError(null);
-        } catch (error) {
-            setError("Failed to create event");
-            console.error(error);
         }
-    };
-
-    const convertFileToBase64 = async (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = error => reject(error);
-        });
-    };
+    } catch (error) {
+        setError("Failed to create event");
+        console.error(error);
+    }
+};
 
     const handleUpdateAdmins = async (newAdmins: any[]) => {
         try {
-            await axios.put(
+            const response = await fetch(
                 `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/admins`,
-                newAdmins,
-                { headers: { 'Content-Type': 'application/json' } }
+                {
+                    method: "PUT",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newAdmins),
+                }
             );
-            setOrgData(prev => prev ? { ...prev, admins: newAdmins } : null);
-            setError(null);
+
+            if (response.ok) {
+                setOrgData(prev => prev ? { ...prev, admins: newAdmins } : prev);
+                setError(null);
+            }
         } catch (error) {
             setError("Failed to update admins");
             console.error(error);
@@ -198,37 +263,132 @@ const OrgPageAdmin = () => {
         email: string;
     }) => {
         try {
-            await axios.put(
+            const response = await fetch(
                 `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/details`,
-                details,
-                { headers: { 'Content-Type': 'application/json' } }
+                {
+                    method: "PUT",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(details),
+                }
             );
-            setOrgData(prev => prev ? {
-                ...prev,
-                name: details.organization,
-                collegeName: details.college,
-                email: details.email
-            } : null);
-            setError(null);
+
+            if (response.ok) {
+                setOrgData(prev => prev ? {
+                    ...prev,
+                    name: details.organization,
+                    collegeName: details.college,
+                    email: details.email
+                } : prev);
+                setError(null);
+            }
         } catch (error) {
             setError("Failed to update organization details");
             console.error(error);
         }
     };
 
-
-    const handleUpdateHighlights = async (newHighlights: any[]) => {
+    const handleUpdateHighlights = async (highlightsData: HighlightDTO[]) => {
         try {
-            await axios.put(
-                `${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/highlights`,
-                newHighlights,
-                { headers: { 'Content-Type': 'application/json' } }
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/Admin/${orgId}/highlights`, {
+                method: "PUT",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(highlightsData),
+                },
             );
-            setOrgData(prev => prev ? { ...prev, highlights: newHighlights } : null);
-            setError(null);
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Update successful:', data);
+            }
         } catch (error) {
-            setError("Failed to update highlights");
-            console.error(error);
+            console.error('Failed to update highlights:', error);
+        }
+    };
+
+    const convertFileToBase64 = async (file: File | null): Promise<FileUploadResponse> => {
+        if (!file) {
+            return {
+                success: false,
+                error: "No file provided"
+            };
+        }
+
+        try {
+            const isImage = file.type.startsWith('image/');
+            if (!isImage) {
+                return {
+                    success: false,
+                    error: "File must be an image"
+                };
+            }
+
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+
+                reader.onload = () => {
+                    if (typeof reader.result === "string") {
+                        // Extract only the Base64 data part
+                        const base64Data = reader.result.split(",")[1];
+                        resolve({
+                            success: true,
+                            base64Data
+                        });
+                    } else {
+                        resolve({
+                            success: false,
+                            error: "Failed to read file as Base64"
+                        });
+                    }
+                };
+
+                reader.onerror = () => {
+                    resolve({
+                        success: false,
+                        error: "Error reading file"
+                    });
+                };
+
+                reader.readAsDataURL(file);
+            });
+        } catch (error) {
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : "Unknown error occurred"
+            };
+        }
+    };
+    const handleSavePictures = async (logoFile: File | null, headerFile: File | null) => {
+        try {
+            if (logoFile) {
+                const logoResult = await convertFileToBase64(logoFile);
+                if (logoResult.success && logoResult.base64Data) {
+                    await handleSaveLogo(logoResult.base64Data);
+                } else {
+                    console.error("Logo upload failed:", logoResult.error);
+                    // Consider setting the error state here
+                    setError(`Logo upload failed: ${logoResult.error}`);
+                }
+            }
+
+            if (headerFile) {
+                const headerResult = await convertFileToBase64(headerFile);
+                if (headerResult.success && headerResult.base64Data) {
+                    await handleSaveHeader(headerResult.base64Data);
+                } else {
+                    console.error("Header upload failed:", headerResult.error);
+                    // Consider setting the error state here
+                    setError(`Header upload failed: ${headerResult.error}`);
+                }
+            }
+
+            await loadOrganizationData(); // Refresh the data after successful upload
+            return true;
+        } catch (error) {
+            console.error("Error uploading images:", error);
+            setError("Failed to upload images. Please try again.");
+            return false;
         }
     };
 
@@ -257,20 +417,7 @@ const OrgPageAdmin = () => {
                                 <ProfilePictureButton
                                     imageUrl={orgData.imageUrl}
                                     bannerImageUrl={orgData.headerImageUrl ?? ''}
-                                    onSavePictures={async (logoFile: File, headerFile: File) => {
-                                        try {
-                                            if (logoFile) {
-                                                const logoBase64 = await convertFileToBase64(logoFile);
-                                                await handleSaveLogo(logoBase64);
-                                            }
-                                            if (headerFile) {
-                                                const headerBase64 = await convertFileToBase64(headerFile);
-                                                await handleSaveHeader(headerBase64);
-                                            }
-                                        } catch (error) {
-                                            console.error("Error uploading images:", error);
-                                        }
-                                    }}
+                                    onSavePictures={handleSavePictures}
                                 />
                                 <div className="flex flex-col justify-center">
                                     <h2 className="text-3xl font-semibold font-museo">
@@ -313,17 +460,22 @@ const OrgPageAdmin = () => {
                                 Upcoming Events
                             </div>
                             {orgData?.upcomingEvents?.length ? (
-                                <div className="space-y-4">
-                                    {orgData.upcomingEvents.map((event, index) => (
-                                        <div
-                                            key={index}
-                                            className="flex items-center bg-white shadow-lg rounded-lg p-1"
-                                        >
-                                            
+                                orgData.upcomingEvents.map((event) => (
+                                    <div className="flex items-center space-x-4" key={event.eventId}>
+                                        <img
+                                            src={event.imageUrl}
+                                            alt={event.eventName}
+                                            className="w-24 h-24 object-cover rounded-lg"
+                                        />
+                                        <div>
+                                            <h3 className="font-semibold">{event.eventName}</h3>
+                                            <p>{event.eventDetails}</p>
+                                            <p>When: {event.when}</p>
+                                            <p>Where: {event.platform} - {event.location}</p>
+                                            <p>RSVPs: {event.rsvpCount}</p>
                                         </div>
-                                    ))}
-                                </div>
-                            ) : (
+                                    </div>
+                                ))) : (
                                 <p>No upcoming events</p>
                             )}
                         </div>
@@ -341,7 +493,7 @@ const OrgPageAdmin = () => {
                                 orgType: orgData.classification,
                                 college: orgData.collegeName,
                                 email: orgData.email,
-                                socials: orgData.socials,
+                                socials: orgData.socials
                             }}
                             onUpdateDetails={handleUpdateDetails}
                             onUpdateSocials={handleUpdateSocials}

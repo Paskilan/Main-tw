@@ -9,7 +9,7 @@ interface Admin {
 interface AdminManagementProps {
   isOpen: boolean;
   onClose: () => void;
-  currentAdmins: Admin[];
+  currentAdmins?: Admin[];
   onRemoveAdmin: (email: string) => void;
   onAddAdmin: (admin: Admin) => void;
 }
@@ -46,7 +46,7 @@ export function AdminManagement({
           </div>
 
           <div className="mt-6 space-y-4">
-            {currentAdmins.map((admin) => (
+            {currentAdmins?.map((admin) => (
               <div
                 key={admin.email}
                 className="flex justify-between items-center p-4 bg-gray-100 rounded-lg"

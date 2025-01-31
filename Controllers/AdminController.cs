@@ -3,6 +3,7 @@ using appdev.DTOs;
 using appdev.Services;
 using static appdev.Services.AdminService;
 using System.ComponentModel.DataAnnotations;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace appdev.Controllers
 
@@ -38,7 +39,7 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPut("/{orgId}/description")]
+        [HttpPut("{orgId}/description")]
         public async Task<IActionResult> UpdateOrganizationDescription(int orgId, [FromBody] string description)
         {
             if (string.IsNullOrWhiteSpace(description))
@@ -56,7 +57,7 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPut("/{orgId}/details")]
+        [HttpPut("{orgId}/details")]
         public async Task<IActionResult> UpdateOrganizationDetails(int orgId, [FromBody] OrganizationDetailsUpdateRequest request)
         {
             if (request == null)
@@ -74,7 +75,7 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPut("/{orgId}/socials")]
+        [HttpPut("{orgId}/socials")]
         public async Task<IActionResult> UpdateOrganizationSocials(int orgId, [FromBody] List<SocialMediaDTO> socials)
         {
             if (socials == null || socials.Count == 0)
@@ -92,33 +93,37 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPut("/{orgId}/logo")]
-        public async Task<IActionResult> UpdateOrganizationLogo(int orgId, byte[] image)
+        [HttpPut("{orgId}/logo")]
+        public async Task<IActionResult> UpdateOrganizationLogo(int orgId, [FromBody] ImageUploadRequest request)
         {
-            if (image == null || image.Length == 0)
-                return BadRequest(new { message = "No file uploaded." });
+            if (string.IsNullOrEmpty(request?.Image))
+                return BadRequest(new { message = "No image data provided" });
 
             try
             {
-                 await _adminService.UpdateOrganizationLogoAsync(orgId, image);
-                return Ok(new { message = "Organization logo updated successfully." });
+                var imageBytes = Convert.FromBase64String(request.Image);
+                await _adminService.UpdateOrganizationLogoAsync(orgId, imageBytes);
+                return Ok(new { message = "Logo updated successfully" });
             }
-            catch (Exception ex)
+            catch (FormatException)
             {
-                _logger.LogError(ex, "Error updating organization logo.");
-                return StatusCode(500, new { message = "An error occurred while updating organization logo." });
+                return BadRequest(new { message = "Invalid Base64 format" });
             }
         }
 
-        [HttpPut("/{orgId}/header")]
-        public async Task<IActionResult> UpdateOrganizationHeader(int orgId, byte[] image)
+        [HttpPut("{orgId}/header")]
+        public async Task<IActionResult> UpdateOrganizationHeader(int orgId, IFormFile image)
         {
             if (image == null || image.Length == 0)
                 return BadRequest(new { message = "No file uploaded." });
 
             try
             {
-                 await _adminService.UpdateOrganizationHeaderAsync(orgId, image);
+                using var memoryStream = new MemoryStream();
+                await image.CopyToAsync(memoryStream);
+                var imageData = memoryStream.ToArray();
+
+                await _adminService.UpdateOrganizationHeaderAsync(orgId, imageData);
                 return Ok(new { message = "Organization header updated successfully." });
             }
             catch (Exception ex)
@@ -128,16 +133,19 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPut("/{orgId}/highlights")]
-        public async Task<IActionResult> UpdateOrganizationHighlights(int orgId, [FromBody] List<HighlightDTO> highlights)
+        [HttpPut("{orgId}/highlights")]
+        public async Task<IActionResult> UpdateOrganizationHighlights(int orgId, [FromBody] List<HighlightDTO> highlights, IFormFile image)
         {
             if (highlights == null || highlights.Count == 0)
                 return BadRequest(new { message = "No highlights provided." });
 
             try
             {
-                await _adminService.UpdateOrganizationHighlightsAsync(orgId, highlights);
-                return Ok(new { message = "Organization highlights updated successfully." });
+                using var memoryStream = new MemoryStream();
+                await image.CopyToAsync(memoryStream);
+                var imageData = memoryStream.ToArray();
+                // Add a return statement here
+                return Ok(new { message = "Highlights updated successfully." });
             }
             catch (Exception ex)
             {
@@ -146,14 +154,19 @@ namespace appdev.Controllers
             }
         }
 
-        [HttpPost("/{orgId}/events")]
+        [HttpPost("{orgId}/events")]
         public async Task<IActionResult> CreateEvent(int orgId, [FromForm] EventCreateRequest request)
         {
-            if (request == null)
-                return BadRequest(new { message = "Invalid event data." });
-
             try
             {
+                byte[] pictureBytes = null;
+                if (request.Picture != null)
+                {
+                    using var memoryStream = new MemoryStream();
+                    await memoryStream.WriteAsync(request.Picture);
+                    pictureBytes = memoryStream.ToArray();
+                }
+
                 var eventDto = new EventCreateDTO
                 {
                     EventName = request.EventName,
@@ -185,6 +198,7 @@ namespace appdev.Controllers
             }
         }
     }
+
     
 
     public class OrganizationDetailsUpdateRequest

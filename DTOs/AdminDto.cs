@@ -3,8 +3,7 @@ namespace appdev.DTOs
 {
     public class OrganizationDTO
     {
-        public int OrgId { get; set; }
-        public orgDetailsDTO OrgDetails { get; set; }
+        public int OrgId { get; set; }      
         public string Name { get; set; }
         public int CollegeId { get; set; }
         public string Email { get; set; }
@@ -48,6 +47,11 @@ namespace appdev.DTOs
         public string RegistrationLink { get; set; }
         public string FreeOrPaid { get; set; }
         public string Cost { get; set; }
+    }
+
+    public class ImageUploadRequest
+    {
+        public string Image { get; set; }
     }
 
     public class SocialMediaDTO

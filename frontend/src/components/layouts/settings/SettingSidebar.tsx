@@ -25,13 +25,15 @@ export function SettingSidebar({ activePage, setActivePage }: SidebarProps) {
   const [showLogoutAlert, setShowLogoutAlert] = useState(false);
 
   const handleLogout = () => {
+    // Clear authentication token
+    localStorage.removeItem('authToken');
+    
     setShowLogoutAlert(true);
     setTimeout(() => {
       setShowLogoutAlert(false);
       navigate("/");
     }, 1500);
   };
-
   return (
     <>
       <div className="w-[250px] bg-pup-maroon1 dark:bg-pup-maroon2 p-5 flex flex-col gap-6">

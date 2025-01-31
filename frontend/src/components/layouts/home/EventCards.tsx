@@ -10,15 +10,15 @@ import { FaSchool, FaBell } from "react-icons/fa";
 import { IoTicket } from 'react-icons/io5';
 import { HiMiniBell, HiMiniBellAlert } from "react-icons/hi2";
 
-interface OrgCardProps {
-    eventName?: string;
-    host?: string;
-    description?: string;
-    eventPrice?: number;
-    category?: string;
-    followers?: number;
-    imageSrc?: string;
-    onFollow?: () => void;
+interface EventCardsProps {
+    eventName: string;
+    host: string;
+    description: string;
+    category: string;
+    followers: number;
+    imageSrc: string;
+    eventPrice: number;
+    onFollow: (e: React.MouseEvent) => void;
 }
 
 // Function to format price
@@ -31,14 +31,15 @@ const formatPrice = (price: number) => {
     return price.toString();  // Return as is if less than 1k
 }
 
-export const EventCards: React.FC<OrgCardProps> = ({
-    eventName = "Organization Name",
-    host = "Org Name",
-    category = "General",
-    followers = 0,
-    eventPrice = 0,
-    imageSrc = "https://via.placeholder.com/80",
-    onFollow = () => alert("Follow button clicked!"),
+export const EventCards: React.FC<EventCardsProps> = ({
+    eventName,
+    host,
+    description,
+    category,
+    followers,
+    imageSrc,
+    eventPrice,
+    onFollow,
 }) => {
     return (
         <Card className="w-[488.5px] h-[258.36px] shadow-md rounded-[8.82px] bg-white flex flex-col">

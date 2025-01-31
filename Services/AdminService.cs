@@ -38,10 +38,11 @@ namespace appdev.Services
             try
             {
                 var org = await _context.Orgs
-                    .Include(o => o.EventTables)
-                    .Include(o => o.OrgHighlightsTables)
-                    .Include(o => o.AdminTables)
-                    .FirstOrDefaultAsync(o => o.OrgId == orgId);
+       .Include(o => o.EventTables)
+       .Include(o => o.OrgHighlightsTables)
+       .Include(o => o.AdminTables)
+           .ThenInclude(a => a.Student) 
+       .FirstOrDefaultAsync(o => o.OrgId == orgId);
 
                 if (org == null)
                     throw new NotFoundException("Organization not found");
@@ -59,8 +60,18 @@ namespace appdev.Services
                         Instagram = org.OrgInstagram,
                         LinkedIn = org.OrgLinkedIn
                     },
-                    ImageUrl = Convert.ToBase64String(org.OrgLogo),
-                    HeaderImageUrl = Convert.ToBase64String(org.OrgHeader),
+                    ImageUrl = org.OrgLogo != null && org.OrgLogo.Length > 0
+                    ? $"data:image/jpeg;base64,{Convert.ToBase64String(org.OrgLogo)}"
+                    : null,
+                    HeaderImageUrl = org.OrgHeader != null && org.OrgHeader.Length > 0
+                    ? $"data:image/jpeg;base64,{Convert.ToBase64String(org.OrgHeader)}"
+                        : null,
+                    Admins = org.AdminTables.Select(a => new AdminDTO
+                    {
+                        StudentId = a.Student.StudentId,
+                        Name = a.Student.StudentFirstName,
+                        Email = a.Student.StudentEmail
+                    }).ToList(),
                     CollegeName = org.College?.CollegeName,
                     IsVerified = org.Verified,
                     CollegeId = org.CollegeId ?? 0,
@@ -72,8 +83,11 @@ namespace appdev.Services
                         Id = h.OrgHighlightsId,
                         Title = h.OrgHighlightsTitle,
                         Description = h.OrgHighlightsDescription,
-                        ImageUrl = Convert.ToBase64String(h.OrgHighlightsImage)
-                    }).ToList()
+                        ImageUrl = h.OrgHighlightsImage != null && h.OrgHighlightsImage.Length > 0
+                    ? Convert.ToBase64String(h.OrgHighlightsImage)
+                    : null
+                    }
+                    ).ToList()
                 };
             }
             catch (Exception ex)
@@ -95,12 +109,18 @@ namespace appdev.Services
 
         public async Task UpdateOrganizationDetailsAsync(int orgId, string Organization, string College, string Email)
         {
-            var org = await _context.Orgs.FindAsync(orgId);
+            var org = await _context.Orgs
+                .Include(o => o.College)
+                .FirstOrDefaultAsync(o => o.OrgId == orgId);
             if (org == null)
                 throw new NotFoundException("Organization not found");
 
+            var college = await _context.Colleges.FirstOrDefaultAsync(c => c.CollegeName == College);
+            if (college == null)
+                throw new NotFoundException("College not found");
+
             org.OrgName = Organization;
-            org.College = new CollegeTable { CollegeName = College };
+            org.College = college; // Assign existing college
             org.OrgEmail = Email;
             await _context.SaveChangesAsync();
         }

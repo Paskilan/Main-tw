@@ -19,7 +19,8 @@ const OrgHighlights = ({
   onUpdateHighlights,
   isAdmin = false,
 }: OrgHighlightsProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   return (
     <div className="w-full h-auto bg-white shadow-xl rounded-lg p-3">

@@ -1,4 +1,5 @@
 import { FunctionComponent, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SingleSelectInput from "@/components/commons/SingleSelectInput";
 import MultiSelectInput from "@/components/commons/MultiSelectInput";
 import { events } from "@/sample_data/features/homepage";
@@ -42,6 +43,7 @@ const formatEventDate = (startDate: string | Date, startTime: string, endTime: s
 };
 
 const EventsView: FunctionComponent = () => {
+  const navigate = useNavigate();
   const [selectedColleges, setSelectedColleges] = useState<string[]>([]);
   const [relevance, setRelevance] = useState<string>("New");
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,6 +58,11 @@ const EventsView: FunctionComponent = () => {
 
   const toggleFavorite = (eventId: string) => {
     setFavorites((prev) => ({ ...prev, [eventId]: !prev[eventId] }));
+  };
+
+  const handleEventClick = (index: number) => {
+    localStorage.setItem('selectedEventIndex', index.toString());
+    navigate('/event');
   };
 
   return (
@@ -94,7 +101,7 @@ const EventsView: FunctionComponent = () => {
           <div key={event.id} className="flex flex-col gap-2">
             <div
               className="flex flex-row gap-4 items-start p-4 rounded-md hover:shadow-lg cursor-pointer"
-              onClick={() => console.log(`Clicked on ${event.name}`)}
+              onClick={() => handleEventClick(index)}
             >
               <img
                 src={event.imageSrc}

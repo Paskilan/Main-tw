@@ -4,7 +4,7 @@ import { ProfilePictureEditor } from "./ProfilePictureEditor";
 interface ProfilePictureButtonProps {
   imageUrl: string;
   bannerImageUrl: string;
-  onSavePictures: (profilePic: string, headerPic: string) => void;
+  onSavePictures: (profilePic: File, headerPic: File) => void;
 }
 
 export function ProfilePictureButton({

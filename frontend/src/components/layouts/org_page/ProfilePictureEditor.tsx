@@ -86,8 +86,6 @@ export function ProfilePictureEditor({
   isOpen,
   onClose,
   onSave,
-  currentProfilePic,
-  currentHeaderPic,
 }: ProfilePictureEditorProps) {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [headerImage, setHeaderImage] = useState<string | null>(null);

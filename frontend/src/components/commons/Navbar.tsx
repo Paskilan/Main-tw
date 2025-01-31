@@ -55,14 +55,16 @@ export function Navbar() {
         {/* Right Section */}
         <div className="flex items-center space-x-4 gap-2 p-4">
           
-          {/* User Profile Picture */}
-          {!loading && profile && (
+        {/* User Profile Picture */}
+        {!loading && profile && (
+          <Link to="/settings/profile">
             <img
               src={profile.profilePicture}
               alt={`${profile.firstName} ${profile.lastName}`}
               className="w-8 h-8 rounded-full object-cover cursor-pointer"
             />
-          )}
+          </Link>
+        )}
 
           <Link to="/settings" className="cursor-pointer hover:text-white">
             <FiSettings size={24} />

@@ -15,9 +15,9 @@ namespace appdev.Models
         public string? OrgLinkedIn { get; set; } 
         public byte[] OrgLogo { get; set; } = null!;
         public byte[] OrgHeader { get; set; } = null!;
-        public bool Verified { get; set; } = false; // Changed to boolean
+        public bool Verified { get; set; } = false;
         public int? CollegeId { get; set; }
-        public bool OrgApproved { get; set; } = false; // Changed to boolean for clarity
+        public bool OrgApproved { get; set; } = false;
         public virtual CollegeTable? College { get; set; } = null!;
 
         // Navigation properties

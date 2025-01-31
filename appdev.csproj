@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="frontend\src\Services\" />
     <Folder Include="Migrations\" />
 
     <Folder Include="Models\" />

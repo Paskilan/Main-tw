@@ -20,17 +20,29 @@ function App() {
   return (
     <Router>
       <UserProvider>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/*" element={<HomePage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/event" element={<EventPage />} />
-        <Route path="/settings/*" element={<SettingsPage />} />
-        <Route path="/org/StudentView" element={<OrgPageStudent />} />
+
+
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/event" element={<EventPage />} />
+            <Route path="/settings/*" element={<SettingsPage />} />
+            <Route path="/org/StudentView" element={<OrgPageStudent />} />
+            <Route path="/org/AdminView/:orgId" element={<OrgPageAdmin />} />
+            <Route path="/temporary-event" element={<TemporaryEventPage />} />
+            <Route path="/*" element={<HomePage />} />
+          </Route>
+        </Routes>
+
         <Route path="/org/AdminView" element={<OrgPageAdmin />} />
         <Route path="/temporary-event" element={<TemporaryEventPage />} />
       </Routes>
+
       </UserProvider>
     </Router>
   );

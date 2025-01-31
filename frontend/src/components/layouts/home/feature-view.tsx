@@ -8,9 +8,10 @@ import {
 } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
 import { useUser } from '@/contexts/UserContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 // Importing sample data
 import { events, orgs } from '@/sample_data/features/homepage';
+
 
 // Card Components
 import { OrgCards } from "./OrgCards";
@@ -96,10 +97,12 @@ export default function FeatureView() {
                         text-shadow-sm shadow-gray-900 mb-4">
                         Featured Events
                     </h1>
-                    <span className="text-pup-maroon1 text-3xl font-semibold tracking-tighter
-                        text-shadow-sm shadow-gray-900">
+                    <Link 
+                        to="/events" 
+                        className="text-pup-maroon1 text-3xl font-semibold tracking-tighter text-shadow-sm shadow-gray-900 hover:underline"
+                    >
                         See more
-                    </span>
+                    </Link>
                 </div>
                 <div className="w-[1110px] h-[450px] overflow-hidden rounded-[10px] relative">
                     <Carousel
@@ -151,10 +154,12 @@ export default function FeatureView() {
                         text-shadow-sm shadow-gray-900 mb-4">
                         Featured Orgs
                     </h1>
-                    <span className="text-pup-maroon1 text-3xl font-semibold tracking-tighter
-                        text-shadow-sm shadow-gray-900">
+                    <Link 
+                        to="/orgs" 
+                        className="text-pup-maroon1 text-3xl font-semibold tracking-tighter text-shadow-sm shadow-gray-900 hover:underline"
+                    >
                         See more
-                    </span>
+                    </Link>
                 </div>
                 <div className="w-[1110px] h-[450px] overflow-hidden rounded-[10px] relative">
                     <Carousel

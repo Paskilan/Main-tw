@@ -87,7 +87,7 @@ namespace appdev.Models
             ,
             new CollegeTable { CollegeId = 6, CollegeName = "College of Human Kinetics" }
             ,
-            new CollegeTable { CollegeId = 7, CollegeName = "ollege of Law" }
+            new CollegeTable { CollegeId = 7, CollegeName = "College of Law" }
             ,
             new CollegeTable { CollegeId = 8, CollegeName = "College of Communication" }
             ,
@@ -242,13 +242,19 @@ namespace appdev.Models
                     .HasMaxLength(10)
                     .IsUnicode(false)
                     .IsFixedLength();
-                entity.Property(e => e.CollegeId).HasColumnName("CollegeID");
+                entity.Property(e => e.OrgApproved)
+                    .HasMaxLength(5)
+                    .IsUnicode(false);
+                entity.Property(e => e.CollegeId)
+                    .HasColumnName("CollegeID")
+                    .IsRequired(false);
 
                 entity.HasOne(d => d.College)
                     .WithMany(p => p.OrgTables)
                     .HasForeignKey(d => d.CollegeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrgTable_CollegeTable");
+                    .HasConstraintName("FK_OrgTable_CollegeTable")
+                    .IsRequired(false);
             });
 
             modelBuilder.Entity<ReportTable>(entity =>

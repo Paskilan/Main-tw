@@ -1,4 +1,3 @@
-import * as React from "react";
 import PaskilanStickman from '@/assets/paskilan_stickman.png';
 import {
     Carousel,
@@ -8,7 +7,8 @@ import {
     CarouselPrevious,
 } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
-
+import { useUser } from '@/contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 // Importing sample data
 import { events, orgs } from '@/sample_data/features/homepage';
 
@@ -21,15 +21,23 @@ import SampleHeader1 from '@/sample_data/sample_header/sample_header.jpeg';
 import SampleHeader2 from '@/sample_data/sample_header/sample_header2.jpg';
 
 export default function FeatureView() {
-    const NAME = "Earl";
+    const navigate = useNavigate();
+    const { profile, loading } = useUser();
+
+    const handleEventClick = (index: number) => {
+        localStorage.setItem('selectedEventIndex', index.toString());
+        navigate('/event');
+    };
 
     return (
         <div>
             {/* Feature Heading */}
             <div className="relative w-full h-[260px] left-0">
                 <h1 className="h1-text text-shadow shadow-gray-900 absolute top-[95px] left-0">
-                    <span className="h1-text italic text-pup-maroon1">What's up, </span>
-                    <span className="h1-text text-pup-gold2">{NAME.toUpperCase()}</span>
+                <span className="h1-text italic text-pup-maroon1">What's up, </span>
+                <span className="h1-text text-pup-gold2 truncate max-w-[200px]">
+                {loading ? '...' : profile?.firstName.toUpperCase()}
+                </span>
                     <span className="h1-text text-pup-maroon1">!</span>
                 </h1>
                 <img
@@ -106,7 +114,8 @@ export default function FeatureView() {
                             {events.map((event, index) => (
                                 <CarouselItem
                                     key={index}
-                                    className="flex-shrink-0 w-[540px] h-full basis-1/2"
+                                    className="flex-shrink-0 w-[540px] h-full basis-1/2 cursor-pointer"
+                                    onClick={() => handleEventClick(index)}
                                 >
                                     <EventCards
                                         eventName={event.name}
@@ -116,7 +125,10 @@ export default function FeatureView() {
                                         followers={event.followers}
                                         imageSrc={event.imageSrc}
                                         eventPrice={event.price}
-                                        onFollow={() => alert(`Followed ${event.name}!`)}
+                                        onFollow={(e) => {
+                                            e.stopPropagation(); // Prevent card click when following
+                                            alert(`Followed ${event.name}!`);
+                                        }}
                                     />
                                 </CarouselItem>
                             ))}

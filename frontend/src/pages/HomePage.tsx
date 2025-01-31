@@ -1,3 +1,4 @@
+// src/pages/HomePage.tsx
 import { Navbar } from "@/components/commons/Navbar";
 import GroupSidebar from "@/components/commons/GroupSidebar";
 import { HomeButtons } from "@/components/layouts/home/HomeButtons";
@@ -11,18 +12,15 @@ import EventsView from "@/components/layouts/home/events-view";
 export default function HomePage() {
     return (
         <div className="min-h-screen flex flex-col">
-            {/* Sticky Navbar */}
             <div className="sticky top-0 z-50">
                 <Navbar />
             </div>
 
             <div className="flex flex-1">
-                {/* Sticky Sidebar */}
                 <div className="sticky top-0 h-screen">
                     <GroupSidebar />
                 </div>
 
-                {/* Main Content */}
                 <div className="container p-10 w-full overflow-auto">
                     <HomeButtons />
                     <div className="mt-4">

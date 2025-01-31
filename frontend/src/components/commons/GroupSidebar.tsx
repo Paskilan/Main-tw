@@ -1,4 +1,5 @@
 import { FiPlus } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 /** sample org picture TODO : remove in prod*/
 import Org1 from "@/sample_data/sample_orgs/pup_circle.png";
@@ -26,23 +27,20 @@ export default function GroupSidebar() {
             <div className="flex flex-col items-center gap-4">
               {/* Sample Organizations */}
               {sampleOrgs.map((org, index) => (
-                <div
+                <Link
                   key={index}
-                  className="w-[60px] h-[60px] bg-white rounded-full shadow-md flex items-center justify-center overflow-hidden"
+                  to="/org/StudentView"
+                  className="w-[60px] h-[60px] bg-white rounded-full shadow-md flex items-center justify-center overflow-hidden hover:shadow-lg transition-shadow duration-200"
                 >
                   <img
                     src={org}
                     alt={`Org ${index + 1}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
                   />
-                </div>
+                </Link>
               ))}
             </div>
-    
-            {/* Add Group Button */}
-            <div className="relative flex items-center justify-center w-[60px] h-[60px] bg-white rounded-full shadow-md cursor-pointer">
-              <FiPlus className="text-pup-maroon1 text-3xl" />
-            </div>
+      
           </div>
         </div>
       );

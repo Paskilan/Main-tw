@@ -152,9 +152,6 @@ const OrgPageStudent = () => {
                 {/* Buttons */}
                 <div className="flex items-center justify-start space-x-4">
                   <button className="px-5 py-2 bg-red-900 text-white text-l font-museo rounded-lg shadow-md hover:bg-red-700">
-                    Ask me!
-                  </button>
-                  <button className="px-5 py-2 bg-red-900 text-white text-l font-museo rounded-lg shadow-md hover:bg-red-700">
                     Follow
                   </button>
                 </div>

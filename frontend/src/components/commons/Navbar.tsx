@@ -56,14 +56,16 @@ export function Navbar() {
           <FiHelpCircle size={24} className="cursor-pointer hover:text-white" />
           <FiBell size={24} className="cursor-pointer hover:text-white" />
           
-          {/* User Profile Picture */}
-          {!loading && profile && (
+        {/* User Profile Picture */}
+        {!loading && profile && (
+          <Link to="/settings/profile">
             <img
               src={profile.profilePicture}
               alt={`${profile.firstName} ${profile.lastName}`}
               className="w-8 h-8 rounded-full object-cover cursor-pointer"
             />
-          )}
+          </Link>
+        )}
           <Link to="/settings" className="cursor-pointer hover:text-white">
             <FiSettings size={24} />
           </Link>

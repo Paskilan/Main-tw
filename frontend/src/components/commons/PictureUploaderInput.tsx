@@ -29,7 +29,7 @@ export const PictureUploaderInput = ({ onChange }: PictureUploaderInputProps) =>
             const file = event.target.files[0];
             setSelectedImage(URL.createObjectURL(file));
             setCropModalOpen(true);
-
+          
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
             }

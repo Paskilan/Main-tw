@@ -5,6 +5,9 @@ import OrgBanner from "@/components/layouts/org_page/OrgBanner";
 import OrgHighlights from "@/components/layouts/org_page/OrgHighlights";
 import OrgDescription from "@/components/layouts/org_page/OrgDescription";
 import OrgDetails from "@/components/layouts/org_page/OrgDetails";
+
+import OrgHeads from "@/components/layouts/org_page/OrgHeads";
+import { ManageAdminsButton } from "@/components/layouts/org_page/ManageAdminsButton";
 import { ProfilePictureButton } from "@/components/layouts/org_page/ProfilePictureButton";
 import { EventModal } from "@/components/layouts/settings/EventModal";
 
@@ -74,19 +77,28 @@ const mockData = {
   },
   orgHeads: [
     {
+      id: 1,
       name: "John Doe",
       imageUrl: "https://via.placeholder.com/100",
       role: "President",
     },
     {
+      id: 2,
       name: "Jane Smithy",
       imageUrl: "https://via.placeholder.com/100",
       role: "Vice President",
     },
     {
+      id: 3,
       name: "Sam Wilson",
       imageUrl: "https://via.placeholder.com/100",
       role: "Secretary",
+    },
+  ],
+  admins: [
+    {
+      name: "John Doe",
+      email: "johndoe@iskolarngbayan.pup.edu.ph",
     },
   ],
   pastEvents: [
@@ -199,6 +211,8 @@ const OrgPageAdmin = () => {
     });
   };
 
+  // Changing Header and Profile
+
   const handleSavePictures = (profilePic: string, headerPic: string) => {
     setOrgData((prevData) => ({
       ...prevData,
@@ -206,6 +220,23 @@ const OrgPageAdmin = () => {
       bannerImageUrl: headerPic,
     }));
   };
+
+  // Updating Org Heads Section
+  const handleUpdateOrgHeads = (newOrgHeads) => {
+    setOrgData({
+      ...orgData,
+      orgHeads: newOrgHeads,
+    });
+  };
+
+  // Managing Admins
+  const handleUpdateAdmins = (newAdmins) => {
+    setOrgData((prevData) => ({
+      ...prevData,
+      admins: newAdmins,
+    }));
+  };
+
 
   return (
     <>
@@ -261,6 +292,11 @@ const OrgPageAdmin = () => {
                     isOpen={isModalOpen}
                     onClose={handleCloseModal}
                     onSubmit={handleSubmit}
+                  />
+
+                  <ManageAdminsButton
+                    orgData={orgData}
+                    onUpdateAdmins={handleUpdateAdmins}
                   />
                 </div>
               </div>

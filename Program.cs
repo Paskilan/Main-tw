@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<StudentService>();
 builder.Services.AddScoped<OrgService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.Configure<EmailConfiguration>(
     builder.Configuration.GetSection("EmailConfiguration"));

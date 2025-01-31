@@ -2,16 +2,18 @@ import { useState } from "react";
 import { OrgDetailsModal } from "./OrgDetailsModal";
 
 interface OrgDetailsProps {
+
   orgDetails: {
-    organization: string;
+    orgType: string;
     college: string;
     email: string;
-    socials: {
-      facebook?: string;
-      instagram?: string;
-      linkedin?: string;
+      socials: {
+          facebook?: string | undefined;
+      instagram?: string | undefined;
+      linkedin?: string | undefined;
     };
-  };
+    };
+
   onUpdateDetails: (details: {
     organization: string;
     college: string;
@@ -56,7 +58,7 @@ const OrgDetails = ({
             Organization:
           </span>
           <span className="font-poppins text-base">
-            {orgDetails?.organization || "Not specified"}
+            {orgDetails?.orgType || "Not specified"}
           </span>
         </div>
 
@@ -115,7 +117,7 @@ const OrgDetails = ({
       <OrgDetailsModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        orgType={orgDetails.organization}
+        orgType={orgDetails.orgType}
         college={orgDetails.college}
         email={orgDetails.email}
         socials={orgDetails.socials}

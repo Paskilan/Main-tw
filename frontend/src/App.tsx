@@ -28,7 +28,7 @@ function App() {
         <Route path="/event" element={<EventPage />} />
         <Route path="/settings/*" element={<SettingsPage />} />
         <Route path="/org/StudentView" element={<OrgPageStudent />} />
-        <Route path="/org/AdminView" element={<OrgPageAdmin />} />
+        <Route path="/org/AdminView/:orgId" element={<OrgPageAdmin />} />
         <Route path="/temporary-event" element={<TemporaryEventPage />} />
       </Routes>
       </UserProvider>

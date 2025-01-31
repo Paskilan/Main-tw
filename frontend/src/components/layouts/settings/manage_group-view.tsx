@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
@@ -13,6 +14,7 @@ interface Group {
 }
 
 export default function ManageGroup() {
+    const navigate = useNavigate();
     const [groups, setGroups] = useState<Group[]>([]);
     const [showNotification, setShowNotification] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -46,6 +48,10 @@ export default function ManageGroup() {
         setIsDialogOpen(false);
     };
 
+    const handleOrgClick = (orgId: number) => {
+        navigate(`/org/AdminView/${orgId}`);
+    };
+
     return (
         <div>
             <div className='flex flex-col gap-8 mb-8'>
@@ -70,6 +76,7 @@ export default function ManageGroup() {
                 {groups.map(group => (
                     <button
                         key={group.id}
+                        onClick={() => handleOrgClick(group.id)}
                         className="p-4 bg-white rounded-lg shadow-md text-left flex flex-col items-center gap-4 w-full h-full transform transition-transform hover:scale-105 hover:shadow-xl"
                     >
                         <div className="w-24 h-24 overflow-hidden rounded-full border-4 border-pup-maroon2">

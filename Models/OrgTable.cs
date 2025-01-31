@@ -17,6 +17,7 @@ namespace appdev.Models
         public byte[] OrgHeader { get; set; } = null!;
         public bool Verified { get; set; } = false; // Changed to boolean
         public int? CollegeId { get; set; }
+        public string CollegeName { get; set; } = null!;
         public bool OrgApproved { get; set; } = false; // Changed to boolean for clarity
         public virtual CollegeTable? College { get; set; } = null!;
 

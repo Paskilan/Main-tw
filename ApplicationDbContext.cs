@@ -32,26 +32,25 @@ namespace appdev.Models
         {
             modelBuilder.Entity<AdminTable>(entity =>
             {
-                entity.HasKey(e => e.AdminId);
+                entity.HasKey(e => new { e.OrgId, e.StudentId });
 
                 entity.ToTable("AdminTable");
+               
+                entity.Property(e => e.OrgId)
+                    .HasColumnName("OrgID");  
 
-                entity.Property(e => e.AdminId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("AdminID");
+                entity.Property(e => e.StudentId)
+                    .HasColumnName("StudentID");
 
-                entity.Property(e => e.OrgId).HasColumnName("OrgID");
                 entity.Property(e => e.OrgOwner)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .IsFixedLength();
-                entity.Property(e => e.StudentId).HasColumnName("StudentID");
-
-                entity.HasOne(d => d.Org)
+                    .IsRequired()
+                    .HasColumnName("OrgOwner");
+               
+                entity.HasOne(d => d.Org) 
                     .WithMany(p => p.AdminTables)
-                    .HasForeignKey(d => d.OrgId)
+                    .HasForeignKey(d => d.OrgId)  
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_AdminTable_OrgTable");
+                    .HasConstraintName("FK_AdminTable_OrgTable"); 
 
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.AdminTables)
@@ -87,7 +86,7 @@ namespace appdev.Models
             ,
             new CollegeTable { CollegeId = 6, CollegeName = "College of Human Kinetics" }
             ,
-            new CollegeTable { CollegeId = 7, CollegeName = "ollege of Law" }
+            new CollegeTable { CollegeId = 7, CollegeName = "College of Law" }
             ,
             new CollegeTable { CollegeId = 8, CollegeName = "College of Communication" }
             ,
@@ -207,7 +206,6 @@ namespace appdev.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrgHighlightsTable_OrgTable");
             });
-
             modelBuilder.Entity<OrgTable>(entity =>
             {
                 entity.HasKey(e => e.OrgId);
@@ -217,39 +215,66 @@ namespace appdev.Models
                 entity.Property(e => e.OrgId)
                     .ValueGeneratedOnAdd()
                     .HasColumnName("OrgID");
+
                 entity.Property(e => e.OrgDescription).IsUnicode(false);
+
                 entity.Property(e => e.OrgEmail)
                     .HasMaxLength(150)
                     .IsUnicode(false);
+
                 entity.Property(e => e.OrgFacebook)
                     .HasMaxLength(150)
-                    .IsUnicode(false);
-                entity.Property(e => e.OrgHeader).HasColumnType("image");
+                    .IsUnicode(false)
+                    .IsRequired(false);
+
+                entity.Property(e => e.OrgHeader).HasColumnType("image")
+                    .IsRequired(false);
+
                 entity.Property(e => e.OrgInstagram)
                     .HasMaxLength(150)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .IsRequired(false); 
+
                 entity.Property(e => e.OrgLinkedIn)
                     .HasMaxLength(150)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .IsRequired(false); 
+
                 entity.Property(e => e.OrgLogo).HasColumnType("image");
+
                 entity.Property(e => e.OrgName)
                     .HasMaxLength(150)
                     .IsUnicode(false);
+
                 entity.Property(e => e.OrgType)
                     .HasMaxLength(150)
                     .IsUnicode(false);
+
                 entity.Property(e => e.Verified)
-                    .HasMaxLength(10)
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false);
+
+                entity.Property(e => e.OrgApproved)
+                    .HasColumnType("bit")
+                    .HasDefaultValue(false);
+
+                entity.Property(e => e.ControlNumber)
+                    .HasMaxLength(50)
                     .IsUnicode(false)
-                    .IsFixedLength();
-                entity.Property(e => e.CollegeId).HasColumnName("CollegeID");
+                    .IsRequired(false);
+
+                entity.Property(e => e.CollegeId)
+                    .HasColumnName("CollegeID")
+                    .IsRequired(false);
 
                 entity.HasOne(d => d.College)
                     .WithMany(p => p.OrgTables)
                     .HasForeignKey(d => d.CollegeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrgTable_CollegeTable");
+                    .HasConstraintName("FK_OrgTable_CollegeTable")
+                    .IsRequired(false);
             });
+
 
             modelBuilder.Entity<ReportTable>(entity =>
             {

@@ -1,18 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 using appdev.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Security.Cryptography;
-using AppDev.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using BCrypt.Net;
-using Microsoft.Extensions.Options;
-using static AppDev.Controllers.AccountController;
+using static appdev.Controllers.AccountController;
 using appdev.DTOs;
-using static AppDev.Controllers.AccountController.RegisterRequest;
+using static appdev.Controllers.AccountController.RegisterRequest;
 
 namespace appdev.Services
 {
@@ -157,12 +151,12 @@ namespace appdev.Services
                         CollegeName = student.College.CollegeName,
                         CollegeId = student.CollegeId,
                         ProfilePicture = student.StudentProfilePicture?.Length > 0
-             ? Convert.ToBase64String(student.StudentProfilePicture)
-             : null
+                         ? Convert.ToBase64String(student.StudentProfilePicture)
+                         : null
                     }
                 };
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new AuthResponse<StudentProfileDto>
                 {
@@ -215,7 +209,7 @@ namespace appdev.Services
                     };
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new AuthResponse<UserDto>
                 {
@@ -228,23 +222,33 @@ namespace appdev.Services
 
         private string GenerateJwtToken(StudentTable user)
         {
+            if (string.IsNullOrEmpty(_jwtSettings.SecretKey) || _jwtSettings.SecretKey.Length < 32)
+            {
+                throw new InvalidOperationException("Invalid JWT secret key configuration");
+            }
+
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.NameIdentifier, user.StudentId.ToString()),
-                    new Claim(ClaimTypes.Email, user.StudentEmail),
-                    new Claim(ClaimTypes.GivenName, user.StudentFirstName),
-                    new Claim(ClaimTypes.Surname, user.StudentLastName),
-                    new Claim("CollegeId", user.CollegeId.ToString())
-                };
+    {
+                new Claim(JwtRegisteredClaimNames.Sub, user.StudentId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.StudentEmail),
+                new Claim(JwtRegisteredClaimNames.GivenName, user.StudentFirstName),
+                new Claim(JwtRegisteredClaimNames.FamilyName, user.StudentLastName),
+                new Claim("CollegeId", user.CollegeId.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) 
+    };
+
+            var tokenExpiration = DateTime.UtcNow.AddMinutes(
+                Math.Max(_jwtSettings.ExpirationMinutes, 1)
+            );
 
             var token = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationMinutes),
+                expires: tokenExpiration,
                 signingCredentials: credentials
             );
 
